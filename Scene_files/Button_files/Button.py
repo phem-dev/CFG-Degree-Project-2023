@@ -1,12 +1,13 @@
 import pygame
 from Scene_files.Button_files.draw_rounded_rect import draw_rounded_rect # instead of the pygame.draw.rect, use this custom function for a rounded rectangle in the Button class
 from settings import FONT
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 
 
 
 # If we want to standardise the button sizes
-BUTTON_WIDTH = 140
-BUTTON_HEIGHT = 80
+BUTTON_WIDTH = SCREEN_WIDTH / 5
+BUTTON_HEIGHT = SCREEN_HEIGHT / 12
 
 
 class Button:
