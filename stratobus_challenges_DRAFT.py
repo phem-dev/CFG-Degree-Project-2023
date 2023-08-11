@@ -1,7 +1,6 @@
 # laying out the structure of the Stratobus Mission challenges the player will face. OOP - each challenge is a class instance
 import requests
-from datetime import date
-
+from stratobus_challenges_config import today_date_string, api_key, short_url
 
 class Challenge:
     def __init__(self, challenge_name):# is this bit needed?? adding any attributes to the challenges
@@ -45,12 +44,6 @@ class Asteroids(Challenge):
             self.fail()
 
     def get_all_asteroid_data(self):
-        today_date = date.today()
-        today_date_string = str(today_date)
-
-        api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
-        short_url = f"https://api.nasa.gov/neo/rest/v1/feed?start_date={today_date}&end_date={today_date}&api_key={api_key}"
-
         response = requests.get(short_url)
         data = response.json()
 
