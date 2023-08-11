@@ -27,7 +27,7 @@ class Asteroids(Challenge):
         return '\n'.join(asteroid_output)
 
     def player_enter_asteroid_distance(self, asteroid_distances, asteroid_output):
-        print(self.display_asteroid_data(asteroid_output)) # call this fn to output the data as a return
+        print(self.display_asteroid_data(asteroid_output))
         attempts = 3
         while attempts > 0:
             inp = input(f"For any of the 3 asteroids that passed near Earth today, enter the miss distance rounded to the nearest km. You have {attempts} attempts remaining... ")
@@ -81,7 +81,7 @@ class Asteroids(Challenge):
             asteroid_distances.append(round(third_asteroid_miss_distance_raw, 0))
         except: pass
 
-        self.player_enter_asteroid_distance(asteroid_distances, asteroid_output)  # should this be 'self' or 'asteroid_challenge'?
+        self.player_enter_asteroid_distance(asteroid_distances, asteroid_output)
 
 
 # the below lines create a class object for the asteroid challenge and run it
