@@ -1,17 +1,18 @@
 # laying out the structure of the Stratobus Mission challenges the player will face. OOP - each challenge is a class instance
 import requests
-from stratobus_challenges_config import today_date_string, api_key, short_url
+from Missions.stratobus_challenges_config import today_date_string, api_key, short_url
+
 
 class Challenge:
-    def __init__(self, challenge_name):# is this bit needed?? adding any attributes to the challenges
+    def __init__(self, challenge_name):  # is this bit needed?? adding any attributes to the challenges
         self.challenge_name = challenge_name
 
-    def greet(self): # only if we want a generic greeting as the player gets to each challenge. Can use interpolation to insert the name of the challenge into the Welcome statement
-        print("Welcome to the X challenge!")
-        # call funct body
+    def greet(self):  # only if we want a generic greeting as the player gets to each challenge. Can use interpolation to insert the name of the challenge into the Welcome statement
+        return f"Welcome to the {self.challenge_name} challenge!"
+
 
     def exit(self):# as above
-        print("Goodbye!")
+        return "Goodbye!"
 
 class Asteroids(Challenge):
     def success(self):
@@ -78,5 +79,5 @@ class Asteroids(Challenge):
 
 
 # the below lines create a class object for the asteroid challenge and run it
-asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object, adding the name of the challenge
-asteroid_challenge.get_all_asteroid_data()
+# asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object, adding the name of the challenge
+# asteroid_challenge.get_all_asteroid_data()

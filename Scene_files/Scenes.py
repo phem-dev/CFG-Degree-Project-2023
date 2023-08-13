@@ -3,6 +3,7 @@ from Scene_files.SceneManager import Scene
 from Scene_files.Button_files.Button import Button, BUTTON_HEIGHT, BUTTON_WIDTH
 from settings import WHITE, BLACK, RED, BLUE, GREY, PURPLE, SCREEN_HEIGHT, SCREEN_WIDTH
 from Scene_files.Typewriter import TypewriterText
+from Missions.stratobus_challenges_DRAFT import Challenge
 
 
 ########################################################################################################################
@@ -12,7 +13,8 @@ class SceneStart(Scene):
     def __init__(self, manager, game_clock):
         self.manager = manager
         self.game_clock = game_clock
-        self.typewriter = TypewriterText(50, 50, 500, 500, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+        self.title = "Asteroid"
+        self.typewriter = TypewriterText(50, 50, 500, 500, Challenge.greet(Challenge(self.title)))
 
         # here we define the things to be drawn byt the draw method  further down
         self.button1 = Button(
@@ -31,7 +33,7 @@ class SceneStart(Scene):
     def to_scene3(self):
         self.manager.switch_scene(SceneGrey(self.manager, self.game_clock))
 
-    # here we have an event handler, evets are fed in using a while loop with "for event in pygame.event.get():"
+    # here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():"
     def handle_event(self, event):
         self.button1.handle_event(event)
         self.button2.handle_event(event)
