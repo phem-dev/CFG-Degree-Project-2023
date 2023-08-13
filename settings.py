@@ -14,6 +14,6 @@ BLUE = (0, 0, 255, 255)
 GREY = (128, 128, 128, 255)
 PURPLE = (128, 0, 255, 255)
 
-# Screen dimensions (this can be changed but all positioning of buttons etc. may nned to be scaled relative to this)
+# Screen dimensions (this can be changed but all positioning of buttons etc. may need to be scaled relative to this)
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
