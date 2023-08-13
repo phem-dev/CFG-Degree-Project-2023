@@ -1,7 +1,7 @@
 import sys
 from Scene_files.SceneManager import Scene
 from Scene_files.Button_files.Button import Button, BUTTON_HEIGHT, BUTTON_WIDTH
-from settings import WHITE, BLACK, RED, BLUE, GREY, SCREEN_HEIGHT, SCREEN_WIDTH
+from settings import WHITE, BLACK, RED, BLUE, GREY, PURPLE, SCREEN_HEIGHT, SCREEN_WIDTH
 from Scene_files.Typewriter import TypewriterText
 
 
@@ -12,7 +12,7 @@ class SceneStart(Scene):
     def __init__(self, manager, game_clock):
         self.manager = manager
         self.game_clock = game_clock
-        self.typewriter = TypewriterText(50, 50, "Welcome to Stratobus Mission!")
+        self.typewriter = TypewriterText(50, 50, 500, 500, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
 
         # here we define the things to be drawn byt the draw method  further down
         self.button1 = Button(
@@ -37,10 +37,10 @@ class SceneStart(Scene):
         self.button2.handle_event(event)
 
     def update(self):
-        self.typewriter.update(self.game_clock)
+        self.typewriter.update()
 
     def draw(self, screen):
-        screen.fill(WHITE)
+        screen.fill(PURPLE)
         self.typewriter.draw(screen)
         self.button1.draw(screen)
         self.button2.draw(screen)
@@ -96,7 +96,7 @@ class SceneGrey(Scene):
         )
 
     def back_to_scene_start(self):
-        self.manager.switch_scene(SceneStart(self.manager, self.game_clock ))
+        self.manager.switch_scene(SceneStart(self.manager, self.game_clock))
 
     def handle_event(self, event):
         self.button1.handle_event(event)

@@ -7,12 +7,13 @@ pygame.font.init()
 FONT = pygame.font.SysFont("Courier New", 40, bold=True, italic=False)
 
 # Colour (constants are written in all-caps)
-WHITE = (255, 255, 255, 1)
-BLACK = (0, 0, 0, 1)
-RED = (255, 0, 0, 1)
-BLUE = (0, 0, 255, 1)
-GREY = (128, 128, 128, 1)
+WHITE = (255, 255, 255, 255)
+BLACK = (0, 0, 0, 255)
+RED = (255, 0, 0, 255)
+BLUE = (0, 0, 255, 255)
+GREY = (128, 128, 128, 255)
+PURPLE = (128, 0, 255, 255)
 
-# Screen dimensions (this can be changed but all positioning of buttons etc. may nned to be scaled releatice to this)
+# Screen dimensions (this can be changed but all positioning of buttons etc. may nned to be scaled relative to this)
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
