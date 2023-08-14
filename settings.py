@@ -4,6 +4,11 @@ import pygame
 # Fonts
 pygame.font.init()
 # FONT = pygame.font.Font(pygame.font.get_default_font(), 32)
+
+#------------------------------- uncomment below to add font file: --------------------------------------------------------------
+# font_path = 'Scene_files/kenvector_future.ttf'
+# FONT = pygame.font.Font(font_path, bold=True, italic=False)
+# Delete below line:
 FONT = pygame.font.SysFont("Courier New", 40, bold=True, italic=False)
 
 # Colour (constants are written in all-caps)
