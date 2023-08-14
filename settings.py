@@ -5,6 +5,7 @@ import pygame
 pygame.font.init()
 # FONT = pygame.font.Font(pygame.font.get_default_font(), 32)
 FONT = pygame.font.SysFont("Courier New", 40, bold=True, italic=False)
+TITLE_FONT = pygame.font.SysFont("Courier New", 60, bold=True, italic=False)
 
 # Colour (constants are written in all-caps)
 WHITE = (255, 255, 255, 255)

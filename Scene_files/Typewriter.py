@@ -22,7 +22,7 @@ class TypewriterText:
     typed_text (str): Accumulated text that has been typed.
     """
 
-    def __init__(self, x, y, width, height, text, color=(0, 0, 0)):
+    def __init__(self, x, y, width, height, text, font=FONT, color=(255, 255, 255)):
         # Initialize bounding box properties
         self.x = x
         self.y = y
@@ -31,8 +31,8 @@ class TypewriterText:
 
         # Initialize text properties
         self.text = text
-        self.font = FONT  # imported from the settings.py
-        self.color = color  # Text color, is default black (not imported from settings.py but could be?)
+        self.font = font  # default is FONT imported from the settings.py
+        self.color = color  # Text color, is default white (not imported from settings.py but could be?)
 
         # Text typing related variables
         self.text_cursor = 0  # Index of the character currently being typed
