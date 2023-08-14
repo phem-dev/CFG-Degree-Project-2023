@@ -12,17 +12,11 @@ class TypewriterText:
     height (int): The height of the bounding box.
     text (str): The complete text to be displayed.
     font (pygame.font.Font): The font used for rendering the text.
-    color (tuple): The RGB color of the text.
-    text_cursor (int): Index of the current character in the text to be typed next.
-    current_line (str): The current line of text being typed.
-    lines (list of str): List of completed lines that have been typed.
-    next_update (int): The time (in milliseconds) when the next character should be typed.
-    typing_speed (int): The duration (in milliseconds) between typing characters.
-    completed (bool): A flag indicating whether the entire text has been typed or not.
-    typed_text (str): Accumulated text that has been typed.
+    colour (tuple): The RGBA colour of the text.
+    justify (str): The alignment of the lines when wrapped, either "left", "center" or "right" ("left" by default).
     """
 
-    def __init__(self, x, y, width, height, text, font=FONT, color=(255, 255, 255)):
+    def __init__(self, x, y, width, height, text, font=FONT, colour=(255, 255, 255, 255), justify="left"):
         # Initialize bounding box properties
         self.x = x
         self.y = y
@@ -32,14 +26,16 @@ class TypewriterText:
         # Initialize text properties
         self.text = text
         self.font = font  # default is FONT imported from the settings.py
-        self.color = color  # Text color, is default white (not imported from settings.py but could be?)
+        self.colour = colour  # Text colour, is default white (not imported from settings.py but could be?)
+        self.justify = justify
 
         # Text typing related variables
         self.text_cursor = 0  # Index of the character currently being typed
         self.current_line = ""  # The current line of text being constructed
+        self.next_line = ""  # Predicted next line of text
         self.lines = []  # All the lines of text that have been completely typed out
         self.next_update = 0  # Time when the next character will be added (to be an accumulator)
-        self.typing_speed = 10  # Time (in milliseconds) to wait before typing next character
+        self.typing_speed = 10  # Time (in milliseconds) to wait before rendering next character (though speed is limited by main game clock?)
         self.completed = False  # Whether all the text has been typed out or not
         self.typed_text = ""  # Accumulated text that has been typed so far
 
@@ -92,20 +88,29 @@ class TypewriterText:
 
     def draw(self, surface):
         """
-                Draws the typed text made in the update funtion on the given surface.
+        Draws the typed text made in the update function on the given surface.
 
-                Args:
-                surface (pygame.Surface): The surface on which the text should be rendered and drawn.
-                """
+        Args:
+        surface (pygame.Surface): The surface on which the text should be rendered and drawn.
+        """
 
-        # Render and draw each line of text
         y_offset = 0
         for line_text in self.lines:
-            line_surface = self.font.render(line_text, True, self.color)
-            surface.blit(line_surface, (self.x, self.y + y_offset))
+            line_surface = self.font.render(line_text, True, self.colour)
+            x_offset = self.get_x_offset(line_surface)
+            surface.blit(line_surface, (self.x + x_offset, self.y + y_offset))
             y_offset += self.font.get_height()
 
-        # If typing isn't finished, render and draw the line that's still being typed
         if not self.completed:
-            current_line_surface = self.font.render(self.current_line, True, self.color)
-            surface.blit(current_line_surface, (self.x, self.y + y_offset))
+            current_line_surface = self.font.render(self.current_line, True, self.colour)
+            x_offset = self.get_x_offset(current_line_surface)
+            surface.blit(current_line_surface, (self.x + x_offset, self.y + y_offset))
+
+    def get_x_offset(self, surface):
+        """Calculate the x offset based on justification."""
+        if self.justify == "center":
+            return (self.width - surface.get_width()) // 2
+        elif self.justify == "right":
+            return self.width - surface.get_width()
+        else:  # Default to left justification
+            return 0

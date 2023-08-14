@@ -1,0 +1,34 @@
+########################################################################################################################
+SceneStart
+    The title screen with start button, rules button and exit button
+
+    Function to direct here:
+        self.back_to_scene_start
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids
+        self.button2 -> self.to_controls
+        self.button3 -> sys.exit
+
+
+ ########################################################################################################################
+SceneControls
+    The rules and controls screen
+
+    Function to direct here:
+        self.to_controls
+
+    Buttons on here:
+        self.button1 -> self.back_to_scene_start
+        self.button2 -> sys.exit
+
+########################################################################################################################
+SceneMissionAsteroids
+    The asteroid mission intro page with title,  description, accept button and exit button
+
+    Function to direct here:
+        self.to_scene_mission_asteroids
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids
+        self.button2 -> sys.exit

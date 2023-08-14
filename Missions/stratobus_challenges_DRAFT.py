@@ -8,7 +8,7 @@ class Challenge:
         self.challenge_name = challenge_name
 
     def greet(self):  # only if we want a generic greeting as the player gets to each challenge. Can use interpolation to insert the name of the challenge into the Welcome statement
-        return f"Welcome to the {self.challenge_name} challenge!"
+        return f"Welcome to mission #1: the {self.challenge_name}!"
 
 
     def exit(self):# as above

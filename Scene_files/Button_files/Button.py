@@ -26,7 +26,7 @@ class Button:
     """
 
     def __init__(self, x, y, colour, hover_colour, text, text_colour, hover_text_colour, action):
-        self.width = FONT.size(text)[0] * 1.1
+        self.width = FONT.size(text)[0] * 1.2
         self.height = FONT.size(text)[1] * 1.1
 
         if x == "center":

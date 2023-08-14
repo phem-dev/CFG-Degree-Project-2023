@@ -3,14 +3,12 @@ import pygame
 
 # Fonts
 pygame.font.init()
-# FONT = pygame.font.Font(pygame.font.get_default_font(), 32)
 
-#------------------------------- uncomment below to add font file: --------------------------------------------------------------
-# font_path = 'Scene_files/kenvector_future.ttf'
-# FONT = pygame.font.Font(font_path, bold=True, italic=False)
-# Delete below line:
-FONT = pygame.font.SysFont("Courier New", 40, bold=True, italic=False)
-TITLE_FONT = pygame.font.SysFont("Courier New", 60, bold=True, italic=False)
+# Font settings
+font_path = 'Scene_files/kenvector_future.ttf'
+FONT = pygame.font.Font(font_path, 40)
+FONT_TITLE = pygame.font.Font(font_path, 80)
+FONT_SMALL = pygame.font.Font(font_path, 20)
 
 # Colour (constants are written in all-caps)
 WHITE = (255, 255, 255, 255)
