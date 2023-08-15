@@ -30,5 +30,16 @@ SceneMissionAsteroids
         self.to_scene_mission_asteroids
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids
+        self.button1 -> self.to_scene_mission_asteroids_input
+        self.button2 -> sys.exit
+
+########################################################################################################################
+SceneMissionAsteroidsInput
+    The asteroid mission user input page with...
+
+    Function to direct here:
+        self.to_scene_mission_asteroids_input
+
+    Buttons on here:
+        self.button1 -> self.back_to_scene_start
         self.button2 -> sys.exit

@@ -1,27 +1,31 @@
 # laying out the structure of the Stratobus Mission challenges the player will face. OOP - each challenge is a class instance
 import requests
-from Missions.stratobus_challenges_config import today_date_string, api_key, short_url
-
+from Missions.Mission1_Asteroids_config import today_date_string, api_key, short_url
 
 class Challenge:
-    def __init__(self, challenge_name):  # is this bit needed?? adding any attributes to the challenges
+    def __init__(self, challenge_name):
         self.challenge_name = challenge_name
 
-    def greet(self):  # only if we want a generic greeting as the player gets to each challenge. Can use interpolation to insert the name of the challenge into the Welcome statement
-        return f"Welcome to mission #1: the {self.challenge_name}!"
-
-
-    def exit(self):# as above
-        return "Goodbye!"
+    def greet(self):  # outputs a greeting + challenge description
+        greet_string = f"Welcome to mission #1: The {self.challenge_name} challenge!"
+        return greet_string
 
 class Asteroids(Challenge):
-    def success(self):
-        print("success")
-        # body
+    def success(self):  # do we want to add this as an att to the parent class so it's consistent across all challenges?
+        return "Mission Completed - congratulations! Returning home..."
+        # return to base
 
-    def fail(self):
-        print("fail")
-        # body
+    def fail(self):  # as above
+        inp = input("Oh no, Mission Failed! Do you want to try again? Enter Y for Yes or N to return home")
+        if inp == "Y":
+            pass
+            # re-run whole code
+        elif inp == "N":
+            pass
+            # return home
+        else:
+            return "Oops - unexpected input! Returning home..."
+        # return home
 
     def display_asteroid_data(self, asteroid_output):
         return '\n'.join(asteroid_output)
@@ -33,7 +37,7 @@ class Asteroids(Challenge):
             inp = input(f"For any of the 3 asteroids that passed near Earth today, enter the miss distance rounded to the nearest km. You have {attempts} attempts remaining... ")
             if inp.isnumeric():
                 if int(inp) in asteroid_distances:
-                    self.success()  # call Success function from above if player inputs correct number
+                    print(self.success())  # print statement here - will this work in pygame?
                     break
                 else:
                     attempts -= 1
@@ -42,7 +46,7 @@ class Asteroids(Challenge):
                 attempts -= 1
                 print(f"Oops, it looks like you entered something that isn't a number! {attempts} attempts remaining... ")  # move this?
         if attempts == 0:
-            self.fail()
+            print(self.fail()) # print statement here - will this work in pygame?
 
     def get_all_asteroid_data(self):
         response = requests.get(short_url)
@@ -79,5 +83,6 @@ class Asteroids(Challenge):
 
 
 # the below lines create a class object for the asteroid challenge and run it
-# asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object, adding the name of the challenge
+# asteroid_challenge = Asteroids("Asteroid Proximity Sensor", "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!")  # create new class object, adding the name of the challenge
+# print(asteroid_challenge.greet())
 # asteroid_challenge.get_all_asteroid_data()
