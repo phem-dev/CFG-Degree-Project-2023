@@ -90,8 +90,10 @@ class SceneMissionAsteroids(Scene):
         self.game_clock = game_clock
         self.title = "Asteroids Mission"
         self.block = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        self.typewriter_title = TypewriterText(50, 20, 550, 500, Challenge.greet(Challenge(self.title)))
-        self.typewriter_block = TypewriterText(50, 170, 550, 300, self.block, font=FONT_SMALL)
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 400, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
 
 
         # Adjust these buttons to your needs for the second scene
@@ -119,6 +121,7 @@ class SceneMissionAsteroids(Scene):
 
     def draw(self, screen):
         screen.fill(GREY)
+        screen.blit(self.mission_box_image, (75, 120))
         self.typewriter_title.draw(screen)
 
         # Only draw typewriter_block if typewriter_title has completed

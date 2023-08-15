@@ -8,7 +8,7 @@ pygame.font.init()
 font_path = 'Scene_files/kenvector_future.ttf'
 FONT = pygame.font.Font(font_path, 40)
 FONT_TITLE = pygame.font.Font(font_path, 80)
-FONT_SMALL = pygame.font.Font(font_path, 20)
+FONT_SMALL = pygame.font.Font(font_path, 15)
 
 # Colour (constants are written in all-caps)
 WHITE = (255, 255, 255, 255)
