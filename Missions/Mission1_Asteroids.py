@@ -83,6 +83,6 @@ class Asteroids(Challenge):
 
 
 # the below lines create a class object for the asteroid challenge and run it
-# asteroid_challenge = Asteroids("Asteroid Proximity Sensor", "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!")  # create new class object, adding the name of the challenge
+# asteroid_challenge = Asteroids("Asteroid Proximity Sensor")#, "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!")  # create new class object, adding the name of the challenge
 # print(asteroid_challenge.greet())
 # asteroid_challenge.get_all_asteroid_data()

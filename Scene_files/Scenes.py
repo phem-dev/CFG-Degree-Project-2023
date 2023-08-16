@@ -12,7 +12,16 @@ from Scene_files.TextInput import TextInput
 ########################################################################################################################
 # START AND CONTROLS
 ########################################################################################################################
+class Background(pygame.sprite.Sprite):
+    def __init__(self, image_file, location):
+        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        self.image = pygame.image.load(image_file)
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = location
 
+
+BackGround_home = Background('Scene_files/Images/home_bg.png', [0,0])
+BackGround_asteroid = Background('Scene_files/Images/asteroid_bg.png', [0, 0])
 
 class SceneStart(Scene):
     # here we will pass the SceneManager class as an attribute to allow to change scene... eg. scene_manager.switch_scene(SceneStart(SceneManager()))  # start scene 1
@@ -51,7 +60,8 @@ class SceneStart(Scene):
         self.typewriter.update()
 
     def draw(self, screen):
-        screen.fill(PURPLE)
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_home.image, BackGround_home.rect)
         self.typewriter.draw(screen)
         self.button1.draw(screen)
         self.button2.draw(screen)
@@ -125,7 +135,8 @@ class SceneMissionAsteroids(Scene):
             self.typewriter_block.update()
 
     def draw(self, screen):
-        screen.fill(GREY)
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_asteroid.image, BackGround_asteroid.rect)
         screen.blit(self.mission_box_image, (75, 120))
         self.typewriter_title.draw(screen)
 
@@ -144,7 +155,7 @@ class SceneMissionAsteroidsInput(Scene):
         self.manager = manager
         self.game_clock = game_clock
         # title
-        self.title = "Asteroids Mission"
+        self.title = "Asteroid Mission"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
         # display text box
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
@@ -188,7 +199,8 @@ class SceneMissionAsteroidsInput(Scene):
 
 
     def draw(self, screen):
-        screen.fill(GREY)
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_asteroid.image, BackGround_asteroid.rect)
         screen.blit(self.display_bl_image, (30, 70))
         screen.blit(self.trivia_box1_image, (390, 190))
         self.typewriter_title.draw(screen)
@@ -206,3 +218,51 @@ class SceneMissionAsteroidsInput(Scene):
 
 
 ########################################################################################################################
+# Mars
+
+class SceneMissionMars(Scene):
+    def __init__(self, manager, game_clock):
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Mars"
+        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Adjust these buttons to your needs for the second scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
+        )
+
+    def to_scene_mission_asteroids_input(self):
+        self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_asteroid.image, BackGround_asteroid.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+
