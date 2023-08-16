@@ -19,9 +19,11 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
-
-BackGround_home = Background('Scene_files/Images/home_bg.png', [0,0])
+BackGround_home = Background('Scene_files/Images/home_bg.png', [0, 0])
 BackGround_asteroid = Background('Scene_files/Images/asteroid_bg.png', [0, 0])
+BackGround_sentinel = Background('Scene_files/Images/sentinel_bg.png', [0, 0])
+BackGround_mars = Background('Scene_files/Images/mars_bg.png', [0, 0])
+BackGround_payload = Background('Scene_files/Images/payload_bg.png', [0, 0])
 
 class SceneStart(Scene):
     # here we will pass the SceneManager class as an attribute to allow to change scene... eg. scene_manager.switch_scene(SceneStart(SceneManager()))  # start scene 1
@@ -34,7 +36,7 @@ class SceneStart(Scene):
 
         # here we define the things to be drawn byt the draw method further down
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.6), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_scene_mission_asteroids
+            "center", (SCREEN_HEIGHT * 0.6), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_mission_menu
         )
         self.button2 = Button(
             "center", (SCREEN_HEIGHT * 0.72), YELLOW, BLUE, "CONTROLS", BLACK, WHITE, self.to_controls
@@ -44,8 +46,8 @@ class SceneStart(Scene):
         )
 
     # here we define some actions as functions to be called on button clicks
-    def to_scene_mission_asteroids(self):
-        self.manager.switch_scene(SceneMissionAsteroids(self.manager, self.game_clock))
+    def to_mission_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def to_controls(self):
         self.manager.switch_scene(SceneControls(self.manager, self.game_clock))
@@ -96,6 +98,79 @@ class SceneControls(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
+#######################################################################################################################
+
+class SceneStartMenu(Scene):
+    # here we will pass the SceneManager class as an attribute to allow to change scene... eg. scene_manager.switch_scene(SceneStart(SceneManager()))  # start scene 1
+    def __init__(self, manager, game_clock):
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Select a mission:"
+        self.typewriter = TypewriterText(130, 20, 550, 500, self.title, justify="center")
+        # self.typewriter = TypewriterText(50, 50, 500, 500, Challenge.greet(Challenge(self.title)), 100) #  to use in missions
+
+        # here we define the things to be drawn byt the draw method further down
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.24), GREEN, BLUE, "Mission 1: Asteroid Challenge", BLACK, WHITE, self.to_scene_mission_asteroids
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.36), YELLOW, BLUE, "Mission 2: Satellite Images", BLACK, WHITE, self.to_scene_mission_sentinel
+        )
+        self.button3 = Button(
+            "center", (SCREEN_HEIGHT * 0.48), GREEN, BLUE, "Mission 3: Capture Mars", BLACK, WHITE, self.to_scene_mission_mars
+        )
+        self.button4 = Button(
+            "center", (SCREEN_HEIGHT * 0.60), YELLOW, BLUE, "Mission 4: Payload Mission", BLACK, WHITE, self.to_scene_payload
+        )
+        self.button5 = Button(
+            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "Mission 5: Asteroid Dodge", BLACK, WHITE, self.to_scene_dodge
+        )
+        self.button6 = Button(
+            "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
+        )
+
+    # here we define some actions as functions to be called on button clicks
+    def to_scene_mission_asteroids(self):
+        self.manager.switch_scene(SceneMissionAsteroids(self.manager, self.game_clock))
+
+    def to_scene_mission_sentinel(self):
+        self.manager.switch_scene(SceneMissionSentinel(self.manager, self.game_clock))
+
+    def to_scene_mission_mars(self):
+        self.manager.switch_scene(SceneMissionMars(self.manager, self.game_clock))
+
+    def to_scene_payload(self):
+        self.manager.switch_scene(SceneMissionPayload(self.manager, self.game_clock))
+
+    def to_scene_dodge(self):
+        self.manager.switch_scene(SceneMissionDodge(self.manager, self.game_clock))
+
+
+
+    # here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():" in the main game.py
+    def handle_event(self, event):
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+        self.button3.handle_event(event)
+        self.button4.handle_event(event)
+        self.button5.handle_event(event)
+        self.button6.handle_event(event)
+
+    def update(self):
+        self.typewriter.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_home.image, BackGround_home.rect)
+        self.typewriter.draw(screen)
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+        self.button3.draw(screen)
+        self.button4.draw(screen)
+        self.button5.draw(screen)
+        self.button6.draw(screen)
+
+
 
 ########################################################################################################################
 # MISSIONS
@@ -116,11 +191,14 @@ class SceneMissionAsteroids(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
         self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def handle_event(self, event):
         self.button1.handle_event(event)
@@ -172,11 +250,14 @@ class SceneMissionAsteroidsInput(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.back_to_scene_start
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
         )
 
     def back_to_scene_start(self):
         self.manager.switch_scene(SceneStart(self.manager, self.game_clock))
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def handle_event(self, event):
         # for buttons
@@ -218,14 +299,67 @@ class SceneMissionAsteroidsInput(Scene):
 
 
 ########################################################################################################################
-# Mars
+# Mission 2: Sentinel
+
+class SceneMissionSentinel(Scene):
+    def __init__(self, manager, game_clock):
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Earth Satellite Imaging"
+        self.block = "In this challenge you will take aerial photographs of Earth.  What does your house look like from above? "
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Adjust these buttons to your needs for the second scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+        )
+
+    def to_scene_mission_asteroids_input(self):
+        self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_sentinel.image, BackGround_sentinel.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+
+
+###########################################################################################################################
+# Mission 3: Mars
 
 class SceneMissionMars(Scene):
     def __init__(self, manager, game_clock):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Mars"
-        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
+        self.block = "In this mission you can take control of the Mars Rover and take photos of Mars!"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
         self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
@@ -255,6 +389,110 @@ class SceneMissionMars(Scene):
 
     def draw(self, screen):
         screen.fill([255, 255, 255])
+        screen.blit(BackGround_mars.image, BackGround_mars.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+
+#######################################################################################################################
+# Mission 4: Payload
+
+class SceneMissionPayload(Scene):
+    def __init__(self, manager, game_clock):
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Payload"
+        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Adjust these buttons to your needs for the second scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+        )
+
+    def to_scene_mission_asteroids_input(self):
+        self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_payload.image, BackGround_payload.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+
+#######################################################################################################################
+# Mission 5: Asteroid dodge
+
+class SceneMissionDodge(Scene):
+    def __init__(self, manager, game_clock):
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Asteroid"
+        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Adjust these buttons to your needs for the second scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroid_dodge_game
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+        )
+
+    def to_scene_mission_asteroid_dodge_game(self):
+        self.manager.switch_scene(SceneMissionDodgeGame(self.manager, self.game_clock))
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
         screen.blit(BackGround_asteroid.image, BackGround_asteroid.rect)
         screen.blit(self.mission_box_image, (75, 120))
         self.typewriter_title.draw(screen)
@@ -266,3 +504,57 @@ class SceneMissionMars(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
+######################################################################################################################
+# dodge game
+
+
+class SceneMissionDodgeGame(Scene):
+    def __init__(self, manager, game_clock):
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Asteroid"
+        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Adjust these buttons to your needs for the second scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+        )
+
+
+    def to_scene_mission_asteroids_input(self):
+        self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_asteroid.image, BackGround_asteroid.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)

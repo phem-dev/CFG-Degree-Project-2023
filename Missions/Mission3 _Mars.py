@@ -13,6 +13,14 @@ from io import BytesIO
 mars_api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
 rover = "curiosity"
 
+class Challenge:
+    def __init__(self, challenge_name):
+        self.challenge_name = challenge_name
+
+    def greet(self):  # outputs a greeting + challenge description
+        greet_string = f"Welcome to mission #3: The {self.challenge_name} mission!"
+        return greet_string
+
 
 # Function to check if the input is a valid number:
 def is_valid(input_str):
