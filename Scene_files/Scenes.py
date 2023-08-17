@@ -111,19 +111,19 @@ class SceneStartMenu(Scene):
 
         # here we define the things to be drawn byt the draw method further down
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.24), GREEN, BLUE, "Mission 1: Asteroid Challenge", BLACK, WHITE, self.to_scene_mission_asteroids
+            "center", (SCREEN_HEIGHT * 0.24), GREEN, BLUE, "1: Asteroid Challenge", BLACK, WHITE, self.to_scene_mission_asteroids
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.36), YELLOW, BLUE, "Mission 2: Satellite Images", BLACK, WHITE, self.to_scene_mission_sentinel
+            "center", (SCREEN_HEIGHT * 0.36), YELLOW, BLUE, "2: Satellite Images", BLACK, WHITE, self.to_scene_mission_sentinel
         )
         self.button3 = Button(
-            "center", (SCREEN_HEIGHT * 0.48), GREEN, BLUE, "Mission 3: Capture Mars", BLACK, WHITE, self.to_scene_mission_mars
+            "center", (SCREEN_HEIGHT * 0.48), GREEN, BLUE, "3: Capture Mars", BLACK, WHITE, self.to_scene_mission_mars
         )
         self.button4 = Button(
-            "center", (SCREEN_HEIGHT * 0.60), YELLOW, BLUE, "Mission 4: Payload Mission", BLACK, WHITE, self.to_scene_payload
+            "center", (SCREEN_HEIGHT * 0.60), YELLOW, BLUE, "4: Payload Mission", BLACK, WHITE, self.to_scene_payload
         )
         self.button5 = Button(
-            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "Mission 5: Asteroid Dodge", BLACK, WHITE, self.to_scene_dodge
+            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "5: Asteroid Dodge", BLACK, WHITE, self.to_scene_dodge
         )
         self.button6 = Button(
             "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
