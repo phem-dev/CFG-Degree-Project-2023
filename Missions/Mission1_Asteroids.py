@@ -17,7 +17,7 @@ class Challenge:
 
 class Asteroids(Challenge):
     def success(self):  # do we want to add this as an att to the parent class so it's consistent across all challenges?
-        return "Mission Completed - congratulations!"
+        return "Mission Completed |Congratulations!"
         # ALSO go to next mission
 
     # def fail(self):  # as above
@@ -34,26 +34,26 @@ class Asteroids(Challenge):
     #         return fail_message, self.player_enter_asteroid_distance(self, asteroid_distances, asteroid_output)
     #         # re-run whole code
 
-    def fail(self):
-        # Simulate logic for handling player input event in PyGame
-        player_input_event = None  # Replace with actual event handling logic
+    # def fail(self):
+        # # Simulate logic for handling player input event in PyGame
+        # player_input_event = None  # Replace with actual event handling logic
+        #
+        # if player_input_event:  # If the player makes an input
+        #     player_input = player_input_event  # Replace with actual player input
+        #
+        #     if player_input == "Y":
+        #         fail_message_retry = "We knew we could count on you! Retrying mission..."
+        #         return fail_message_retry, self.prompt_display_asteroid_data(asteroid_distances, asteroid_output)
+        #
+        #     elif player_input == "N":
+        #         quit_game_event = True  # Set this flag to quit the game
+        #         return None  # Return None to indicate no further action is needed
+        #
+        #     else:
+        #         fail_message = "Oops - unexpected input! Re-launching game, we're counting on you!"
+        #         return fail_message, self.prompt_display_asteroid_data(asteroid_distances, asteroid_output)
 
-        if player_input_event:  # If the player makes an input
-            player_input = player_input_event  # Replace with actual player input
-
-            if player_input == "Y":
-                fail_message_retry = "We knew we could count on you! Retrying mission..."
-                return fail_message_retry, self.prompt_display_asteroid_data(asteroid_distances, asteroid_output)
-
-            elif player_input == "N":
-                quit_game_event = True  # Set this flag to quit the game
-                return None  # Return None to indicate no further action is needed
-
-            else:
-                fail_message = "Oops - unexpected input! Re-launching game, we're counting on you!"
-                return fail_message, self.prompt_display_asteroid_data(asteroid_distances, asteroid_output)
-
-        return None  # Return None if no player input event has occurred yet
+        # return None  # Return None if no player input event has occurred yet
 
     def display_asteroid_data(self, asteroid_output):
         return '\n'.join(asteroid_output)
@@ -67,38 +67,33 @@ class Asteroids(Challenge):
                                  # , asteroid_distances
                                 ):
         #print("58") debugging
-        return f"For any of the 3 asteroids that passed near Earth today, enter the miss distance rounded to the nearest km. You have 3 attempts... "\
+        return f"For any of the 3 asteroids that passed near Earth today, enter the miss distance rounded to the nearest km. |You have 3 attempts... "\
             #, self.player_enter_asteroid_distance(asteroid_distances)
 
-    def player_enter_asteroid_distance(self, asteroid_distances):
+    def player_enter_asteroid_distance(self, asteroid_distances, player_input, attempts):
         #print("67")  # debugging
-        attempts = 3
-        while attempts > 0:
-            # Simulate logic for handling player input event in PyGame
-            player_input_event = None # Add actual event handling logic
-
-            if player_input_event:  # If the player makes an input
-                player_input = player_input_event  # Replace with actual player input
-
+        # attempts = 3
+        while attempts > 1:
                 if player_input.isnumeric():
-                    if int(player_input) in asteroid_distances:
+                    if player_input in asteroid_distances:
                         success_message = self.success()  # Get the success message
-                        return success_message  # Return the success message to display in the game
+                        return success_message, attempts  # Return the success message to display in the game
 
                     else:
                         attempts -= 1
-                        incorrect_message = f"Incorrect data - try again. {attempts} attempts remaining..."
-                        return incorrect_message  # Return the incorrect message to display in the game
+                        if attempts == 1:
+                            incorrect_message = f"Incorrect data - try again. |{attempts} attempt remaining..."
+                            return incorrect_message, attempts  # Return the incorrect message to display in the game
+                        incorrect_message = f"Incorrect data - try again. |{attempts} attempts remaining..."
+                        return incorrect_message, attempts  # Return the incorrect message to display in the game
 
                 else:
                     attempts -= 1
                     not_numeric_message = f"Oops, it looks like you entered something that isn't a number! {attempts} attempts remaining..."
-                    return not_numeric_message  # Return the not numeric message to display in the game
+                    return not_numeric_message, attempts  # Return the not numeric message to display in the game
 
-            # "Simulate game loop update here" - according to chatgpt (lol)
-
-        fail_message = self.fail()  # Get the fail message
-        return fail_message  # Return the fail message to display in the game
+        fail_message = "Oh no, Mission Failed!"
+        return fail_message, attempts  # Return the fail message to display in the game
 
     def get_all_asteroid_data(self):
         response = requests.get(short_url)

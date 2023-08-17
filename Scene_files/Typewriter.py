@@ -59,20 +59,25 @@ class TypewriterText:
             if self.text_cursor < len(self.text):
                 char = self.text[self.text_cursor]
 
-                # If it's not a space, add the character to the current line
-                if char != ' ':
-                    self.current_line += char
+                # Check for full stop to initiate a line break
+                if char == '|':
+                    self.lines.append(self.current_line.strip())
+                    self.current_line = ""
                 else:
-                    # Check if adding the character would exceed the bounding box width
-                    potential_line = self.current_line + char
-                    if self.font.size(potential_line)[0] <= self.width:
-                        self.current_line = potential_line
+                    # If it's not a space, add the character to the current line
+                    if char != ' ':
+                        self.current_line += char
                     else:
-                        # Start a new line and store the completed line
-                        self.lines.append(self.current_line)
-                        self.current_line = ""
+                        # Check if adding the character would exceed the bounding box width
+                        potential_line = self.current_line + char
+                        if self.font.size(potential_line)[0] <= self.width:
+                            self.current_line = potential_line
+                        else:
+                            # Start a new line and store the completed line
+                            self.lines.append(self.current_line)
+                            self.current_line = ""
 
-                # Move to the next character in the text
+                    # Move to the next character in the text
                 self.text_cursor += 1
                 self.typed_text += char
             else:

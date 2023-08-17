@@ -184,7 +184,7 @@ class SceneMissionAsteroids(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Asteroid"
-        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
+        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. |Report the data back to base to complete the mission!"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
         self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
@@ -235,34 +235,61 @@ class SceneMissionAsteroidsInput(Scene):
     def __init__(self, manager, game_clock):
         self.manager = manager
         self.game_clock = game_clock
+
         # title
         self.title = "Asteroid Mission"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
+
         # display text box
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL, colour=(0, 0, 0, 0))
         self.display_text1 = f"{Asteroids.asteroid_distance_prompt(Asteroids(self.title))}"
         self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), Asteroids.get_all_asteroid_data(Asteroids(self.title)), Missions.Mission1_Asteroids.today_date_string)}"
         self.typewriter_display1 = TypewriterText(55, 170, 150, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
-        self.typewriter_display2 = TypewriterText(55, 300, 150, 300, self.display_text2, font=FONT_SMALL, colour=(0, 0, 0, 0))
+        self.typewriter_display2 = TypewriterText(55, 320, 150, 300, self.display_text2, font=FONT_SMALL, colour=(0, 0, 0, 0))
+
         # input box
         self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
         self.typewriter_input_head = TypewriterText(420, 210, 200, 100, "User Input", font=FONT_SMALL,colour=(0, 0, 0, 0))
-        self.user_input = TextInput(420, 260, 300, 25)
+        self.user_input = TextInput(420, 255, 300, 25)
+        self.result_message = None
+        self.attempts = 3
 
         # Adjust these buttons to your needs for the second scene
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.back_to_scene_start
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
         self.button2 = Button(
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
         )
+#
+
+    def user_submit(self):
+        # Get the current text input from the user using the user_answer method from TextInput
+        player_input = self.user_input.user_answer()
+
+        asteroid_challenge_instance = Asteroids(self.title)
+        asteroid_data = asteroid_challenge_instance.get_all_asteroid_data()
+        asteroid_distances = asteroid_challenge_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_Asteroids.today_date_string)
+
+        # Call the player_enter_asteroid_distance function
+        result_message, remaining_attempts = asteroid_challenge_instance.player_enter_asteroid_distance(asteroid_distances, player_input, self.attempts)
+        self.attempts = remaining_attempts
+        # Create a TypewriterText instance with the result and assign it to result_message
+        self.result_message = TypewriterText(420, 285, 300, 300, result_message, font=FONT_VSMALL, colour=(0, 0, 0, 0))
+        if result_message == asteroid_challenge_instance.success():
+            self.button1 = Button(
+                "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
+            )
 
     def back_to_scene_start(self):
         self.manager.switch_scene(SceneStart(self.manager, self.game_clock))
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def to_scene_mission_sentinel(self):
+        self.manager.switch_scene(SceneMissionSentinel(self.manager, self.game_clock))
 
     def handle_event(self, event):
         # for buttons
@@ -283,6 +310,10 @@ class SceneMissionAsteroidsInput(Scene):
             self.typewriter_display1.update()
         if self.typewriter_display1.completed:
             self.typewriter_display2.update()
+
+        #  if the result message has been made by the user pressing the submit button
+        if self.result_message:
+            self.result_message.update()
 
 
 
@@ -305,6 +336,11 @@ class SceneMissionAsteroidsInput(Scene):
         self.user_input.draw(screen)
         self.button1.draw(screen)
         self.button2.draw(screen)
+
+        # Draw the result_message if it's not None
+        if self.result_message:
+            self.result_message.draw(screen)
+
 
 
 ########################################################################################################################
