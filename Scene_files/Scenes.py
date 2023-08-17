@@ -5,12 +5,12 @@ from Scene_files.Button_files.Button import Button
 from settings import WHITE, BLACK, RED, GREEN, ORANGE, YELLOW, BLUE, PURPLE, L_PURPLE, TURQ, GREY, SCREEN_HEIGHT, \
     SCREEN_WIDTH, FONT_TITLE, FONT_SMALL, FONT, FONT_VSMALL
 from Scene_files.Typewriter import TypewriterText
-from Missions.Mission1_Asteroids import Challenge
+from Missions.Mission1_Asteroids import Challenge, Asteroids
 from Scene_files.TextInput import TextInput
 
 
 ########################################################################################################################
-# START AND CONTROLS
+# START AND CONTROLS ###################################################################################################
 ########################################################################################################################
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -173,9 +173,10 @@ class SceneStartMenu(Scene):
 
 
 ########################################################################################################################
-# MISSIONS
+# MISSIONS #############################################################################################################
 ########################################################################################################################
 # ASTEROIDS
+
 class SceneMissionAsteroids(Scene):
     def __init__(self, manager, game_clock):
         self.manager = manager
@@ -239,6 +240,7 @@ class SceneMissionAsteroidsInput(Scene):
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL, colour=(0, 0, 0, 0))
         self.display_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
+        # self.display_text = Asteroids.asteroid_distance_prompt()
         self.typewriter_display = TypewriterText(55, 180, 200, 200, self.display_text, font=FONT_VSMALL, colour=(0, 0, 0, 0))
         # input box
         self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
@@ -299,6 +301,7 @@ class SceneMissionAsteroidsInput(Scene):
 
 
 ########################################################################################################################
+########################################################################################################################
 # Mission 2: Sentinel
 
 class SceneMissionSentinel(Scene):
@@ -351,7 +354,8 @@ class SceneMissionSentinel(Scene):
         self.button2.draw(screen)
 
 
-###########################################################################################################################
+########################################################################################################################
+########################################################################################################################
 # Mission 3: Mars
 
 class SceneMissionMars(Scene):
@@ -400,6 +404,8 @@ class SceneMissionMars(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
+
+########################################################################################################################
 #######################################################################################################################
 # Mission 4: Payload
 
@@ -452,6 +458,8 @@ class SceneMissionPayload(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
+
+########################################################################################################################
 #######################################################################################################################
 # Mission 5: Asteroid dodge
 
@@ -504,7 +512,8 @@ class SceneMissionDodge(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
-######################################################################################################################
+
+########################################################################################################################
 # dodge game
 
 
