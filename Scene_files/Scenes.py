@@ -1,16 +1,18 @@
 import sys
 import pygame
+
+import Missions.Mission1_Asteroids
 from Scene_files.SceneManager import Scene
 from Scene_files.Button_files.Button import Button
 from settings import WHITE, BLACK, RED, GREEN, ORANGE, YELLOW, BLUE, PURPLE, L_PURPLE, TURQ, GREY, SCREEN_HEIGHT, \
     SCREEN_WIDTH, FONT_TITLE, FONT_SMALL, FONT, FONT_VSMALL
 from Scene_files.Typewriter import TypewriterText
-from Missions.Mission1_Asteroids import Challenge
+from Missions.Mission1_Asteroids import Challenge, Asteroids
 from Scene_files.TextInput import TextInput
 
 
 ########################################################################################################################
-# START AND CONTROLS
+# START AND CONTROLS ###################################################################################################
 ########################################################################################################################
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -173,9 +175,10 @@ class SceneStartMenu(Scene):
 
 
 ########################################################################################################################
-# MISSIONS
+# MISSIONS #############################################################################################################
 ########################################################################################################################
 # ASTEROIDS
+
 class SceneMissionAsteroids(Scene):
     def __init__(self, manager, game_clock):
         self.manager = manager
@@ -238,8 +241,10 @@ class SceneMissionAsteroidsInput(Scene):
         # display text box
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL, colour=(0, 0, 0, 0))
-        self.display_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
-        self.typewriter_display = TypewriterText(55, 180, 200, 200, self.display_text, font=FONT_VSMALL, colour=(0, 0, 0, 0))
+        self.display_text1 = f"{Asteroids.asteroid_distance_prompt(Asteroids(self.title))}"
+        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), Asteroids.get_all_asteroid_data(Asteroids(self.title)), Missions.Mission1_Asteroids.today_date_string)}"
+        self.typewriter_display1 = TypewriterText(55, 170, 150, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
+        self.typewriter_display2 = TypewriterText(55, 300, 150, 300, self.display_text2, font=FONT_SMALL, colour=(0, 0, 0, 0))
         # input box
         self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
         self.typewriter_input_head = TypewriterText(420, 210, 200, 100, "User Input", font=FONT_SMALL,colour=(0, 0, 0, 0))
@@ -275,7 +280,9 @@ class SceneMissionAsteroidsInput(Scene):
             self.typewriter_display_head.update()
             self.typewriter_input_head.update()
         if self.typewriter_display_head.completed:
-            self.typewriter_display.update()
+            self.typewriter_display1.update()
+        if self.typewriter_display1.completed:
+            self.typewriter_display2.update()
 
 
 
@@ -291,13 +298,16 @@ class SceneMissionAsteroidsInput(Scene):
             self.typewriter_display_head.draw(screen)
             self.typewriter_input_head.draw(screen)
         if self.typewriter_display_head.completed and self.typewriter_input_head.completed:
-            self.typewriter_display.draw(screen)
+            self.typewriter_display1.draw(screen)
+        if self.typewriter_display1.completed:
+            self.typewriter_display2.draw(screen)
 
         self.user_input.draw(screen)
         self.button1.draw(screen)
         self.button2.draw(screen)
 
 
+########################################################################################################################
 ########################################################################################################################
 # Mission 2: Sentinel
 
@@ -351,7 +361,8 @@ class SceneMissionSentinel(Scene):
         self.button2.draw(screen)
 
 
-###########################################################################################################################
+########################################################################################################################
+########################################################################################################################
 # Mission 3: Mars
 
 class SceneMissionMars(Scene):
@@ -400,6 +411,8 @@ class SceneMissionMars(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
+
+########################################################################################################################
 #######################################################################################################################
 # Mission 4: Payload
 
@@ -452,6 +465,8 @@ class SceneMissionPayload(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
+
+########################################################################################################################
 #######################################################################################################################
 # Mission 5: Asteroid dodge
 
@@ -504,7 +519,8 @@ class SceneMissionDodge(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
 
-######################################################################################################################
+
+########################################################################################################################
 # dodge game
 
 
