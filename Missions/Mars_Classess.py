@@ -121,9 +121,9 @@ class MarsRoverViewer:
 
                         # Display the image on the Pygame screen:
                         self.screen.fill((0, 0, 0)) # Clear screen
-                        self.screen.blit(pygame_image, (100, 75))   # Display at the top-left corner
+                        self.screen.blit(pygame_image, (100, 75))   # Display at the top-left corner ----------- *****REPOSITION ONTOP OF BG*****
 
-                        # Display text info/which camera: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***CHANGE FONT******
+                        # Display text info/which camera: ------------------------------------------------------------ ***CHANGE FONT******
                         font = pygame.font.Font(None, 24)
                         rover_text = font.render(f"Photo from Mars Rover {latest_image_data['rover_name']}", True,
                                                  (255, 255, 255))
@@ -154,9 +154,9 @@ class MarsRoverViewer:
                             scaled_height = 250
                             pygame_image = pygame.transform.scale(pygame_image, (scaled_width, scaled_height))
                             self.screen.fill((0, 0, 0)) # CLear screen
-                            self.screen.blit(pygame_image, (100, 75)) # Display at the top-left corner
+                            self.screen.blit(pygame_image, (100, 75)) # Display at the top-left corner  ----------- *****REPOSITION ONTOP OF BG*****
 
-                            # Display text info/which camera: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***CHANGE FONT******
+                            # Display text info/which camera: -------------------------------------------------------- ***CHANGE FONT******
                             font = pygame.font.Font(None, 24)
                             rover_text = font.render(f"Photo from Mars Rover", True, (255, 255, 255))
                             camera_text = font.render(f"Camera: {self.camera_names[camera]}", True, (255, 255, 255))
