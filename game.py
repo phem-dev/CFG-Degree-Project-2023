@@ -34,7 +34,7 @@ def main():
         else:
             mixer.music.load(MUSIC_PATH)
             mixer.music.set_volume(MUSIC_VOLUME) # Set volume to 30%
-            mixer.music.play(-1) # loop infinitely
+            mixer.music.play(-1, 0, 200) # loop infinitely
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # exit event

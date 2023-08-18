@@ -21,6 +21,7 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
+
 BackGround_home = Background('Scene_files/Images/home_bg.png', [0, 0])
 BackGround_asteroid = Background('Scene_files/Images/asteroid_bg.png', [0, 0])
 BackGround_sentinel = Background('Scene_files/Images/sentinel_bg.png', [0, 0])
@@ -34,7 +35,8 @@ class SceneStart(Scene):
         self.game_clock = game_clock
         self.title = "Stratobus Missions"
         self.typewriter = TypewriterText(150, 120, 500, 500, self.title, FONT_TITLE, justify="center")
-        # self.typewriter = TypewriterText(50, 50, 500, 500, Challenge.greet(Challenge(self.title)), 100) #  to use in missions
+        self.draw_intro = False
+
 
         # here we define the things to be drawn byt the draw method further down
         self.button1 = Button(
@@ -47,6 +49,9 @@ class SceneStart(Scene):
             "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
         )
 
+        pygame.time.set_timer(pygame.USEREVENT + 1, 1000)  # This will trigger a USEREVENT after a set time. (the + 1 is used as ID for that USEREVENT in case there are more)
+
+
     # here we define some actions as functions to be called on button clicks
     def to_mission_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
@@ -56,20 +61,27 @@ class SceneStart(Scene):
 
     # here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():" in the main game.py
     def handle_event(self, event):
+        # waiting for the timer USEREVENT to happen
+        if event.type == pygame.USEREVENT + 1:
+            self.draw_intro = True
         self.button1.handle_event(event)
         self.button2.handle_event(event)
         self.button3.handle_event(event)
 
     def update(self):
-        self.typewriter.update()
+        #  if timer has finsihed
+        if self.draw_intro:
+            self.typewriter.update()
 
     def draw(self, screen):
         screen.fill([255, 255, 255])
         screen.blit(BackGround_home.image, BackGround_home.rect)
-        self.typewriter.draw(screen)
-        self.button1.draw(screen)
-        self.button2.draw(screen)
-        self.button3.draw(screen)
+        #  if timer has finsihed
+        if self.draw_intro:
+            self.button1.draw(screen)
+            self.button2.draw(screen)
+            self.button3.draw(screen)
+            self.typewriter.draw(screen)
 
 
 ########################################################################################################################
@@ -283,7 +295,7 @@ class SceneMissionAsteroidsInput(Scene):
             )
         elif result_message == asteroid_challenge_instance.fail_message:
             self.button1 = Button(
-                "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
+                           "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
             )
 
     def back_to_scene_start(self):

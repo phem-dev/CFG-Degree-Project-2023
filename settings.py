@@ -32,6 +32,6 @@ SCREEN_HEIGHT = 600
 # Audio
 MUSIC_VOLUME = 0.3
 BUTTON_VOLUME = 0.4
-MUSIC_PATH = "Scene_files/Audio/CFG Track.wav"
+MUSIC_PATH = "Scene_files/Audio/CFG Track 2.wav"
 BUTTON_HOVER_PATH = "Scene_files/Audio/Button hover 1.wav"
 BUTTON_CLICK_PATH = "Scene_files/Audio/Button click 1.wav"
