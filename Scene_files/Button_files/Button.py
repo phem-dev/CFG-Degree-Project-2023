@@ -1,7 +1,6 @@
 import pygame
 from Scene_files.Button_files.draw_rounded_rect import draw_rounded_rect # instead of the pygame.draw.rect, use this custom function for a rounded rectangle in the Button class
-from settings import FONT
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from settings import FONT, SCREEN_HEIGHT, SCREEN_WIDTH, BUTTON_HOVER_PATH, BUTTON_CLICK_PATH, BUTTON_VOLUME
 
 
 
@@ -43,6 +42,11 @@ class Button:
         self.text_colour = text_colour
         self.hover_text_colour = hover_text_colour
         self.action = action
+        self.hover_sound = pygame.mixer.Sound(BUTTON_HOVER_PATH)
+        self.hover_sound.set_volume(BUTTON_VOLUME)
+        self.click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
+        self.click_sound.set_volume(BUTTON_VOLUME)
+        self.hovered = False
 
     def draw(self, surface):
         """
@@ -53,8 +57,16 @@ class Button:
 
         # the bit means: if the rectangle representing the button area (self.rect) collides wth where the mouse is update the button colour
         if self.rect.collidepoint(pygame.mouse.get_pos()):
+            # Check if the button was not hovered before, this all stops the button from continuously playing the sound throughout the collision
+            if not self.hovered:
+                self.hover_sound.play()
+                self.hovered = True
             current_colour = self.hover_colour
             current_text_colour = self.hover_text_colour
+
+        else:
+            # If the mouse is no longer hovering over the button, reset the flag
+            self.hovered = False
 
         draw_rounded_rect(surface, current_colour, self.rect, (self.height * 0.1))  # draw the button rectangle
         text_surface = FONT.render(self.text, True, current_text_colour)  # render the button ready for adding (blit) to the screen surface, True here has enabled anti-aliasing on the text to make it render nice and smooth on the edges (not as pixely)
@@ -67,4 +79,5 @@ class Button:
         """
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.rect.collidepoint(event.pos):
+                self.click_sound.play()
                 self.action()

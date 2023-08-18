@@ -16,6 +16,7 @@ class Challenge:
 
 
 class Asteroids(Challenge):
+    fail_message = "Oh no, Mission Failed!"
     def success(self):  # do we want to add this as an att to the parent class so it's consistent across all challenges?
         return "Mission Completed |Congratulations!"
         # ALSO go to next mission
@@ -92,8 +93,7 @@ class Asteroids(Challenge):
                     not_numeric_message = f"Oops, it looks like you entered something that isn't a number! {attempts} attempts remaining..."
                     return not_numeric_message, attempts  # Return the not numeric message to display in the game
 
-        fail_message = "Oh no, Mission Failed!"
-        return fail_message, attempts  # Return the fail message to display in the game
+        return Asteroids.fail_message, attempts  # Return the fail message to display in the game
 
     def get_all_asteroid_data(self):
         response = requests.get(short_url)

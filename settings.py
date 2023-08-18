@@ -28,3 +28,10 @@ GREY = (128, 128, 128, 255)
 # Screen dimensions (this can be changed but all positioning of buttons etc. may need to be scaled relative to this)
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+
+# Audio
+MUSIC_VOLUME = 0.3
+BUTTON_VOLUME = 0.4
+MUSIC_PATH = "Scene_files/Audio/CFG Track.wav"
+BUTTON_HOVER_PATH = "Scene_files/Audio/Button hover 1.wav"
+BUTTON_CLICK_PATH = "Scene_files/Audio/Button click 1.wav"

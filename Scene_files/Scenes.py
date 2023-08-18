@@ -281,6 +281,10 @@ class SceneMissionAsteroidsInput(Scene):
             self.button1 = Button(
                 "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
             )
+        elif result_message == asteroid_challenge_instance.fail_message:
+            self.button1 = Button(
+                "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
+            )
 
     def back_to_scene_start(self):
         self.manager.switch_scene(SceneStart(self.manager, self.game_clock))

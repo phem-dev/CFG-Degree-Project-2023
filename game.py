@@ -1,15 +1,16 @@
 import pygame
-
+from pygame import mixer
 import sys  # needed so the system can exit the window when the 'x' is pressed
 from Scene_files.SceneManager import SceneManager, Scene
 from Scene_files.Scenes import SceneStart
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH, MUSIC_PATH, MUSIC_VOLUME
 
 
 ########################################################################################################################
 
 
 pygame.init()
+mixer.init()
 
 
 # Create screen and clock, clock will be needed to help make animations and waits https://www.pygame.org/docs/ref/time.html
@@ -28,6 +29,13 @@ def main():
 
     # start running the game but always listen for the event of the user clicking exit or any other events to handle
     while True:
+        if mixer.music.get_busy():
+            pass  # As the code might loop back to here, didn't want to load it again if already playing (ie busy == True)
+        else:
+            mixer.music.load(MUSIC_PATH)
+            mixer.music.set_volume(MUSIC_VOLUME) # Set volume to 30%
+            mixer.music.play(-1) # loop infinitely
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # exit event
                 pygame.quit()
