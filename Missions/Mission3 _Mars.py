@@ -13,7 +13,7 @@ from io import BytesIO
 mars_api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
 rover = "curiosity"
 
-class Challenge:
+class Mars:
     def __init__(self, challenge_name):
         self.challenge_name = challenge_name
 

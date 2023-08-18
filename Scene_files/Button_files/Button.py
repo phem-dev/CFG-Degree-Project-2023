@@ -10,6 +10,8 @@ from settings import FONT, SCREEN_HEIGHT, SCREEN_WIDTH, BUTTON_HOVER_PATH, BUTTO
 
 
 class Button:
+    button_volume = BUTTON_VOLUME
+    active_buttons = []
     """
     Represents a rectangular button.
 
@@ -43,10 +45,15 @@ class Button:
         self.hover_text_colour = hover_text_colour
         self.action = action
         self.hover_sound = pygame.mixer.Sound(BUTTON_HOVER_PATH)
-        self.hover_sound.set_volume(BUTTON_VOLUME)
+        self.hover_sound.set_volume(Button.button_volume)
         self.click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
-        self.click_sound.set_volume(BUTTON_VOLUME)
+        self.click_sound.set_volume(Button.button_volume)
         self.hovered = False
+        Button.active_buttons.append(self) #  keep a list of all active buttons so the mute/unmute can apply to them even though they have already been rendered
+
+    def set_volume(self, volume):
+        self.hover_sound.set_volume(volume)
+        self.click_sound.set_volume(volume)
 
     def draw(self, surface):
         """
