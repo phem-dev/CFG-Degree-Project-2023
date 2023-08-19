@@ -1,6 +1,6 @@
 # laying out the structure of the Stratobus Mission challenges the player will face. OOP - each challenge is a class instance
 import requests
-from stratobus_challenges_config import today_date_string, api_key, short_url
+from Draft_missions.stratobus_challenges_config import today_date_string, api_key, short_url
 
 class Challenge:
     def __init__(self, challenge_name):# is this bit needed?? adding any attributes to the challenges
