@@ -18,6 +18,8 @@ class TextInput:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
+            elif event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
+                pass
             else:
                 # Render the new text with the appended character to check its width
                 new_text = self.text + event.unicode

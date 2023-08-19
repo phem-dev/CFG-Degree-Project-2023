@@ -316,6 +316,8 @@ class SceneMissionAsteroidsInput(Scene):
                            "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
             )
 
+
+
     def back_to_scene_start(self):
         self.manager.switch_scene(SceneStart(self.manager, self.game_clock))
 
@@ -331,6 +333,10 @@ class SceneMissionAsteroidsInput(Scene):
         self.button1.handle_event(event)
         self.button2.handle_event(event)
         # for keyboard entry to user input
+        self.user_input.handle_event(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                self.user_submit()
         self.user_input.handle_event(event)
 
     def update(self):
@@ -560,7 +566,10 @@ class SceneMissionMarsInput(Scene):
         self.button1.handle_event(event)
         self.button2.handle_event(event)
         # for keyboard entry to user input
+        if event.type == pygame.K_RETURN or event.type == pygame.K_KP_ENTER:
+            self.user_submit()
         self.user_input.handle_event(event)
+
 
     def update(self):
         # Always update the typewriter_title
