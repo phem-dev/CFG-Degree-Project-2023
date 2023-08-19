@@ -12,6 +12,9 @@ from settings import FONT, SCREEN_HEIGHT, SCREEN_WIDTH, BUTTON_HOVER_PATH, BUTTO
 class Button:
     button_volume = BUTTON_VOLUME
     active_buttons = []
+    pygame.mixer.init()
+    click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
+
     """
     Represents a rectangular button.
 

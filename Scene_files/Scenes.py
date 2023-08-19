@@ -284,6 +284,7 @@ class SceneMissionAsteroidsInput(Scene):
         self.user_input = TextInput(420, 255, 300, 25)
         self.result_message = None
         self.attempts = 3
+        self.click_sound = Button.click_sound
 
         # Adjust these buttons to your needs for the second scene
         self.button1 = Button(
@@ -336,8 +337,9 @@ class SceneMissionAsteroidsInput(Scene):
         self.user_input.handle_event(event)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                self.click_sound.play()
                 self.user_submit()
-        self.user_input.handle_event(event)
+
 
     def update(self):
         # Always update the typewriter_title
