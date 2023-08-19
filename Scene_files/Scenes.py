@@ -117,7 +117,7 @@ class SceneStartMenu(Scene):
             "center", (SCREEN_HEIGHT * 0.62), YELLOW, BLUE, "6: Asteroid Dodge", BLACK, WHITE, self.to_scene_dodge
         )
         self.button7 = Button(
-            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "7: Quiz", BLACK, WHITE, self.to_scene_dodge
+            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "7: Quiz", BLACK, WHITE, self.to_scene_quiz
         )
         self.button8 = Button(
             "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
@@ -138,6 +138,9 @@ class SceneStartMenu(Scene):
 
     def to_scene_dodge(self):
         self.manager.switch_scene(SceneMissionDodge(self.manager, self.game_clock))
+
+    def to_scene_quiz(self):
+        self.manager.switch_scene(SceneQuiz(self.manager, self.game_clock))
 
 
 
@@ -508,7 +511,7 @@ class SceneMissionPayload(Scene):
 
 ########################################################################################################################
 #######################################################################################################################
-# Mission 5: Asteroid dodge
+# Mission 6: Asteroid dodge
 
 class SceneMissionDodge(Scene):
     def __init__(self, manager, game_clock):
@@ -561,7 +564,7 @@ class SceneMissionDodge(Scene):
 
 ###
 ########################################################################################################################
-# mission 7: dodge game
+
 
 
 class SceneMissionDodgeGame(Scene):
@@ -616,3 +619,54 @@ class SceneMissionDodgeGame(Scene):
         self.button2.draw(screen)
 #########################################################################################################################################
 #######################################################################################################################################
+# mission 7: QUIZ
+
+class SceneQuiz(Scene):
+    def __init__(self, manager, game_clock):
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Quiz"
+        self.block = "Test your knowledge with the Stratobus Mission Quiz!"
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Adjust these buttons to your needs for the second scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+        )
+
+    def to_scene_mission_asteroids_input(self):
+        self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_quiz.image, BackGround_quiz.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+
