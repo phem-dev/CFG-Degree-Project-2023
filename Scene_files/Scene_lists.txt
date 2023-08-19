@@ -1,0 +1,124 @@
+########################################################################################################################
+# START AND CONTROLS ###################################################################################################
+########################################################################################################################
+SceneStart
+    The title screen with start button, rules button and exit button
+
+    Function to direct here:
+        self.back_to_scene_start
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids
+        self.button2 -> self.to_controls
+        self.button3 -> sys.exit
+
+
+ ########################################################################################################################
+SceneControls
+    The rules and controls screen
+
+    Function to direct here:
+        self.to_controls
+
+    Buttons on here:
+        self.button1 -> self.back_to_scene_start
+        self.button2 -> sys.exit
+
+
+########################################################################################################################
+SceneStartMenu
+    A menu screen of all 4 mission buttons and the exit
+
+    Function to direct here:
+        self.to_mission_menu
+
+    Buttons on here:
+        self.button1 -> to_scene_mission_asteroids
+        self.button2 ->to_scene_mission_sentinel
+        self.button3 ->to_scene_mission_mars
+        self.button4 ->self.to_scene_payload
+        self.button5 ->self.to_scene_dodge
+        self.button6 -> sys.exit
+
+########################################################################################################################
+# MISSIONS #############################################################################################################
+########################################################################################################################
+SceneMissionAsteroids
+    The asteroid mission intro page with title, description, accept button and menu button
+
+    Function to direct here:
+        self.to_scene_mission_asteroids
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids_input
+        self.button2 -> self.to_menu
+
+########################################################################################################################
+SceneMissionAsteroidsInput
+    The asteroid mission user input page with...
+
+    Function to direct here:
+        self.to_scene_mission_asteroids
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids_input
+        self.button2 -> self.to_menu
+
+########################################################################################################################
+#########################################################################################################################
+SceneMissionSentinel
+    The Sentinel mission intro page with title, description, accept button and menu button
+
+    Function to direct here:
+        to_scene_mission_sentinel
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids_input
+        self.button2 -> self.to_menu
+
+########################################################################################################################
+#########################################################################################################################
+SceneMissionMars
+    The Mars Rover mission intro page with title,  description, accept button and menu button
+
+    Function to direct here:
+        to_scene_mission_mars
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids_input
+        self.button2 -> sys.exit
+
+########################################################################################################################
+#########################################################################################################################
+SceneMissionPayload
+    The payload mission intro page with title, description, accept button and menu button
+
+    Function to direct here:
+        self.to_scene_payload
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids_input
+        self.button2 -> self.to_menu
+
+########################################################################################################################
+#########################################################################################################################
+SceneMissionDodge
+    The asteroid dodge mission intro page with title, description, accept button and menu button
+
+    Function to direct here:
+        self.to_scene_dodge
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroid_dodge_game
+        self.button2 -> self.to_menu
+
+########################################################################################################################
+SceneMissionDodgeGame
+    The asteroid dodge mission intro page with title, description, accept button and menu button
+
+    Function to direct here:
+        self.to_scene_mission_asteroid_dodge_game
+
+    Buttons on here:
+        self.button1 -> self.to_scene_mission_asteroids_input
+        self.button2 -> self.to_menu
