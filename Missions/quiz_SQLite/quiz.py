@@ -7,6 +7,9 @@ class QuizGame:
         self.sql_file = sql_file
         self.conn, self.cursor = self.create_connection()
         self.num_questions_to_answer = number_of_questions
+        self.question_list = []
+        self.score = 0
+        self.result_msg = ""
 
     def create_connection(self):
         """Establish a connection to the SQLite database and set up tables if needed."""
@@ -22,8 +25,10 @@ class QuizGame:
 
         return conn, cursor
 
-    def fetch_random_questions(self, num_questions):
+    def fetch_random_questions(self, num_questions=None):
         """Fetch a set of random questions from the database."""
+        if num_questions is None:
+            num_questions = self.num_questions_to_answer
         self.cursor.execute('SELECT * FROM questions ORDER BY RANDOM() LIMIT ?', (num_questions,))
         return self.cursor.fetchall()
 
@@ -55,39 +60,41 @@ class QuizGame:
         questions = self.fetch_random_questions(self.num_questions_to_answer)
 
         for question in questions:
-            question_list = [self.provide_question(question)]
-            # print(self.provide_question(question))
-            user_answer = int(input("Your answer (1-4): ")) - 1
+            self.question_list.append(self.provide_question(question))
+            print(self.provide_question(question))
+            # user_answer = int(input("Your answer (1-4): ")) - 1
 
-            result, point = self.check_answer(question, user_answer)
-            print(result)
-            score += point
+            # result, point = self.check_answer(question, user_answer)
+            # print(result)
+            # score += point
 
-        player_name = input("Enter your name for the leaderboard: ")
-        return self.num_questions_to_answer, "Enter your name for the leaderboard: ", self.end_message(player_name, score)
+        # player_name = input("Enter your name for the leaderboard: ")
+        return self.question_list, self.num_questions_to_answer, "Enter your name for the leaderboard: ", #  self.end_message(player_name, score)
 
     def check_answer(self, question, user_answer):
         """Check the user's answer and return the result."""
         options = question[2:6]  # Define options within the method
 
         if user_answer == question[6] - 1:
-            result_msg = "Correct!"
-            score = 1
+            self.result_msg = "Correct!"
+            self.score += 1
         else:
             correct_option_index = question[6] - 1
-            result_msg = f"Incorrect. The correct answer was: {options[correct_option_index]}"
-            score = 0
+            self.result_msg = f"Incorrect. The correct answer was: {options[correct_option_index]}"
 
-        return result_msg, score
-
-    def end_message(self, player_name, score):
-        self.update_leaderboard(player_name, score)
-        return f"Your final score is: {score}/{self.num_questions_to_answer}", self.display_leaderboard()
+        return self.result_msg, self.score
 
     def close(self):
         """Close the database connection."""
         if self.conn:
             self.conn.close()
+
+    def end_message(self, player_name, score):
+        self.update_leaderboard(player_name, score)
+        self.close()
+        return f"Your final score is: {score}/{self.num_questions_to_answer}", self.display_leaderboard()
+
+
 
 
 # if __name__ == "__main__":

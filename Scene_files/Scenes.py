@@ -218,7 +218,7 @@ class SceneMissionAsteroids(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -288,7 +288,7 @@ class SceneMissionAsteroidsInput(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 #
 
@@ -402,7 +402,7 @@ class SceneMissionSentinel(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -525,7 +525,7 @@ class SceneMissionMarsInput(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 #
 
@@ -637,7 +637,7 @@ class SceneMissionPayload(Scene):
         "center", (SCREEN_HEIGHT * 0.75), YELLOW, BLUE, "CONTROLS", BLACK, WHITE, self.to_controls
         )
         self.button3 = Button(
-            600, (SCREEN_HEIGHT * 0.85), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            600, (SCREEN_HEIGHT * 0.85), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -699,7 +699,7 @@ class SceneMissionISS(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroid_dodge_game
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroid_dodge_game(self):
@@ -757,7 +757,7 @@ class SceneMissionDodge(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -812,14 +812,14 @@ class SceneQuiz(Scene):
 
         # Adjust these buttons to your needs for the second scene
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_quiz_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
-    def to_scene_mission_asteroids_input(self):
-        self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+    def to_scene_mission_quiz_input(self):
+        self.manager.switch_scene(SceneQuizInput(self.manager, self.game_clock))
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
@@ -859,6 +859,7 @@ class SceneQuizInput(Scene):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
+        self.question_number = 0
 
         # title
         self.title = "Quiz"
@@ -868,10 +869,9 @@ class SceneQuizInput(Scene):
         quizgame_instance = QuizGame(r"Missions\quiz_SQLite\my.db", r"Missions\quiz_SQLite\Quiz_game.sql")
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL, colour=(0, 0, 0, 0))
-        self.display_text1 = f"{quizgame_instance.provide_question()}"
-        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), Asteroids.get_all_asteroid_data(Asteroids(self.title)), Missions.Mission1_Asteroids.today_date_string)}"
+        self.display_text1 = f"{str(QuizGame.provide_question(quizgame_instance, QuizGame.fetch_random_questions(quizgame_instance)[self.question_number]))}"
         self.typewriter_display1 = TypewriterText(55, 170, 150, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
-        self.typewriter_display2 = TypewriterText(55, 320, 150, 300, self.display_text2, font=FONT_SMALL, colour=(0, 0, 0, 0))
+
 
         # input box
         self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
@@ -886,7 +886,7 @@ class SceneQuizInput(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 #
 
@@ -946,8 +946,7 @@ class SceneQuizInput(Scene):
             self.typewriter_input_head.update()
         if self.typewriter_display_head.completed:
             self.typewriter_display1.update()
-        if self.typewriter_display1.completed:
-            self.typewriter_display2.update()
+
 
         #  if the result message has been made by the user pressing the submit button
         if self.result_message:
@@ -966,8 +965,7 @@ class SceneQuizInput(Scene):
             self.typewriter_input_head.draw(screen)
         if self.typewriter_display_head.completed and self.typewriter_input_head.completed:
             self.typewriter_display1.draw(screen)
-        if self.typewriter_display1.completed:
-            self.typewriter_display2.draw(screen)
+
 
         self.user_input.draw(screen)
         self.button1.draw(screen)
