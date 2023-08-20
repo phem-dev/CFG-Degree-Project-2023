@@ -2,11 +2,11 @@ import sqlite3
 
 
 class QuizGame:
-    def __init__(self, db_file, sql_file):
+    def __init__(self, db_file, sql_file, number_of_questions=10):
         self.db_file = db_file
         self.sql_file = sql_file
         self.conn, self.cursor = self.create_connection()
-        self.num_questions_to_answer = 10
+        self.num_questions_to_answer = number_of_questions
 
     def create_connection(self):
         """Establish a connection to the SQLite database and set up tables if needed."""
@@ -55,7 +55,8 @@ class QuizGame:
         questions = self.fetch_random_questions(self.num_questions_to_answer)
 
         for question in questions:
-            print(self.provide_question(question))
+            question_list = [self.provide_question(question)]
+            # print(self.provide_question(question))
             user_answer = int(input("Your answer (1-4): ")) - 1
 
             result, point = self.check_answer(question, user_answer)
@@ -63,7 +64,7 @@ class QuizGame:
             score += point
 
         player_name = input("Enter your name for the leaderboard: ")
-        return "Enter your name for the leaderboard: ", self.end_message(player_name, score)
+        return self.num_questions_to_answer, "Enter your name for the leaderboard: ", self.end_message(player_name, score)
 
     def check_answer(self, question, user_answer):
         """Check the user's answer and return the result."""
@@ -89,8 +90,8 @@ class QuizGame:
             self.conn.close()
 
 
-if __name__ == "__main__":
-    game = QuizGame("my.db", "Quiz_game.sql")
-    result = game.run()
-    print(result)
-    game.close()
+# if __name__ == "__main__":
+#     game = QuizGame("my.db", "Quiz_game.sql")
+#     result = game.run()
+#     print(result)
+#     game.close()
