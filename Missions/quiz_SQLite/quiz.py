@@ -48,28 +48,34 @@ class QuizGame:
         return leaderboard_str
 
     def provide_question(self, question):
-        """Return the question and its options for the user."""
+        """Return a question from the list of random questions and its options for the user."""
         options = question[2:6]
-        question_str = question[1] + "|" + "|".join([f"{i + 1}. {option}" for i, option in enumerate(options)])
+        question_str = question[1]
+        # answer_list = "|||" + "||".join([f"{i + 1}. {option}" for i, option in enumerate(options)])
 
-        return question_str
+        return question_str, options
 
-    def run(self):
-        """Main execution method for the quiz game."""
-        score = 0
-        questions = self.fetch_random_questions(self.num_questions_to_answer)
+    def get_provided_question(self, question_number):
+        question_data = self.fetch_random_questions()[question_number]
+        return self.provide_question(question_data)
 
-        for question in questions:
-            self.question_list.append(self.provide_question(question))
-            print(self.provide_question(question))
-            # user_answer = int(input("Your answer (1-4): ")) - 1
 
-            # result, point = self.check_answer(question, user_answer)
-            # print(result)
-            # score += point
-
-        # player_name = input("Enter your name for the leaderboard: ")
-        return self.question_list, self.num_questions_to_answer, "Enter your name for the leaderboard: ", #  self.end_message(player_name, score)
+    # def run(self):
+    #     """Main execution method for the quiz game."""
+    #     score = 0
+    #     questions = self.fetch_random_questions(self.num_questions_to_answer)
+    #
+    #     for question in questions:
+    #         self.question_list.append(self.provide_question(question))
+    #         print(self.provide_question(question))
+    #         # user_answer = int(input("Your answer (1-4): ")) - 1
+    #
+    #         # result, point = self.check_answer(question, user_answer)
+    #         # print(result)
+    #         # score += point
+    #
+    #     # player_name = input("Enter your name for the leaderboard: ")
+    #     return self.question_list, self.num_questions_to_answer, "Enter your name for the leaderboard: ", #  self.end_message(player_name, score)
 
     def check_answer(self, question, user_answer):
         """Check the user's answer and return the result."""
