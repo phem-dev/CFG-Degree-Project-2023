@@ -49,6 +49,7 @@ class SatelliteImageDownloader(Challenge):
             response = requests.post(sentinel_url, headers=headers, json=data)
 
             if response.status_code == 200:
+                # Currently saving images as local files - think we want to change this to pygame objects?
                 with open(f"sentinel_image{city_code}.jpg", "wb") as f:  # Modify filename in the final game if desired
                     f.write(response.content)
                 print(f"Image successfully captured! (saved as 'sentinel_image{city_code}.jpg')")  # remove filename for PG

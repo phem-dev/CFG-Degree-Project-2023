@@ -74,7 +74,11 @@ class WhitishPixels:
         return round(whiteish_pixel_percentage,2)
 
 
-# Example Usage:
-image_to_analyse = None  # image file
-analyzer = WhitishPixels(img_file=image_to_analyse)
-print(analyzer.calculate_whiteish_pixel_percentage())
+def main():
+    #image_to_analyse = None
+    analyzer = WhitishPixels(image_to_analyse)
+    print(analyzer.calculate_whiteish_pixel_percentage())
+
+
+if __name__ == "__main__":
+    main()
