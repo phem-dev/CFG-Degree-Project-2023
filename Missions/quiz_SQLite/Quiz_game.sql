@@ -74,14 +74,25 @@ VALUES (
     1
 );
 
+--INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct_answer)
+--VALUES (
+--    8,
+--    'Name the 8 planets in our solar system in order from the Sun',
+--    'Neptune, Mars, Earth, Saturn, Venus, Jupiter, Mercury, Uranus',
+--    'Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune',
+--    'Earth, Neptune, Uranus, Saturn, Jupiter, Mars, Venus, Mercury',
+--    'Venus, Mercury, Saturn, Earth, Mars, Neptune, Jupiter, Uranus',
+--    2
+--);
+
 INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct_answer)
 VALUES (
     8,
-    'Name the 8 planets in our solar system in order from the Sun',
-    'Neptune, Mars, Earth, Saturn, Venus, Jupiter, Mercury, Uranus',
-    'Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune',
-    'Earth, Neptune, Uranus, Saturn, Jupiter, Mars, Venus, Mercury',
-    'Venus, Mercury, Saturn, Earth, Mars, Neptune, Jupiter, Uranus',
+    'What are the first letters of the 8 planets names in our solar system in order from the Sun',
+    'N, M, E, S, V, J, M, U',
+    'M, V, E, M, J, S, U, N',
+    'E, N, U, S, J, M, V, M',
+    'V, M, S, E, M, N, J, U',
     2
 );
 
@@ -97,7 +108,7 @@ INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct
 VALUES (
     10,
     'Which famous spacecraft was the first to land humans on the Moon?',
-    'Voyager1', 'Hubble Space Telescope', 'Apollo11',  'Mars Rover',
+    'Voyager1', 'Hubble', 'Apollo11',  'Mars Rover',
     3
 );
 
@@ -169,7 +180,7 @@ INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct
 VALUES (
     19,
     'How do scientists control satellites in space?',
-    'They use a remote control', 'They take turns living in them to control them', 'They send commands from special stations on Earth',  'They use the Moon to help',
+    'Wifi', 'They take turns living in them', 'They send commands from stations on Earth',  'They use the Moon to help',
     3
 );
 
@@ -177,7 +188,7 @@ INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct
 VALUES (
     20,
     'Which of these is not something that satellites are used for?',
-    'Taking pictures of Earth', 'Sending text messages', 'Predicting the weather',  'Growing plants on other planets',
+    'Taking pictures of Earth', 'Sending text messages', 'Predicting the weather',  'Growing plants on the moon',
     4
 );
 

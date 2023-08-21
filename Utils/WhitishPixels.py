@@ -34,8 +34,8 @@ class WhitishPixels:
 
         """
         if img_url:
-            urllib.request.urlretrieve(img_url, "Images/Temp/cloud_cover.png")
-            return Image.open("Images/Temp/cloud_cover.png")
+            urllib.request.urlretrieve(img_url, "../Scene_files/Images/Temp/cloud_cover.png")
+            return Image.open("../Scene_files/Images/Temp/cloud_cover.png")
         elif img_file:
             return img_file
         else:
