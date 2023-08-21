@@ -44,7 +44,7 @@ class SatelliteImageDownloader(Challenge):
         """ Iterates through the cities in city_mapping, calls API, saves each image as a temp file
         Returns: confirmation message for each image saved OR error message if API connection error
         """
-        for city_code in [1, 2, 3]:
+        for city_code in [1, 2, 3]:  # for the 3 hardcoded cities
             data = self.city_mapping[city_code]
             response = requests.post(sentinel_url, headers=headers, json=data)
 
@@ -59,7 +59,7 @@ class SatelliteImageDownloader(Challenge):
                 print("Oh no! Satellite connection failed. Please try again later.")  # remove for PG
                 #return "Oh no! Satellite connection failed. Please try again later."
 
-        # ALSO NEED TO display the 3 images to the user (PyGame)
+        # ALSO NEED TO display the 3 saved images to the user (PyGame)
 
     def whitish_pixels(self):
         """Uses whitish_pixels function to calculate cloud coverage based on how many whitish pixels are detected in
@@ -70,7 +70,8 @@ class SatelliteImageDownloader(Challenge):
         cloud_coverage = {}  # initialise new dict to store city codes and cloud coverage values
 
         for city_code in [1, 2, 3]:
-            pixels = WhitishPixels(f"sentinel_image{city_code}.jpg")  # iterate through city codes, calculate whitish pixels for each
+            pixels = WhitishPixels(img_file=f"sentinel_image{city_code}.jpg")  # iterate through city codes, calculate
+            # whitish pixels for each
             cloud_coverage[city_code] = pixels  # write data to cloud_coverage dict
             print(cloud_coverage)  # debugging only, Return for PyGame
 
