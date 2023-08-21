@@ -822,7 +822,7 @@ class SceneMissionDodge(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Quiz"
-        quizgame_instance = QuizGame("my.db", "Quiz_game.sql")
+        quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
         self.block = f"In this challenge you will need to answer {quizgame_instance.num_questions_to_answer} space questions!| Enter your name at the end to join the leaderboard."
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
@@ -936,7 +936,7 @@ class SceneQuizInput(Scene):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
-        self.quizgame_instance = QuizGame(r"Missions\quiz_SQLite\my.db", r"Missions\quiz_SQLite\Quiz_game.sql")
+        self.quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
         self.user_answer_number = None
         self.question_and_answers_list = self.quizgame_instance.get_provided_question(SceneQuizInput.question_number)
         self.user_score = 0
