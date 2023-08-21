@@ -1,5 +1,5 @@
 import requests
-from Mission_config import rejkyavic, lima, beijing, sentinel_url, headers
+from Missions.Mission_config import rejkyavic, lima, beijing, sentinel_url, headers
 from Scene_files.WhitishPixels_modified import WhitishPixels
 
 
@@ -30,38 +30,66 @@ class Challenge:
 class SatelliteImageDownloader(Challenge):
 
     def display_cities(self):
+        """Outputs the cities in a readable way
+
+        Returns: cities_message, city codes + names, downloading_message
+
+        """
         cities_message = "Satellite configured to photograph the following cities:\n"
         downloading_message = "\nDownloading - please wait..."
-        return cities_message, self.cities, downloading_message
+        formatted_cities = [f"{key}: {value}" for key, value in self.cities.items()]
+        return cities_message, ("\n".join(formatted_cities)), downloading_message
 
-    def get_image(self, city_code):
+    def get_image(self):
+        """ Iterates through the cities in city_mapping, calls API, saves each image as a temp file
+        Returns: confirmation message for each image saved OR error message if API connection error
+        """
+        for city_code in [1, 2, 3]:
+            data = self.city_mapping[city_code]
+            response = requests.post(sentinel_url, headers=headers, json=data)
 
-        data = self.city_mapping[city_code]
-        response = requests.post(sentinel_url, headers=headers, json=data)
+            if response.status_code == 200:
+                with open(f"sentinel_image{city_code}.jpg", "wb") as f:  # Modify filename in the final game if desired
+                    f.write(response.content)
+                print(f"Image successfully captured! (saved as 'sentinel_image{city_code}.jpg')")  # remove filename for PG
+                #return f"Image successfully captured! (saved as 'sentinel_image{city_code}.jpg')"
 
-        if response.status_code == 200:
-            with open(f"sentinel_image{city_code}.jpg", "wb") as f:  # Modify this filename in the final game if desired
-                f.write(response.content)
-            return f"Image successfully captured! (saved as 'sentinel_image{city_code}.jpg')"  # Edit this line for the final game
-        else:
-            print(response.status_code)  # Debugging only
-            return "Oh no! Satellite connection failed. Please try again later."
+            else:
+                print(response.status_code)  # Debugging only - remove
+                print("Oh no! Satellite connection failed. Please try again later.")  # remove for PG
+                #return "Oh no! Satellite connection failed. Please try again later."
+
+        # ALSO NEED TO display the 3 images to the user (PyGame)
+
+    def whitish_pixels(self):
+        """Uses whitish_pixels function to calculate cloud coverage based on how many whitish pixels are detected in
+        each photo.
+        Returns: cloud_coverage dictionary of city codes and cloud coverages
+
+        """
+        cloud_coverage = {}  # initialise new dict to store city codes and cloud coverage values
+
+        for city_code in [1, 2, 3]:
+            pixels = WhitishPixels(f"sentinel_image{city_code}.jpg")  # iterate through city codes, calculate whitish pixels for each
+            cloud_coverage[city_code] = pixels  # write data to cloud_coverage dict
+            print(cloud_coverage)  # debugging only, Return for PyGame
+
+        self.player_enter_cloudiest_city(cloud_coverage)
+
+
+    def player_enter_cloudiest_city(self, cloud_coverage):
+        # logic here for capturing player input. Ask player to enter the key for the cloudiest city
+        # if key entered = key of cit with most cloud cover, mission successful
+        pass
 
 
 def main():
-    downloader = SatelliteImageDownloader("Satellite Imaging")
-    cloud_coverage = {}  # initialise dict to store city codes and cloud coverage values
+    downloader = SatelliteImageDownloader("Satellite Imaging")  # initialise a class object
+    print(downloader.display_cities())  # output the city names we will download images of ---- RETURN FOR PG
+    print(downloader.get_image())  # fetch & save images for the 3 x cities ---- RETURN FOR PG
+    print(downloader.whitish_pixels())  # call whitish_pixels function to analyse cloud coverage ---- RETURN FOR PG
+
     # Initialize PyGame window and event loop
-
-    downloader.display_cities()  # output the city names we will download images of
-    for city_code in [1, 2, 3]:  # get & save all 3 city images
-        print(downloader.get_image(city_code))  # remove PRINT for PyGame implementation
-
-    for city_code in [1, 2, 3]:
-        pixels = WhitishPixels(f"sentinel_image{city_code}.jpg")  # iterate through city codes, calculate whitish pixels for each
-        cloud_coverage[city_code] = pixels  # write data to cloud_coverage dict
-        print(cloud_coverage)
-
 
 
     # display image_message and update PyGame screen
