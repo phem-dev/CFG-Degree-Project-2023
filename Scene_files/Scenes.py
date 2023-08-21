@@ -1,16 +1,18 @@
 import sys
-import pygame
 import Missions.Mission1_Asteroids
+import Missions.quiz_SQLite.quiz
 
 #Superclass and constants
 from Scene_files.SceneManager import Scene
-from settings import WHITE, BLACK, RED, GREEN, ORANGE, YELLOW, BLUE, PURPLE, L_PURPLE, TURQ, GREY, SCREEN_HEIGHT, SCREEN_WIDTH, FONT_TITLE, FONT_SMALL, FONT, FONT_VSMALL
-#Mission classes
+
+from settings import *
+# Mission classes
 from Missions.Mission1_Asteroids import Challenge, Asteroids
-#Functional classes
-from Scene_files.Typewriter import TypewriterText
-from Scene_files.Button_files.Button import Button
-from Scene_files.TextInput import TextInput
+from Missions.quiz_SQLite.quiz import QuizGame
+# functional classes
+from Utils.Typewriter import TypewriterText
+from Utils.Button import Button
+from Utils.TextInput import TextInput
 from Scene_files.background import *
 
 
@@ -155,7 +157,7 @@ class SceneStartMenu(Scene):
         )
         #Button for Locate ISS
         self.button5 = Button(
-            "center", (SCREEN_HEIGHT * 0.52), GREEN, BLUE, "5: Locate ISS", BLACK, WHITE, self.to_scene_dodge
+            "center", (SCREEN_HEIGHT * 0.52), GREEN, BLUE, "5: Locate ISS", BLACK, WHITE, self.to_scene_iss
         )
         #Button for Asteroid Dodge
         self.button6 = Button(
@@ -163,7 +165,7 @@ class SceneStartMenu(Scene):
         )
         #Button for Quiz
         self.button7 = Button(
-            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "7: Quiz", BLACK, WHITE, self.to_scene_dodge
+            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "7: Quiz", BLACK, WHITE, self.to_scene_quiz
         )
         #Button for exiting the game
         self.button8 = Button(
@@ -183,8 +185,14 @@ class SceneStartMenu(Scene):
     def to_scene_payload(self):
         self.manager.switch_scene(SceneMissionPayload(self.manager, self.game_clock))
 
+    def to_scene_iss(self):
+        self.manager.switch_scene(SceneMissionISS(self.manager, self.game_clock))
+
     def to_scene_dodge(self):
         self.manager.switch_scene(SceneMissionDodge(self.manager, self.game_clock))
+
+    def to_scene_quiz(self):
+        self.manager.switch_scene(SceneQuiz(self.manager, self.game_clock))
 
     # here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():" in the main game.py
 
@@ -229,7 +237,7 @@ class SceneStartMenu(Scene):
 ########################################################################################################################
 # MISSIONS #############################################################################################################
 ########################################################################################################################
-# ASTEROIDS
+# Mission 1 : Asteroids Mission
 
 class SceneMissionAsteroids(Scene):
     #This class represents the mission scene for the Asteroid Challenge
@@ -242,8 +250,7 @@ class SceneMissionAsteroids(Scene):
         self.game_clock = game_clock
     #Title for the scene
         self.title = "Asteroid"
-        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. |Report the data back to base to complete the mission!"
-    #Create typewriter text for title and mission description
+        self.block = "In this challenge you will access the NASA API to track 3 asteroids and see how close they passed by Earth. |Report the data back to base to complete the mission!"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
     #Load and store the mission box image
@@ -255,7 +262,7 @@ class SceneMissionAsteroids(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -317,12 +324,13 @@ class SceneMissionAsteroidsInput(Scene):
         self.title = "Asteroid Mission"
     #Create typewriter text for the title
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
+        self.asteroid_instance = Asteroids(self.title)
 
         #Display text box elements
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL, colour=(0, 0, 0, 0))
-        self.display_text1 = f"{Asteroids.asteroid_distance_prompt(Asteroids(self.title))}"
-        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), Asteroids.get_all_asteroid_data(Asteroids(self.title)), Missions.Mission1_Asteroids.today_date_string)}"
+        self.display_text1 = f"{self.asteroid_instance.asteroid_distance_prompt()}"
+        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), self.asteroid_instance.get_all_asteroid_data(), Missions.Mission1_Asteroids.today_date_string)[0]}"
         self.typewriter_display1 = TypewriterText(55, 170, 150, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
         self.typewriter_display2 = TypewriterText(55, 320, 150, 300, self.display_text2, font=FONT_SMALL, colour=(0, 0, 0, 0))
 
@@ -339,7 +347,7 @@ class SceneMissionAsteroidsInput(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 #
 
@@ -347,20 +355,20 @@ class SceneMissionAsteroidsInput(Scene):
         #Get the current text input from the user using the user_answer method from TextInput
         player_input = self.user_input.user_answer()
 
-        asteroid_challenge_instance = Asteroids(self.title)
-        asteroid_data = asteroid_challenge_instance.get_all_asteroid_data()
-        asteroid_distances = asteroid_challenge_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_Asteroids.today_date_string)
+        asteroid_data = self.asteroid_instance.get_all_asteroid_data()
+        asteroid_distances = self.asteroid_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_Asteroids.today_date_string)[1]
 
-        #Call the player_enter_asteroid_distance function
-        result_message, remaining_attempts = asteroid_challenge_instance.player_enter_asteroid_distance(asteroid_distances, player_input, self.attempts)
-        self.attempts = remaining_attempts
-        #Create a TypewriterText instance with the result and assign it to result_message
+        # Call the player_enter_asteroid_distance function
+        result_message, self.attempts = self.asteroid_instance.player_enter_asteroid_distance(asteroid_distances, player_input, self.attempts)
+        self.user_input.text = ""
+        # Create a TypewriterText instance with the result and assign it to result_message
         self.result_message = TypewriterText(420, 285, 300, 300, result_message, font=FONT_VSMALL, colour=(0, 0, 0, 0))
-        if result_message == asteroid_challenge_instance.success():
+
+        if result_message == self.asteroid_instance.success():
             self.button1 = Button(
                 "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
             )
-        elif result_message == asteroid_challenge_instance.fail_message:
+        elif result_message == self.asteroid_instance.fail():
             self.button1 = Button(
                            "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
             )
@@ -469,7 +477,7 @@ class SceneMissionSentinel(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -593,7 +601,7 @@ class SceneMissionMarsInput(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 #
 
@@ -614,7 +622,7 @@ class SceneMissionMarsInput(Scene):
             self.button1 = Button(
                 "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
             )
-        elif result_message == asteroid_challenge_instance.fail_message:
+        elif result_message == asteroid_challenge_instance.fail():
             self.button1 = Button(
                            "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
             )
@@ -705,7 +713,7 @@ class SceneMissionPayload(Scene):
         "center", (SCREEN_HEIGHT * 0.75), YELLOW, BLUE, "CONTROLS", BLACK, WHITE, self.to_controls
         )
         self.button3 = Button(
-            600, (SCREEN_HEIGHT * 0.85), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            600, (SCREEN_HEIGHT * 0.85), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -748,10 +756,10 @@ class SceneMissionPayload(Scene):
 
 
 ########################################################################################################################
-#######################################################################################################################
-# Mission 5: Asteroid dodge
+########################################################################################################################
+# Mission 5: Locate ISS
 
-class SceneMissionDodge(Scene):
+class SceneMissionISS(Scene):
     def __init__(self, manager, game_clock):
         super().__init__()
         self.manager = manager
@@ -767,11 +775,11 @@ class SceneMissionDodge(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroid_dodge_game
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroid_dodge_game(self):
-        self.manager.switch_scene(SceneMissionDodgeGame(self.manager, self.game_clock))
+        self.manager.switch_scene(SceneMissionDodge(self.manager, self.game_clock))
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
@@ -803,18 +811,19 @@ class SceneMissionDodge(Scene):
         self.button2.draw(screen)
         super().draw(screen)
 
-
 ########################################################################################################################
-# Mission 7: dodge game
+########################################################################################################################
+# Mission 6: Asteroid dodge
 
 
-class SceneMissionDodgeGame(Scene):
+class SceneMissionDodge(Scene):
     def __init__(self, manager, game_clock):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
-        self.title = "Asteroid"
-        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
+        self.title = "Quiz"
+        quizgame_instance = QuizGame("my.db", "Quiz_game.sql")
+        self.block = f"In this challenge you will need to answer {quizgame_instance.num_questions_to_answer} space questions!| Enter your name at the end to join the leaderboard."
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
         self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
@@ -824,7 +833,7 @@ class SceneMissionDodgeGame(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "EXIT", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
     def to_scene_mission_asteroids_input(self):
@@ -848,7 +857,7 @@ class SceneMissionDodgeGame(Scene):
 
     def draw(self, screen):
         screen.fill([255, 255, 255])
-        screen.blit(BackGround_asteroid.image, BackGround_asteroid.rect)
+        screen.blit(BackGround_final.image, BackGround_final.rect)
         screen.blit(self.mission_box_image, (75, 120))
         self.typewriter_title.draw(screen)
 
@@ -859,6 +868,253 @@ class SceneMissionDodgeGame(Scene):
         self.button1.draw(screen)
         self.button2.draw(screen)
         super().draw(screen)
+
+########################################################################################################################
+########################################################################################################################
+# Mission 7: Quiz
+
+
+class SceneQuiz(Scene):
+    def __init__(self, manager, game_clock):
+        super().__init__()
+        self.manager = manager
+        self.game_clock = game_clock
+        self.title = "Quiz"
+        quizgame_instance = QuizGame(r"Missions\quiz_SQLite\my.db", r"Missions\quiz_SQLite\Quiz_game.sql")
+        self.block = f"In this challenge you will need to answer {quizgame_instance.num_questions_to_answer} multiple-choice space questions from the database of trivia!|| Enter your name at the end to join the leaderboard."
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Adjust these buttons to your needs for the second scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_quiz_input
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
+        )
+
+    def to_scene_mission_quiz_input(self):
+        self.manager.switch_scene(SceneQuizInput(self.manager, self.game_clock))
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        super().handle_event(event)
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_final.image, BackGround_final.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+        super().draw(screen)
+
+########################################################################################################################
+
+
+class SceneQuizInput(Scene):
+    question_number = 0
+    def __init__(self, manager, game_clock):
+        super().__init__()
+        self.manager = manager
+        self.game_clock = game_clock
+        self.quizgame_instance = QuizGame(r"Missions\quiz_SQLite\my.db", r"Missions\quiz_SQLite\Quiz_game.sql")
+        self.user_answer_number = None
+        self.question_and_answers_list = self.quizgame_instance.get_provided_question(SceneQuizInput.question_number)
+        self.user_score = 0
+        self.correct = None
+
+
+
+        # title
+        self.title = "Quiz"
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
+
+        # display text box for question
+        self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
+        self.typewriter_display_head = TypewriterText(55, 105, 200, 100, f"Question {SceneQuizInput.question_number+1}", font=FONT_SMALL, colour=(0, 0, 0, 0))
+        self.display_text1 = self.question_and_answers_list[0]
+        self.typewriter_display1 = TypewriterText(55, 170, 180, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
+
+        # answer buttons
+        self.answer_box = pygame.image.load('./Scene_files/Images/trivia_box4_s.png')
+        self.answer1 = self.question_and_answers_list[1][0].strip()
+        self.answer2 = self.question_and_answers_list[1][1].strip()
+        self.answer3 = self.question_and_answers_list[1][2].strip()
+        self.answer4 = self.question_and_answers_list[1][3].strip()
+        self.answer_button1 = Button(
+            "right", (SCREEN_HEIGHT * 0.2), YELLOW, BLUE, self.answer1, BLACK, WHITE,
+            lambda: (setattr(self, 'user_answer_number', 1), self.highlight_answer_button1()), FONT_SMALL
+        )
+        self.answer_button2 = Button(
+            "right", (SCREEN_HEIGHT * 0.28), YELLOW, BLUE, self.answer2, BLACK, WHITE,
+            lambda: (setattr(self, 'user_answer_number', 2), self.highlight_answer_button2()), FONT_SMALL
+        )
+        self.answer_button3 = Button(
+            "right", (SCREEN_HEIGHT * 0.36), YELLOW, BLUE, self.answer3, BLACK, WHITE,
+            lambda: (setattr(self, 'user_answer_number', 3), self.highlight_answer_button3()), FONT_SMALL
+        )
+        self.answer_button4 = Button(
+            "right", (SCREEN_HEIGHT * 0.44), YELLOW, BLUE, self.answer4, BLACK, WHITE,
+            lambda: (setattr(self, 'user_answer_number', 4), self.highlight_answer_button4()), FONT_SMALL
+        )
+
+        # Submit and menu buttons
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
+        )
+
+        # result message and boxes, next question and end buttons
+        self.result_message = None
+        self.display_box_image_green = pygame.image.load('./Scene_files/Images/ans_box_2.png')
+        self.display_box_image_orange = pygame.image.load('./Scene_files/Images/ans_box_3.png')
+        self.button_next = Button(
+            "center", (SCREEN_HEIGHT * 0.75), ORANGE, BLUE, "NEXT QUESTION", BLACK, WHITE, lambda: (setattr(self, 'correct', None), self.to_scene_quiz_input())[1]
+        )
+        self.button_end = Button(
+            "center", (SCREEN_HEIGHT * 0.75), ORANGE, BLUE, "SEE MY RESULTS", BLACK, WHITE, lambda: (setattr(self, 'correct', None), self.to_menu())[1]
+        )
+
+
+
+    def user_submit(self):
+        # run the check answer method from the Quiz class
+        result = QuizGame.check_answer(self.quizgame_instance, self.question_and_answers_list, self.user_answer_number)
+        # prepare the result message box
+        # check answer returns two values, the message at index [0] and whether it was correct/true at index [1]
+        if result[1] is True:
+            self.correct = True
+            self.user_score += 1
+        else:
+            self.correct = False
+        self.result_message = TypewriterText(420, 370, 250, 200, result[0]+"                          ", font=FONT_VSMALL, colour=(0, 0, 0, 0))
+        SceneQuizInput.question_number += 1
+
+
+    # code for highlighting the button answer choice when clicked
+    def highlight_answer_button1(self):
+        self.answer_button1 = Button(
+            "right", (SCREEN_HEIGHT * 0.2), BLUE, BLUE, self.answer1, WHITE, WHITE, self.highlight_answer_button1, FONT_SMALL
+        )
+    def highlight_answer_button2(self):
+        self.answer_button2 = Button(
+            "right", (SCREEN_HEIGHT * 0.28), BLUE, BLUE, self.answer2, WHITE, WHITE, self.highlight_answer_button2, FONT_SMALL
+        )
+    def highlight_answer_button3(self):
+        self.answer_button3 = Button(
+            "right", (SCREEN_HEIGHT * 0.36), BLUE, BLUE, self.answer3, WHITE, WHITE, self.highlight_answer_button3, FONT_SMALL
+        )
+    def highlight_answer_button4(self):
+        self.answer_button4 = Button(
+            "right", (SCREEN_HEIGHT * 0.44), BLUE, BLUE, self.answer4, WHITE, WHITE, self.highlight_answer_button4, FONT_SMALL
+        )
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def to_scene_quiz_input(self):
+        self.manager.switch_scene(SceneQuizInput(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        super().handle_event(event)
+        # answer buttons
+        self.answer_button1.handle_event(event)
+        self.answer_button2.handle_event(event)
+        self.answer_button3.handle_event(event)
+        self.answer_button4.handle_event(event)
+        # If the result message is not shown yet, you can still handle these buttons (submit, menu)
+        if self.result_message is None:
+            self.button1.handle_event(event)
+            self.button2.handle_event(event)
+        # If the result message is already shown, then handle the next question and end buttons
+        elif self.result_message is not None:
+            if SceneQuizInput.question_number < 9 and self.correct is not None:
+                if self.button_next.handle_event(event):
+                    self.to_scene_quiz_input()
+            elif SceneQuizInput.question_number == 9 and self.correct is not None:
+                if self.button_end.handle_event(event):
+                    # change this to leaderboard scene ****************************************************************
+                    self.to_menu()
+
+        # for keyboard entry to user input
+        # self.user_input.handle_event(event)
+        # if event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+        #         self.click_sound.play()
+        #         self.user_submit()
+
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # stagger the typewriting
+        if self.typewriter_title.completed:
+            self.typewriter_display_head.update()
+        if self.typewriter_display_head.completed:
+            self.typewriter_display1.update()
+
+
+        #  if the result message has been made by the user pressing the submit button
+        if self.result_message:
+            self.result_message.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_final.image, BackGround_final.rect)
+        screen.blit(self.display_bl_image, (30, 70))
+
+        self.typewriter_title.draw(screen)
+
+        # Only draw stagger the typewriting
+        if self.typewriter_title.completed:
+            self.typewriter_display_head.draw(screen)
+        if self.typewriter_display_head.completed:
+            self.typewriter_display1.draw(screen)
+        if self.typewriter_display1.completed:
+            screen.blit(self.answer_box,(380, 70))
+            self.answer_button1.draw(screen)
+            self.answer_button2.draw(screen)
+            self.answer_button3.draw(screen)
+            self.answer_button4.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+
+        # Draw the result_message if it's not None
+        if self.result_message:
+            if self.correct is True:
+                screen.blit(self.display_box_image_green, (380, 345))
+            else:
+                screen.blit(self.display_box_image_orange, (380, 345))
+            self.result_message.draw(screen)
+        if SceneQuizInput.question_number < 9 and self.correct is not None:
+            self.button_next.draw(screen)
+        elif SceneQuizInput.question_number == 9 and self.correct is not None:
+            self.button_end.draw(screen)
+        super().draw(screen)
+
 
 ########################################################################################################################
 ########################################################################################################################
