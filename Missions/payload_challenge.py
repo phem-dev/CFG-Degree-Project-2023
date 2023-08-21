@@ -21,9 +21,6 @@ class Block:
         self.colour = random.randint(1, len(colours) - 1)
         self.rotation = 0
 
-    x = 0
-    y = 0
-
     # Maps out positions in a 4 x 4 matrix for each solid block. Inner list contains rotations
     blocks = [
         [[1, 5, 9, 13], [4, 5, 6, 7]],
@@ -38,15 +35,15 @@ class Block:
         return self.blocks[self.type][self.rotation]
     
     def rotate_blocks(self):
-        self.rotation = (self.rotation + 1) % len(self.blocks(self.type))
+        self.rotation = (self.rotation + 1) % len(self.blocks[self.type])
 
 
 class GamePlay:
 
     # Create a field of the size width x height
     def __init__(self, height, width):
-        self.height = 0
-        self.width = 0
+        self.height = height
+        self.width = width
         self.level = 2
         self.score = 0
         # Are we playing the game?
@@ -58,9 +55,9 @@ class GamePlay:
         self.zoom = 20
         self.block = None
 
-        for h in range(height):
+        for _ in range(height):
             new_line = []
-            for w in range(width):
+            for _ in range(width):
                 new_line.append(0)
             self.field.append(new_line)
 
@@ -86,10 +83,10 @@ class GamePlay:
             for j in range(4):
                 if i * 4 + j in self.block.display_blocks():
                     self.field[i + self.block.y][j + self.block.x] = self.block.colour
-                    self.delete_line()
-                    self.new_blocks()
-                    if self.handle_intersections():
-                        game.state = "gameover"
+        self.delete_line()
+        self.new_blocks()
+        if self.handle_intersections():
+            game.state = "gameover"
 
     # Check if there is a complete horizontal line
     def delete_line(self):
@@ -101,11 +98,11 @@ class GamePlay:
                     zeros += 1
             if zeros == 0:
                 lines += 1
-                for i in range(i, 1, -1):
+                for k in range(i, 0, -1):
                     for j in range(self.width):
-                        self.field[i][j] = self.field[i - 1]
+                        self.field[k][j] = self.field[k - 1][j]
             
-            self.score += lines ** 2
+        self.score += lines ** 2
     
     # Move blocks - define last position, change co-ords and check handle_intersections(). If True, return to previous state. 
     def move_space(self):
@@ -126,11 +123,11 @@ class GamePlay:
         if self.handle_intersections():
             self.block.x = old_x 
     
-    def rotate_block(self):
-        old_rotation = self.block.rotation
-        self.block.rotate()
+    def rotate_blocks(self):
+        previous_rotation = self.block.rotation
+        self.block.rotate_blocks()
         if self.handle_intersections():
-            self.block.rotation = old_rotation
+            self.block.rotation = previous_rotation
 
 # Initialise game
 pygame.init()
@@ -139,7 +136,6 @@ pygame.init()
 black = (0, 0, 0)
 white = (255, 255, 255)
 grey = (128, 128, 128)
-
 
 
 size = (400, 500)
@@ -172,7 +168,7 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                game.rotate_block()
+                game.rotate_blocks()
             if event.key == pygame.K_DOWN:
                 pressing_down = True
             if event.key == pygame.K_LEFT:
@@ -185,17 +181,17 @@ while not done:
                 game.__init__(20, 10)
 
     if event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN:
-                pressing_down = False
+        if event.key == pygame.K_DOWN:
+            pressing_down = False
 
     screen.fill(white)
 
-    for h in range(game.height):
-        for w in range(game.width):
+    for i in range(game.height):
+        for j in range(game.width):
             pygame.draw.rect(screen, grey, [game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom], 1)
-            if game.field[h][w] > 0:
+            if game.field[i][j] > 0:
                 pygame.draw.rect(screen, colours[game.field[i][j]],
-                                 [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 1])
+                                 [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 2])
 
     if game.block is not None:
         for i in range(4):
@@ -223,11 +219,4 @@ while not done:
     clock.tick(fps)
 
 pygame.quit()
-
-
-
-
-
-
-
 
