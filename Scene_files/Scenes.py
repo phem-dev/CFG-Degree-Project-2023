@@ -266,12 +266,13 @@ class SceneMissionAsteroidsInput(Scene):
         # title
         self.title = "Asteroid Mission"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
+        self.asteroid_instance = Asteroids(self.title)
 
         # display text box
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL, colour=(0, 0, 0, 0))
-        self.display_text1 = f"{Asteroids.asteroid_distance_prompt(Asteroids(self.title))}"
-        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), Asteroids.get_all_asteroid_data(Asteroids(self.title)), Missions.Mission1_Asteroids.today_date_string)}"
+        self.display_text1 = f"{self.asteroid_instance.asteroid_distance_prompt()}"
+        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), self.asteroid_instance.get_all_asteroid_data(), Missions.Mission1_Asteroids.today_date_string)[0]}"
         self.typewriter_display1 = TypewriterText(55, 170, 150, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
         self.typewriter_display2 = TypewriterText(55, 320, 150, 300, self.display_text2, font=FONT_SMALL, colour=(0, 0, 0, 0))
 
@@ -296,21 +297,23 @@ class SceneMissionAsteroidsInput(Scene):
         # Get the current text input from the user using the user_answer method from TextInput
         player_input = self.user_input.user_answer()
 
-        asteroid_challenge_instance = Asteroids(self.title)
-        asteroid_data = asteroid_challenge_instance.get_all_asteroid_data()
-        asteroid_distances = asteroid_challenge_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_Asteroids.today_date_string)
+        asteroid_data = self.asteroid_instance.get_all_asteroid_data()
+        asteroid_distances = self.asteroid_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_Asteroids.today_date_string)[1]
 
         # Call the player_enter_asteroid_distance function
-        result_message, remaining_attempts = asteroid_challenge_instance.player_enter_asteroid_distance(asteroid_distances, player_input, self.attempts)
-        self.attempts = remaining_attempts
+        result_message, self.attempts = self.asteroid_instance.player_enter_asteroid_distance(asteroid_distances, player_input, self.attempts)
         self.user_input.text = ""
         # Create a TypewriterText instance with the result and assign it to result_message
         self.result_message = TypewriterText(420, 285, 300, 300, result_message, font=FONT_VSMALL, colour=(0, 0, 0, 0))
-        if result_message == asteroid_challenge_instance.success():
+        print(asteroid_distances)
+        print(player_input)
+        print(result_message)
+        print(self.asteroid_instance.success())
+        if result_message == self.asteroid_instance.success():
             self.button1 = Button(
                 "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
             )
-        elif result_message == asteroid_challenge_instance.fail_message:
+        elif result_message == self.asteroid_instance.fail():
             self.button1 = Button(
                            "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
             )
@@ -546,7 +549,7 @@ class SceneMissionMarsInput(Scene):
             self.button1 = Button(
                 "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
             )
-        elif result_message == asteroid_challenge_instance.fail_message:
+        elif result_message == asteroid_challenge_instance.fail():
             self.button1 = Button(
                            "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
             )
