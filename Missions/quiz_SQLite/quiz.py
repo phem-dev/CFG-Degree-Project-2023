@@ -51,9 +51,10 @@ class QuizGame:
         """Return a question from the list of random questions and its options for the user."""
         options = question[2:6]
         question_str = question[1]
+        correct_answer = question[6]
         # answer_list = "|||" + "||".join([f"{i + 1}. {option}" for i, option in enumerate(options)])
 
-        return question_str, options
+        return question_str, options, correct_answer
 
     def get_provided_question(self, question_number):
         question_data = self.fetch_random_questions()[question_number]
@@ -79,16 +80,17 @@ class QuizGame:
 
     def check_answer(self, question, user_answer):
         """Check the user's answer and return the result."""
-        options = question[2:6]  # Define options within the method
+        options = question[1]  # Define options within the method
 
-        if user_answer == question[6] - 1:
+        if user_answer == question[2]:
             self.result_msg = "Correct!"
-            self.score += 1
+            self.correct = True
         else:
-            correct_option_index = question[6] - 1
+            correct_option_index = question[2]
             self.result_msg = f"Incorrect. The correct answer was: {options[correct_option_index]}"
+            self.correct = False
 
-        return self.result_msg, self.score
+        return self.result_msg, self.correct
 
     def close(self):
         """Close the database connection."""

@@ -4,7 +4,7 @@ import Missions.quiz_SQLite.quiz
 
 # Superclass and constants
 from Scene_files.SceneManager import Scene
-from settings import WHITE, BLACK, RED, GREEN, ORANGE, YELLOW, BLUE, PURPLE, L_PURPLE, TURQ, GREY, SCREEN_HEIGHT, SCREEN_WIDTH, FONT_TITLE, FONT_SMALL, FONT, FONT_VSMALL
+from settings import *
 # Mission classes
 from Missions.Mission1_Asteroids import Challenge, Asteroids
 from Missions.quiz_SQLite.quiz import QuizGame
@@ -863,6 +863,8 @@ class SceneQuizInput(Scene):
         self.question_number = 0
         self.user_answer_number = None
         self.question_and_answers_list = self.quizgame_instance.get_provided_question(self.question_number)
+        self.user_score = 0
+        self.correct = None
 
 
 
@@ -870,13 +872,14 @@ class SceneQuizInput(Scene):
         self.title = "Quiz"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
 
-        # display text box
+        # display text box for question
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL, colour=(0, 0, 0, 0))
         self.display_text1 = self.question_and_answers_list[0]
         self.typewriter_display1 = TypewriterText(55, 170, 200, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
 
         # answer buttons
+        self.answer_box = pygame.image.load('./Scene_files/Images/trivia_box4_large.png')
         self.answer1 = self.question_and_answers_list[1][0].strip()
         self.answer2 = self.question_and_answers_list[1][1].strip()
         self.answer3 = self.question_and_answers_list[1][2].strip()
@@ -886,15 +889,15 @@ class SceneQuizInput(Scene):
             lambda: (setattr(self, 'user_answer_number', 1), self.highlight_answer_button1())[1], FONT_SMALL
         )
         self.answer_button2 = Button(
-            "right", (SCREEN_HEIGHT * 0.3), YELLOW, BLUE, self.answer2, BLACK, WHITE,
+            "right", (SCREEN_HEIGHT * 0.28), YELLOW, BLUE, self.answer2, BLACK, WHITE,
             lambda: (setattr(self, 'user_answer_number', 2), self.highlight_answer_button2())[1], FONT_SMALL
         )
         self.answer_button3 = Button(
-            "right", (SCREEN_HEIGHT * 0.4), YELLOW, BLUE, self.answer3, BLACK, WHITE,
+            "right", (SCREEN_HEIGHT * 0.36), YELLOW, BLUE, self.answer3, BLACK, WHITE,
             lambda: (setattr(self, 'user_answer_number', 3), self.highlight_answer_button3())[1], FONT_SMALL
         )
         self.answer_button4 = Button(
-            "right", (SCREEN_HEIGHT * 0.5), YELLOW, BLUE, self.answer4, BLACK, WHITE,
+            "right", (SCREEN_HEIGHT * 0.44), YELLOW, BLUE, self.answer4, BLACK, WHITE,
             lambda: (setattr(self, 'user_answer_number', 4), self.highlight_answer_button4())[1], FONT_SMALL
         )
 
@@ -906,39 +909,55 @@ class SceneQuizInput(Scene):
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
-        # result message
+        # result message and boxes
         self.result_message = None
+        self.display_box_image_green = pygame.image.load('./Scene_files/Images/trivia_box2_small.png')
+        self.display_box_image_orange = pygame.image.load('./Scene_files/Images/trivia_box3_small.png')
+        # self.button_next = Button(
+        #     "center", (SCREEN_HEIGHT * 0.75), ORANGE, BLUE, "NEXT QUESTION", BLACK, WHITE, lambda: (setattr(self, 'correct', None), self.to_scene_quiz_input())[1]
+        # )
+        # self.button_end = Button(
+        #     "center", (SCREEN_HEIGHT * 0.75), ORANGE, BLUE, "SEE MY RESULTS", BLACK, WHITE, lambda: (setattr(self, 'correct', None), self.to_scene_quiz_input())[1]
+        # )
+
 
 
     def user_submit(self):
-        pass
+        # run the check answer method from the Quiz class
+        result = QuizGame.check_answer(self.quizgame_instance, self.question_and_answers_list, self.user_answer_number)
+        # prepare the result message box
+        if result[1] is True:
+            self.correct = True
+            self.user_score += 1
+        else:
+            self.correct = False
+        self.result_message = TypewriterText(420, 380, 200, 200, result[0]+"          ", font=FONT_VSMALL, colour=(0, 0, 0, 0))
+        self.question_number += 1
+
 
     # code for highlighting the button answer choice when clicked
     def highlight_answer_button1(self):
         self.answer_button1 = Button(
-            "right", (SCREEN_HEIGHT * 0.2), BLUE, BLUE, self.answer1, WHITE, WHITE, None, FONT_SMALL
+            "right", (SCREEN_HEIGHT * 0.2), BLUE, BLUE, self.answer1, WHITE, WHITE, self.highlight_answer_button1, FONT_SMALL
         )
     def highlight_answer_button2(self):
         self.answer_button2 = Button(
-            "right", (SCREEN_HEIGHT * 0.3), BLUE, BLUE, self.answer2, WHITE, WHITE, None, FONT_SMALL
+            "right", (SCREEN_HEIGHT * 0.28), BLUE, BLUE, self.answer2, WHITE, WHITE, self.highlight_answer_button2, FONT_SMALL
         )
     def highlight_answer_button3(self):
         self.answer_button3 = Button(
-            "right", (SCREEN_HEIGHT * 0.4), BLUE, BLUE, self.answer3, WHITE, WHITE, None, FONT_SMALL
+            "right", (SCREEN_HEIGHT * 0.36), BLUE, BLUE, self.answer3, WHITE, WHITE, self.highlight_answer_button3, FONT_SMALL
         )
     def highlight_answer_button4(self):
         self.answer_button4 = Button(
-            "right", (SCREEN_HEIGHT * 0.5), BLUE, BLUE, self.answer4, WHITE, WHITE, None, FONT_SMALL
+            "right", (SCREEN_HEIGHT * 0.44), BLUE, BLUE, self.answer4, WHITE, WHITE, self.highlight_answer_button4, FONT_SMALL
         )
-
-    def back_to_scene_start(self):
-        self.manager.switch_scene(SceneStart(self.manager, self.game_clock))
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
-    def to_scene_mission_sentinel(self):
-        self.manager.switch_scene(SceneMissionSentinel(self.manager, self.game_clock))
+    def to_scene_quiz_input(self):
+        self.manager.switch_scene(SceneQuizInput(self.manager, self.game_clock))
 
     def handle_event(self, event):
         super().handle_event(event)
@@ -949,6 +968,9 @@ class SceneQuizInput(Scene):
         self.answer_button2.handle_event(event)
         self.answer_button3.handle_event(event)
         self.answer_button4.handle_event(event)
+        # self.button_next.handle_event(event)
+        # self.button_end.handle_event(event)
+
         # for keyboard entry to user input
         # self.user_input.handle_event(event)
         # if event.type == pygame.KEYDOWN:
@@ -985,6 +1007,7 @@ class SceneQuizInput(Scene):
         if self.typewriter_display_head.completed:
             self.typewriter_display1.draw(screen)
         if self.typewriter_display1.completed:
+            screen.blit(self.answer_box,(380, 70))
             self.answer_button1.draw(screen)
             self.answer_button2.draw(screen)
             self.answer_button3.draw(screen)
@@ -995,9 +1018,16 @@ class SceneQuizInput(Scene):
 
         # Draw the result_message if it's not None
         if self.result_message:
+            if self.correct is True:
+                screen.blit(self.display_box_image_green, (380, 345))
+            else:
+                screen.blit(self.display_box_image_orange, (380, 345))
             self.result_message.draw(screen)
+        # if self.question_number < 9 and self.correct:
+        #     self.button_next.draw(screen)
+        # elif self.question_number == 9 and self.correct:
+        #     self.button_end.draw(screen)
         super().draw(screen)
-
 
 
 ########################################################################################################################
