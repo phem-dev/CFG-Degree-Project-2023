@@ -75,11 +75,12 @@ class Asteroids(Challenge):
         #print("67")  # debugging
         # attempts = 3
         while attempts > 1:
-                if player_input.isnumeric():
+                if all(x.isnumeric() for x in player_input):  # modified this line as it threw error in unit tests
+                #if player_input.isnumeric():
                     if player_input in asteroid_distances:
                         success_message = self.success()  # Get the success message
-                        return success_message, attempts  # Return the success message to display in the game
-
+                        #return success_message, attempts  # commented this out as we dont want to return attempts
+                        return success_message
                     else:
                         attempts -= 1
                         if attempts == 1:
