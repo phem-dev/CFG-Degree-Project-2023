@@ -210,7 +210,7 @@ class SceneStartMenu(Scene):
 
 
         #Update the scene's elements
-        def update(self):
+    def update(self):
         #Update the typewriter effect
         self.typewriter.update()
 
@@ -880,7 +880,7 @@ class SceneQuiz(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Quiz"
-        quizgame_instance = QuizGame(r"Missions\quiz_SQLite\my.db", r"Missions\quiz_SQLite\Quiz_game.sql")
+        quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
         self.block = f"In this challenge you will need to answer {quizgame_instance.num_questions_to_answer} multiple-choice space questions from the database of trivia!|| Enter your name at the end to join the leaderboard."
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
