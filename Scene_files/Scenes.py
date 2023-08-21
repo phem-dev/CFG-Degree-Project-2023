@@ -202,7 +202,7 @@ class SceneStartMenu(Scene):
 
 
         #Update the scene's elements
-        def update(self):
+    def update(self):
         #Update the typewriter effect
         self.typewriter.update()
 
