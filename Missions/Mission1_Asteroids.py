@@ -73,7 +73,7 @@ class Asteroids(Challenge):
         # attempts = 3
         print("mission1: " + str(asteroid_distances))
         print("mission2: " + player_input)
-        while attempts > 1:
+        while attempts >= 1:
                 if player_input.isnumeric():
                     if int(player_input) in asteroid_distances:
                         success_message = self.success()  # Get the success message
@@ -91,6 +91,9 @@ class Asteroids(Challenge):
 
                 else:
                     attempts -= 1
+                    if attempts == 1:
+                        not_numeric_message = f"Oops, it looks like you entered something that isn't a number! {attempts} attempt remaining..."
+                        return not_numeric_message, attempts  # Return the not numeric message to display in the game
                     not_numeric_message = f"Oops, it looks like you entered something that isn't a number! {attempts} attempts remaining..."
                     return not_numeric_message, attempts  # Return the not numeric message to display in the game
 
