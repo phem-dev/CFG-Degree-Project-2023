@@ -10,16 +10,26 @@ class Challenge:
         self.challenge_name = challenge_name
         # self.challenge_description = challenge_description
 
-    def greet(self):  # outputs a greeting + challenge description
+    def greet(self):
+        """Displays a greeting to the asteroids mission
+
+        Returns: String - welcome message
+        """
         # return f"Welcome to the {self.challenge_name} challenge! {self.challenge_description}"
         return f"Welcome to the {self.challenge_name} challenge!"
 
 
 class Asteroids(Challenge):
     fail_message = "Oh no, Mission Failed!"
-    def success(self):  # do we want to add this as an att to the parent class so it's consistent across all challenges?
-        return "Mission Completed |Congratulations!"
-        # ALSO go to next mission
+    def success(self):
+        """Success message if player correctly inputs asteroid distance
+
+        Returns: String - "mission completed" message
+        """
+
+        # do we want to add this as an att to the parent class so it's consistent across all challenges?
+        return "Mission Completed |Congratulations!"  # why is there a pipe here?
+        # ALSO go to next mission?
 
     # def fail(self):  # as above
     #     inp = input("Oh no, Mission Failed! Do you want to try again? Enter Y for Yes or N to quit")
@@ -57,22 +67,46 @@ class Asteroids(Challenge):
         # return None  # Return None if no player input event has occurred yet
 
     def display_asteroid_data(self, asteroid_output):
+        """Outputs asteroid data for the player to round to nearest km and input
+
+        Args:
+            asteroid_output: passed from another fn
+
+        Returns: readable output for the 3 asteroid miss distances on the given day
+        """
         return '\n'.join(asteroid_output)
 
     def prompt_display_asteroid_data(self, asteroid_distances, asteroid_output, attempts=3):
+        """Takes player input for rounded asteroid distance
+
+        Args:
+            asteroid_distances: passed from other fn
+            asteroid_output: passed from other fn
+            attempts: passed from other fn
+
+        Returns: prompt asking player to enter asteroid data
+
+        """
         display_message = self.display_asteroid_data(asteroid_output)
         player_input = ""  # Initialize player input
-        return self.asteroid_distance_prompt(asteroid_distances), display_message
+        return self.asteroid_distance_prompt(), display_message
 
-    def asteroid_distance_prompt(self
-                                 # , asteroid_distances
-                                ):
-        #print("58") debugging
+    def asteroid_distance_prompt(self):
         return f"For any of the 3 asteroids that passed near Earth today, enter the miss distance rounded to the nearest km. |You have 3 attempts... "\
             #, self.player_enter_asteroid_distance(asteroid_distances)
 
     def player_enter_asteroid_distance(self, asteroid_distances, player_input, attempts):
-        #print("67")  # debugging
+        """For the player to enter the rounded asteroid miss distance (any 1 of the 3 daily asteroids will be
+        accepted). Player gets 3 attempts to enter correct number else mission failed.
+
+        Args:
+            asteroid_distances: passed from other function
+            player_input: passed from other function
+            attempts: passed from other function
+
+        Returns: success or failure message
+
+        """
         # attempts = 3
         while attempts > 1:
                 if all(x.isnumeric() for x in player_input):  # modified this line as it threw error in unit tests
@@ -97,12 +131,28 @@ class Asteroids(Challenge):
         return Asteroids.fail_message, attempts  # Return the fail message to display in the game - do we need to return attempts?
 
     def get_all_asteroid_data(self):
+        """Calls NASA API for 3 asteroids that have missed Earth on the current day. There are always asteroids
+        recorded in this data (no minimum miss distance on NASA side). Uses API endpoint from
+        Missions_config.py file
+
+        Returns: json data that will be filtered in get_3_asteroid_data function
+        """
         response = requests.get(short_url)
         data = response.json()
         self.get_3_asteroid_data(data=data, today_date_string=today_date_string)
         return data
 
     def get_3_asteroid_data(self, data, today_date_string):
+        """Filters json data from NASA API to pull just 3 asteroid miss distances from the current day, appends
+        this to list that is compared against player input
+
+        Args:
+            data: passed from other function
+            today_date_string: passed from other function
+
+        Returns: asteroid_output for human-readable printing of this data for the player; asteroid_distances list
+        of rounded asteroid distances the player can enter to complete the mission
+        """
         asteroid_distances = []
         asteroid_output = []
         try:
@@ -110,7 +160,6 @@ class Asteroids(Challenge):
             asteroid_miss_distance_rounded = round(asteroid_miss_distance_raw, 2)
             asteroid_output.append(f"1st = {asteroid_miss_distance_rounded}km")
             asteroid_distances.append(round(asteroid_miss_distance_raw, 0))
-            #print("109")
         except: return "No asteroids passed near the Earth today."
 
         try:
@@ -118,7 +167,6 @@ class Asteroids(Challenge):
             second_asteroid_miss_distance_rounded = round(second_asteroid_miss_distance_raw, 2)
             asteroid_output.append(f"2nd = {second_asteroid_miss_distance_rounded}km")
             asteroid_distances.append(round(second_asteroid_miss_distance_raw, 0))
-            #print("116")
         except: pass
 
         try:
@@ -126,16 +174,16 @@ class Asteroids(Challenge):
             third_asteroid_miss_distance_rounded = round(third_asteroid_miss_distance_raw, 2)
             asteroid_output.append(f"3rd = {third_asteroid_miss_distance_rounded}km")
             asteroid_distances.append(round(third_asteroid_miss_distance_raw, 0))
-            #print("125")
         except: pass
-        #print(f"127, {asteroid_output}")  # debugging use only
         # return self.asteroid_distance_prompt(asteroid_distances)
         return " ".join(asteroid_output)
 
 
-asteroid_challenge = Asteroids("Asteroid Proximity Sensor",
-                               # "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
-                                )
-# create new class object, adding the name of the challenge
-# print(asteroid_challenge.greet())  # can remove "print" for pygame implementation - just to see the output during dev
-# print(asteroid_challenge.get_all_asteroid_data())
+def main():
+    asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object with challenge name
+    return asteroid_challenge.greet(), asteroid_challenge.get_all_asteroid_data()  # can "print" for testing to
+    # see output in console
+
+
+if __name__ == "__main__":
+    main()
