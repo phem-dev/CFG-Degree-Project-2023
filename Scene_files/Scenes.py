@@ -882,7 +882,7 @@ class SceneQuizInput(Scene):
         self.typewriter_display1 = TypewriterText(55, 170, 180, 300, self.display_text1, font=FONT_VSMALL, colour=(0, 0, 0, 0))
 
         # answer buttons
-        self.answer_box = pygame.image.load('./Scene_files/Images/trivia_box4_large.png')
+        self.answer_box = pygame.image.load('./Scene_files/Images/trivia_box4_s.png')
         self.answer1 = self.question_and_answers_list[1][0].strip()
         self.answer2 = self.question_and_answers_list[1][1].strip()
         self.answer3 = self.question_and_answers_list[1][2].strip()
@@ -914,8 +914,8 @@ class SceneQuizInput(Scene):
 
         # result message and boxes, next question and end buttons
         self.result_message = None
-        self.display_box_image_green = pygame.image.load('./Scene_files/Images/trivia_box2_small.png')
-        self.display_box_image_orange = pygame.image.load('./Scene_files/Images/trivia_box3_small.png')
+        self.display_box_image_green = pygame.image.load('./Scene_files/Images/ans_box_2.png')
+        self.display_box_image_orange = pygame.image.load('./Scene_files/Images/ans_box_3.png')
         self.button_next = Button(
             "center", (SCREEN_HEIGHT * 0.75), ORANGE, BLUE, "NEXT QUESTION", BLACK, WHITE, lambda: (setattr(self, 'correct', None), self.to_scene_quiz_input())[1]
         )
@@ -935,7 +935,7 @@ class SceneQuizInput(Scene):
             self.user_score += 1
         else:
             self.correct = False
-        self.result_message = TypewriterText(420, 380, 250, 200, result[0]+"                          ", font=FONT_VSMALL, colour=(0, 0, 0, 0))
+        self.result_message = TypewriterText(420, 370, 250, 200, result[0]+"                          ", font=FONT_VSMALL, colour=(0, 0, 0, 0))
         SceneQuizInput.question_number += 1
 
 

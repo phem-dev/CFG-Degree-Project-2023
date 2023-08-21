@@ -87,7 +87,7 @@ class QuizGame:
             self.correct = True
         else:
             correct_option_index = question[2]-1
-            self.result_msg = f"Incorrect. The correct answer was: {options[correct_option_index]}"
+            self.result_msg = f"Incorrect. |The correct answer was: {options[correct_option_index]}"
             self.correct = False
 
         return self.result_msg, self.correct

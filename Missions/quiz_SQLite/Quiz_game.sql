@@ -188,7 +188,7 @@ INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct
 VALUES (
     20,
     'Which of these is not something that satellites are used for?',
-    'Taking pictures of Earth', 'Sending text messages', 'Predicting the weather',  'Growing plants on the moon',
+    'Earth imagery', 'Telecommunications', 'Meteorology',  'Luna farming',
     4
 );
 
