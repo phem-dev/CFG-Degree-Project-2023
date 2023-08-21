@@ -35,10 +35,10 @@ class SatelliteImageDownloader(Challenge):
         Returns: cities_message, city codes + names, downloading_message
 
         """
-        cities_message = "Satellite configured to photograph the following cities:\n"
-        downloading_message = "\nDownloading - please wait..."
+        cities_message = "Satellite configured to photograph the following cities:|"
+        downloading_message = "|Downloading - please wait..."
         formatted_cities = [f"{key}: {value}" for key, value in self.cities.items()]
-        return cities_message, ("\n".join(formatted_cities)), downloading_message
+        return cities_message, ("|".join(formatted_cities)), downloading_message
 
     def get_image(self):
         """ Iterates through the cities in city_mapping, calls API, saves each image as a temp file
