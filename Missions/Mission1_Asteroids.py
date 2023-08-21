@@ -20,42 +20,6 @@ class Asteroids(Challenge):
     def fail(self):
         return "Oh no, Mission Failed!"
 
-
-    # def fail(self):  # as above
-    #     inp = input("Oh no, Mission Failed! Do you want to try again? Enter Y for Yes or N to quit")
-    #     if inp == "Y":
-    #         pass
-    #         return self.player_enter_asteroid_distance(self, asteroid_distances, asteroid_output)
-    #         # re-run whole code
-    #     elif inp == "N":
-    #         pass
-    #         # quit game
-    #     else:
-    #         fail_message = "Oops - unexpected input! Re-launching game, we're counting on you!"
-    #         return fail_message, self.player_enter_asteroid_distance(self, asteroid_distances, asteroid_output)
-    #         # re-run whole code
-
-    # def fail(self):
-        # # Simulate logic for handling player input event in PyGame
-        # player_input_event = None  # Replace with actual event handling logic
-        #
-        # if player_input_event:  # If the player makes an input
-        #     player_input = player_input_event  # Replace with actual player input
-        #
-        #     if player_input == "Y":
-        #         fail_message_retry = "We knew we could count on you! Retrying mission..."
-        #         return fail_message_retry, self.prompt_display_asteroid_data(asteroid_distances, asteroid_output)
-        #
-        #     elif player_input == "N":
-        #         quit_game_event = True  # Set this flag to quit the game
-        #         return None  # Return None to indicate no further action is needed
-        #
-        #     else:
-        #         fail_message = "Oops - unexpected input! Re-launching game, we're counting on you!"
-        #         return fail_message, self.prompt_display_asteroid_data(asteroid_distances, asteroid_output)
-
-        # return None  # Return None if no player input event has occurred yet
-
     def display_asteroid_data(self, asteroid_output):
         return '\n'.join(asteroid_output)
 
@@ -65,26 +29,20 @@ class Asteroids(Challenge):
         return self.asteroid_distance_prompt(), display_message
 
     def asteroid_distance_prompt(self):
-        #print("58") debugging
         return f"For any of the 3 asteroids that passed near Earth today, enter the miss distance rounded to the nearest km. |You have 3 attempts... "
 
     def player_enter_asteroid_distance(self, asteroid_distances, player_input, attempts):
-        #print("67")  # debugging
-        # attempts = 3
-        print("mission1: " + str(asteroid_distances))
-        print("mission2: " + player_input)
+
         while attempts >= 1:
                 if player_input.isnumeric():
                     if int(player_input) in asteroid_distances:
                         success_message = self.success()  # Get the success message
-                        print("mission4: " + success_message)
                         return success_message, attempts  # Return the success message to display in the game
 
                     else:
                         attempts -= 1
                         if attempts == 1:
                             incorrect_message = f"Incorrect data - try again. |{attempts} attempt remaining..."
-                            print("mission5: " + incorrect_message)
                             return incorrect_message, attempts  # Return the incorrect message to display in the game
                         incorrect_message = f"Incorrect data - try again. |{attempts} attempts remaining..."
                         return incorrect_message, attempts  # Return the incorrect message to display in the game
@@ -113,7 +71,6 @@ class Asteroids(Challenge):
             asteroid_miss_distance_rounded = round(asteroid_miss_distance_raw, 2)
             asteroid_output.append(f"1st = {asteroid_miss_distance_rounded}km")
             asteroid_distances.append(int(round(asteroid_miss_distance_raw, 0)))
-            #print("109")
         except: return "No asteroids passed near the Earth today."
 
         try:
@@ -121,7 +78,6 @@ class Asteroids(Challenge):
             second_asteroid_miss_distance_rounded = round(second_asteroid_miss_distance_raw, 2)
             asteroid_output.append(f"2nd = {second_asteroid_miss_distance_rounded}km")
             asteroid_distances.append(int(round(second_asteroid_miss_distance_raw, 0)))
-            #print("116")
         except: pass
 
         try:
@@ -129,17 +85,12 @@ class Asteroids(Challenge):
             third_asteroid_miss_distance_rounded = round(third_asteroid_miss_distance_raw, 2)
             asteroid_output.append(f"3rd = {third_asteroid_miss_distance_rounded}km")
             asteroid_distances.append(int(round(third_asteroid_miss_distance_raw, 0)))
-            #print("125")
         except: pass
-        #print(f"127, {asteroid_output}")  # debugging use only
-        # return self.asteroid_distance_prompt(asteroid_distances)
-        print("mission3: " + str(asteroid_distances))
+
         return " ".join(asteroid_output), asteroid_distances
 
 
-asteroid_challenge = Asteroids("Asteroid Proximity Sensor",
-                               # "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
-                                )
+#asteroid_challenge = Asteroids("Asteroid Proximity Sensor")
 # create new class object, adding the name of the challenge
 # print(asteroid_challenge.greet())  # can remove "print" for pygame implementation - just to see the output during dev
 # print(asteroid_challenge.get_all_asteroid_data())

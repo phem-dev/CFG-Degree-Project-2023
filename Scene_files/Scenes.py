@@ -305,10 +305,7 @@ class SceneMissionAsteroidsInput(Scene):
         self.user_input.text = ""
         # Create a TypewriterText instance with the result and assign it to result_message
         self.result_message = TypewriterText(420, 285, 300, 300, result_message, font=FONT_VSMALL, colour=(0, 0, 0, 0))
-        print(asteroid_distances)
-        print(player_input)
-        print(result_message)
-        print(self.asteroid_instance.success())
+
         if result_message == self.asteroid_instance.success():
             self.button1 = Button(
                 "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_mission_sentinel
