@@ -36,10 +36,9 @@ class Asteroids(Challenge):
         while attempts >= 1:
                 if player_input.isnumeric():
                     if int(player_input) in asteroid_distances:
-
                         success_message = self.success()  # Get the success message
-                        #return success_message, attempts  # commented this out as i dont think we want to return attempts?
-                        return success_message
+                        return success_message, attempts  # Return the success message to display in the game
+
                     else:
                         attempts -= 1
                         if attempts == 1:
@@ -55,6 +54,7 @@ class Asteroids(Challenge):
                         return not_numeric_message, attempts  # Return the not numeric message to display in the game
                     not_numeric_message = f"Oops, it looks like you entered something that isn't a number! {attempts} attempts remaining..."
                     return not_numeric_message, attempts  # Return the not numeric message to display in the game
+
         return Asteroids.fail(self), attempts
 
     def get_all_asteroid_data(self):
