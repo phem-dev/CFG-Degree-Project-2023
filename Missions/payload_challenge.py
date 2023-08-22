@@ -1,5 +1,6 @@
 import pygame
 import random
+from Scene_files.background import *
 
 # Define colours for blocks
 colours = [
@@ -50,7 +51,7 @@ class GamePlay:
         self.state = "start"
         # Contains 0 where field is empty, colours where there are blocks
         self.field = []
-        self.x = 100
+        self.x = 300
         self.y = 60
         self.zoom = 20
         self.block = None
@@ -138,7 +139,7 @@ white = (255, 255, 255)
 grey = (128, 128, 128)
 
 
-size = (400, 500)
+size = (800, 600)
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption("Stratobus Payload Challenge")
@@ -185,6 +186,7 @@ while not done:
             pressing_down = False
 
     screen.fill(white)
+    screen.blit(BackGround_payload.image, BackGround_payload.rect)
 
     for i in range(game.height):
         for j in range(game.width):
@@ -212,8 +214,8 @@ while not done:
 
     screen.blit(text, [0, 0])
     if game.state == "gameover":
-        screen.blit(text_game_over, [20, 200])
-        screen.blit(text_esc, [25, 265])
+        screen.blit(text_game_over, [230, 200])
+        screen.blit(text_esc, [235, 265])
 
     pygame.display.flip()
     clock.tick(fps)

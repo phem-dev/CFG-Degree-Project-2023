@@ -1,6 +1,8 @@
 import sys
 import Missions.Mission1_Asteroids
 import Missions.quiz_SQLite.quiz
+import subprocess
+
 
 # Superclass and constants
 from Scene_files.SceneManager import Scene
@@ -215,7 +217,7 @@ class SceneStartMenu(Scene):
 
     def update(self):
         # Update the typewriter effect
-        self.typewriter.update()
+            self.typewriter.update()
 
         # Draw the scene's elements on the screen
         # Fill the screen with a white background and draw background image
@@ -717,32 +719,31 @@ class SceneMissionMarsInput(Scene):
 ########################################################################################################################
 #######################################################################################################################
 # Mission 4: Payload
-
 class SceneMissionPayload(Scene):
     def __init__(self, manager, game_clock):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
-        self.title = "Payload"
-        self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
-        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)),
+        self.title = "Payload Challenge"
+        self.block = "Play the stratobus tetris game!"
+        self.typewriter_title = TypewriterText(130, 30, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
         self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
 
         # Adjust these buttons to your needs for the second scene
         self.button1 = Button(
-            "left", (SCREEN_HEIGHT * 0.85), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_asteroids_input
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_play_payload_challenge
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.75), YELLOW, BLUE, "CONTROLS", BLACK, WHITE, self.to_controls
-        )
-        self.button3 = Button(
-            600, (SCREEN_HEIGHT * 0.85), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
-    def to_scene_mission_asteroids_input(self):
-        self.manager.switch_scene(SceneMissionAsteroidsInput(self.manager, self.game_clock))
+    def to_play_payload_challenge(self):
+        script_path = "Missions/payload_challenge.py"
+
+        # Launch the game in a separate process
+        subprocess.Popen([sys.executable,script_path])
 
     def to_controls(self):
         self.manager.switch_scene(SceneControls(self.manager, self.game_clock))
@@ -750,11 +751,15 @@ class SceneMissionPayload(Scene):
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
+    def run_payload_game():
+        script_path = "payload_challenge.py"
+        subprocess.call(["python", script_path])
+
     def handle_event(self, event):
         super().handle_event(event)
         self.button1.handle_event(event)
         self.button2.handle_event(event)
-        self.button3.handle_event(event)
+
 
     def update(self):
         # Always update the typewriter_title
@@ -776,7 +781,6 @@ class SceneMissionPayload(Scene):
 
         self.button1.draw(screen)
         self.button2.draw(screen)
-        self.button3.draw(screen)
         super().draw(screen)
 
 
@@ -789,7 +793,7 @@ class SceneMissionISS(Scene):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
-        self.title = "Asteroid"
+        self.title = "Locate ISS"
         self.block = "In this challenge you will track 3 asteroids and see how close they passed by Earth. Report the data back to base to complete the mission!"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
