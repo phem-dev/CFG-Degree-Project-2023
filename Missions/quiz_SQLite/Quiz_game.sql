@@ -180,7 +180,7 @@ INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct
 VALUES (
     19,
     'How do scientists control satellites in space?',
-    'Wifi', 'They take turns living in them', 'They send commands from stations on Earth',  'They use the Moon to help',
+    'Wifi', 'By living on them', 'With Radio signals',  'The Moon does it',
     3
 );
 

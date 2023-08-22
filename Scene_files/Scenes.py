@@ -981,12 +981,15 @@ class SceneQuizInput(Scene):
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
 
         # display text box for question
+        # define the box image
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
+        # define a header saying the question number
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100,
                                                       f"Question {SceneQuizInput.question_number + 1}", font=FONT_SMALL,
                                                       colour=(0, 0, 0, 0))
+        # Pull the question (the first returned item from get_provided_question() in Quizgame
         self.display_text1 = self.question_and_answers_list[0]
-        self.typewriter_display1 = TypewriterText(55, 170, 180, 300, self.display_text1, font=FONT_VSMALL,
+        self.typewriter_display1 = TypewriterText(55, 170, 160, 300, self.display_text1, font=FONT_VSMALL,
                                                   colour=(0, 0, 0, 0))
 
         # answer buttons
@@ -1104,13 +1107,6 @@ class SceneQuizInput(Scene):
                     # to leaderboard scene
                     self.to_scene_quiz_leaderboard()
 
-        # for keyboard entry to user input
-        # self.user_input.handle_event(event)
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-        #         self.click_sound.play()
-        #         self.user_submit()
-
     def update(self):
         # Always update the typewriter_title
         self.typewriter_title.update()
@@ -1214,11 +1210,13 @@ class SceneQuizLeaderboard(Scene):
         )
         self.confirmed_input = str(self.user_input)
         self.submitted = True
+        # close the database that was opened in Quizgame
         self.quiz_instance.close()
 
     # Switch to the Start Menu scene
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+        SceneQuizInput.question_number = 0
 
     # Handle events for the scene
     def handle_event(self, event):
