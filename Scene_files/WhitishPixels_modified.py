@@ -10,7 +10,7 @@ class WhitishPixels:
         image (Image): A PIL Image object to be analyzed.
         datas (list): Pixel data of the image.
         """
-    def __init__(self, img_file=None):
+    def __init__(self, img_file):
         """
         Initializes an ImageAnalyzer with an image sourced from a URL or a PIL Image object.
 
@@ -24,22 +24,20 @@ class WhitishPixels:
 
     def _load_image(self, img_file):
         """
-        Method to save the image locally if it is from the web or just reference the path given if not.
+        Method to reference the image path.
         Parameters:
-        img_url (str, optional): A URL to the image to be loaded.
         img_file (Image, optional): A PIL Image object.
 
         Returns:
         Image: A loaded PIL Image object.
 
         """
-        if img_file:
-            urllib.request.urlretrieve(img_file, "Images/Temp/cloud_cover.png")
-            return Image.open("Images/Temp/cloud_cover.png")
-        elif img_file:
+        if isinstance(img_file, str):  # Check if img_file is a string (file path)
+            return Image.open(img_file)  # Open the image using PIL
+        elif isinstance(img_file, Image.Image):  # Check if img_file is already a PIL.Image object
             return img_file
         else:
-            raise ValueError("Either img_url or img_file must be provided.")
+            raise ValueError("Hmm, no image found! Please try again...")
 
     @staticmethod
     def _is_whiteish(pixel, threshold=230): # adjust the threshold here
@@ -63,21 +61,22 @@ class WhitishPixels:
         Returns:
         float: Percentage of whiteish pixels.
         """
-        whiteish_pixel_count = 0
+        whitish_pixel_count = 0
         total_pixel_count = len(self.datas)
 
         for pixel in self.datas:
             if self._is_whiteish(pixel):
-                whiteish_pixel_count += 1
+                whitish_pixel_count += 1
 
-        whiteish_pixel_percentage = (whiteish_pixel_count / total_pixel_count) * 100
-        return round(whiteish_pixel_percentage,2)
+        whitish_pixel_percentage = (whitish_pixel_count / total_pixel_count) * 100
+        return round(whitish_pixel_percentage,2)
 
 
-def main():
-    #image_to_analyse = None
+def main():  # do we need img_file here?? causes conflict below if we dont have it, not sure
+    image_to_analyse = "sentinel_image1.jpg"  # cant work out how to make this work for accepting the img_file from satellite_images_v2 file (rather than hardcoding)
     analyzer = WhitishPixels(image_to_analyse)
-    print(analyzer.calculate_whiteish_pixel_percentage())
+    result = analyzer.calculate_whiteish_pixel_percentage()
+    return result
 
 
 if __name__ == "__main__":
