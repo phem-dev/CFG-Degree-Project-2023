@@ -973,7 +973,6 @@ class SceneQuizInput(Scene):
         self.quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
         self.user_answer_number = None
         self.question_and_answers_list = self.quizgame_instance.get_provided_question(SceneQuizInput.question_number)
-        self.user_score = 0
         self.correct = None
 
         # title
@@ -1043,13 +1042,13 @@ class SceneQuizInput(Scene):
         # check answer returns two values, the message at index [0] and whether it was correct/true at index [1]
         if result[1] is True:
             self.correct = True
-            self.user_score += 1
+            SceneQuizInput.user_score += 1
         else:
             self.correct = False
         self.result_message = TypewriterText(420, 370, 250, 200, result[0] + "                          ",
                                              font=FONT_VSMALL, colour=(0, 0, 0, 0))
         SceneQuizInput.question_number += 1
-        SceneQuizInput.user_score = self.user_score
+        print(SceneQuizInput.user_score)
 
 
     # code for highlighting the button answer choice when clicked
@@ -1174,17 +1173,6 @@ class SceneQuizLeaderboard(Scene):
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
         self.quiz_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
 
-        # Display text box elements
-        self.user_input = ""
-        self.confirmed_input = ""
-        self.submitted = False
-        self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
-        self.typewriter_display_head = TypewriterText(460, 105, 200, 100, "Score", font=FONT_SMALL, colour=(0, 0, 0, 0))
-        self.display_text1 = f"{self.quiz_instance.end_message(self.confirmed_input, SceneQuizInput.user_score)[0]}" \
-                             f"|{self.quiz_instance.end_message(self.confirmed_input, SceneQuizInput.user_score)[1]}"
-        self.typewriter_display1 = TypewriterText(460, 170, 150, 300, self.display_text1, font=FONT_VSMALL,
-                                                  colour=(0, 0, 0, 0))
-
         # Input box elements
         self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
         self.trivia_box2_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
@@ -1195,7 +1183,20 @@ class SceneQuizLeaderboard(Scene):
         self.user_input = TextInput(55, 325, 300, 25)
         self.click_sound = Button.click_sound
 
-        # Adjust these buttons to your needs for the second scene
+        # Display text box elements
+        # A boolean that will conditionally allow the leaderboard to appear once self.user_input is submitted
+        self.submitted = False
+        self.player_input = ""
+        self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
+        self.typewriter_display_head = TypewriterText(460, 105, 200, 100, "Score", font=FONT_SMALL, colour=(0, 0, 0, 0))
+        self.display_text1 = f"{self.quiz_instance.end_message(self.player_input, SceneQuizInput.user_score)[0]}" \
+                             f"|{self.quiz_instance.end_message(self.player_input, SceneQuizInput.user_score)[1]}"
+        self.typewriter_display1 = TypewriterText(460, 170, 150, 300, self.display_text1, font=FONT_VSMALL,
+                                                  colour=(0, 0, 0, 0))
+
+
+
+        # Submit and menu button
         self.button1 = Button(
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
@@ -1205,11 +1206,13 @@ class SceneQuizLeaderboard(Scene):
 
     def user_submit(self):
         # Get the current text input from the user using the user_answer method from TextInput
+        self.player_input = self.user_input.user_answer()
+        # Get the current text input from the user using the user_answer method from TextInput
         self.button1 = Button(
             "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
         )
-        self.confirmed_input = str(self.user_input)
         self.submitted = True
+        self.quiz_instance.update_leaderboard(self.player_input, SceneQuizInput.user_score)
         # close the database that was opened in Quizgame
         self.quiz_instance.close()
 
