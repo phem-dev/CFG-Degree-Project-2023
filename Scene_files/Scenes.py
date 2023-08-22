@@ -1096,10 +1096,10 @@ class SceneQuizInput(Scene):
             self.button2.handle_event(event)
         # If the result message is already shown, then handle the next question and end buttons
         elif self.result_message is not None:
-            if SceneQuizInput.question_number < 9 and self.correct is not None:
+            if SceneQuizInput.question_number <= 9 and self.correct is not None:
                 if self.button_next.handle_event(event):
                     self.to_scene_quiz_input()
-            elif SceneQuizInput.question_number == 9 and self.correct is not None:
+            elif SceneQuizInput.question_number == 10 and self.correct is not None:
                 if self.button_end.handle_event(event):
                     # to leaderboard scene
                     self.to_scene_quiz_leaderboard()
@@ -1154,9 +1154,9 @@ class SceneQuizInput(Scene):
             else:
                 screen.blit(self.display_box_image_orange, (380, 345))
             self.result_message.draw(screen)
-        if SceneQuizInput.question_number < 9 and self.correct is not None:
+        if SceneQuizInput.question_number <= 9 and self.correct is not None:
             self.button_next.draw(screen)
-        elif SceneQuizInput.question_number == 9 and self.correct is not None:
+        elif SceneQuizInput.question_number == 10 and self.correct is not None:
             self.button_end.draw(screen)
         super().draw(screen)
 
@@ -1214,6 +1214,7 @@ class SceneQuizLeaderboard(Scene):
         )
         self.confirmed_input = str(self.user_input)
         self.submitted = True
+        self.quiz_instance.close()
 
     # Switch to the Start Menu scene
     def to_menu(self):
@@ -1269,9 +1270,6 @@ class SceneQuizLeaderboard(Scene):
             self.button2.draw(screen)
         if self.submitted:
             self.typewriter_display1.draw(screen)
-
-
-
         super().draw(screen)
 
 ########################################################################################################################
