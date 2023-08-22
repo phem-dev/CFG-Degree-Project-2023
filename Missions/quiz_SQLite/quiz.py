@@ -99,8 +99,7 @@ class QuizGame:
 
     def end_message(self, player_name, score):
         self.update_leaderboard(player_name, score)
-        self.close()
-        return f"Your final score is: {score}/{self.num_questions_to_answer}", self.display_leaderboard()
+        return f"Your scored: {score}/{self.num_questions_to_answer}", self.display_leaderboard()
 
 
 
