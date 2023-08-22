@@ -52,15 +52,16 @@ class SatelliteImageDownloader(Challenge):
                 # Currently saving images as local files - think we want to change this to pygame objects?
                 with open(f"sentinel_image{city_code}.jpg", "wb") as f:  # Modify filename in the final game if desired
                     f.write(response.content)
-                print(f"Image successfully captured! (saved as 'sentinel_image{city_code}.jpg')")  # remove filename for PG
-                #return f"Image successfully captured! (saved as 'sentinel_image{city_code}.jpg')"
+                print(f"Image {city_code} successfully captured!")  #saves as "sentinel_imageX.jpg
+                #return f"Image {city_code} successfully captured!"
 
             else:
                 print(response.status_code)  # Debugging only - remove
                 print("Oh no! Satellite connection failed. Please try again later.")  # remove for PG
                 #return "Oh no! Satellite connection failed. Please try again later."
 
-        # ALSO NEED TO display the 3 saved images to the user (PyGame)
+        # ALSO NEED TO display the 3 saved images to the user (PyGame). these should either be clickable or have
+        # corresponding buttons below them for user to select the cloudiest photo image
 
     def whitish_pixels(self):
         """Uses whitish_pixels function to calculate cloud coverage based on how many whitish pixels are detected in
@@ -71,17 +72,20 @@ class SatelliteImageDownloader(Challenge):
         cloud_coverage = {}  # initialise new dict to store city codes and cloud coverage values
 
         for city_code in [1, 2, 3]:
-            pixels = WhitishPixels(img_file=f"sentinel_image{city_code}.jpg")  # iterate through city codes, calculate
+            #pixels = WhitishPixels(img_file=f"sentinel_image{city_code}.jpg")  # iterate through city codes, calculate
             # whitish pixels for each
+            # NEEDS CHANGING if using pygame objects to render images (current code uses jpg files)
+            pixels = WhitishPixels(img_file=f"C:\\Users\Rea\PycharmProjects\Group-6-Thales-Gals\Missions\sentinel_image{city_code}.jpg")
             cloud_coverage[city_code] = pixels  # write data to cloud_coverage dict
-            print(cloud_coverage)  # debugging only, Return for PyGame
+        print(cloud_coverage)  # debugging only, Return for PyGame
 
         self.player_enter_cloudiest_city(cloud_coverage)
 
 
     def player_enter_cloudiest_city(self, cloud_coverage):
         # logic here for capturing player input. Ask player to enter the key for the cloudiest city
-        # if key entered = key of cit with most cloud cover, mission successful
+        # if key entered = key of city with most cloud cover, mission successful
+
         pass
 
 
