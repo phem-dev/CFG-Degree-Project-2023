@@ -5,7 +5,13 @@ import pygame
 pygame.font.init()
 
 # Font settings
+
+# NEW FONT PATH????**************************************************
+# font path = 'Scene_files/spaceranger.ttf'
+
+# Delete below font path ******************************************
 font_path = 'Scene_files/kenvector_future.ttf'
+
 FONT = pygame.font.Font(font_path, 40)
 FONT_TITLE = pygame.font.Font(font_path, 80)
 FONT_MEDIUM = pygame.font.Font(font_path, 25)
