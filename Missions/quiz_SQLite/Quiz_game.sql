@@ -155,7 +155,7 @@ VALUES (
 INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct_answer)
 VALUES (
     16,
-    'What causes the Moon to sine at night?',
+    'What causes the Moon to shine at night?',
     'Its own light', 'Reflected sunlight', 'Starlight',  'Moonlight',
     2
 );
