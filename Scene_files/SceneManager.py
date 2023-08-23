@@ -41,6 +41,17 @@ class SceneManager:
 # Scene superclass, is an abstract class to be used as a template, it includes the essential (but empty so far) methods for a scene
 class Scene:
     def __init__(self):
+        """
+    Represents a scene within a game or application, including mute/unmute functionality.
+
+        Attributes:
+        mute_image (pygame.Surface):
+            Loaded image of the mute speaker icon.
+        unmute_image (pygame.Surface):
+            Loaded image of the unmute speaker icon.
+        mute_button_rect (pygame.Rect)
+        The rectangle representing the mute/unmute button's position and size on the screen.
+        """
         # Load the mute and unmute images
         self.mute_image = pygame.image.load('Scene_files/Images/speaker_mute_30px.png')
         self.unmute_image = pygame.image.load('Scene_files/Images/speaker_30px.png')
@@ -48,6 +59,10 @@ class Scene:
         self.mute_button_rect = pygame.Rect(SCREEN_WIDTH - 40, 10, 30, 30)
 
     def toggle_mute(self):
+        """
+        Toggles the mute state of the music and buttons in the scene.
+        Mutes or unmutes based on the current global `IS_MUTED` variable.
+        """
         global MUSIC_VOLUME, IS_MUTED, BUTTON_VOLUME
         if not IS_MUTED:
             IS_MUTED = True
@@ -70,14 +85,33 @@ class Scene:
 
 
     def handle_event(self, event):
+        """
+        Check if the user clicked on the mute/unmute button and triggers the toggle_mute function if so.
+
+        Parameters:
+        event (pygame.event.Event):
+            The user input event to be processed.
+        """
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.mute_button_rect.collidepoint(event.pos):
                 self.toggle_mute()
 
     def update(self):
+        """
+         (Intended for future updates)
+         Process any changes or logic that need to be updated before drawing to the screen.
+         Currently, this method is a placeholder.
+         """
         pass
 
     def draw(self, screen):
+        """
+        Render the mute/unmute button on the screen based on the current mute state.
+
+        Parameters:
+        screen (pygame.Surface):
+            The surface onto which the mute/unmute button should be drawn.
+        """
         # Depending on the state, draw either the mute or unmute button
         if IS_MUTED:
             screen.blit(self.mute_image, self.mute_button_rect.topleft)
