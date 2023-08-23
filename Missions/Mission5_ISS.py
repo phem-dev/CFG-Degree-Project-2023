@@ -39,8 +39,8 @@ class ISSTracker:
         self.display_speed = False     # Flag to display speed information
 
         # Load ISS and Earth images
-        self.iss_image = pygame.image.load("iss.png")
-        self.earth_image = pygame.image.load("earth.png")
+        self.iss_image = pygame.image.load("Missions/iss.png")
+        self.earth_image = pygame.image.load("Missions/earth.png")
 
         # Set Earth image dimensions:
         self.earth_image_width = 300
@@ -53,6 +53,7 @@ class ISSTracker:
         # Button positions and dimensions:
         self.speed_button_rect = pygame.Rect(50, 250, 150, 30)           # Left button: speed
         self.altitude_button_rect = pygame.Rect(570, 250, 160, 30)      # Right button: altitude
+        self.exit_button_rect = pygame.Rect(350, 550, 65, 30)          # Bottom button: exit
 
     # Get the current ISS location:
     def get_iss_location(self):
@@ -152,14 +153,17 @@ class ISSTracker:
     def draw_buttons(self):
         pygame.draw.rect(self.screen, (30, 167, 225), self.speed_button_rect)         # Draw left button
         pygame.draw.rect(self.screen, (30, 167, 225), self.altitude_button_rect)      # Draw right button
+        pygame.draw.rect(self.screen, (30, 167, 225), self.exit_button_rect)          # Draw bottom button
 
         font = pygame.font.Font(None, 28)  #-------------------------------------------------------------------------CHANGE FONT
         speed_button_text = font.render("Show Speed", True, (255, 255, 255))
         altitude_button_text = font.render("Show Altitude", True, (255, 255, 255))
+        exit_button_text = font.render("EXIT", True, (255, 255,255))
 
         # Display button texts a little below their respective buttons
         self.screen.blit(speed_button_text, (self.speed_button_rect.left + 10, self.speed_button_rect.top + 5))
         self.screen.blit(altitude_button_text, (self.altitude_button_rect.left + 10, self.altitude_button_rect.top + 5))
+        self.screen.blit(exit_button_text, (self.exit_button_rect.left + 10, self.exit_button_rect.top +5))
 
     # Main loop:
     def run(self):
@@ -178,6 +182,8 @@ class ISSTracker:
                         elif self.altitude_button_rect.collidepoint(event.pos):
                             self.display_altitude = not self.display_altitude
                             self.display_speed = False
+                        elif self.exit_button_rect.collidepoint(event.pos):
+                            running = False
 
             # Get the current time in milliseconds:
             current_time = pygame.time.get_ticks()
