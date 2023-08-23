@@ -788,14 +788,17 @@ class SceneMissionISS(Scene):
         # Adjust these buttons to your needs for the second scene
         self.button1 = Button(
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE,
-            self.to_scene_mission_iss_play
+            self.to_play_iss
         )
         self.button2 = Button(
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
-    def to_scene_mission_iss_play(self):
-        self.manager.switch_scene(SceneMissionISSPlay(self.manager, self.game_clock))
+    def to_play_iss(self):
+            script_path = "Missions/Mission5_ISS.py"
+
+            # Launch the game in a separate process
+            subprocess.Popen([sys.executable, script_path])
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
