@@ -218,7 +218,7 @@ class SceneStartMenu(Scene):
 
     def update(self):
         # Update the typewriter effect
-        self.typewriter.update()
+            self.typewriter.update()
 
         # Draw the scene's elements on the screen
         # Fill the screen with a white background and draw background image
@@ -709,7 +709,7 @@ class SceneMissionPayload(Scene):
         self.game_clock = game_clock
         self.title = "Payload Challenge"
         self.block = "The stored memory is running low help defragment the data storage by using the arrows keys to optimally pack the data packets in!"
-        self.typewriter_title = TypewriterText(130, 30, 550, 500, Challenge.greet(Challenge(self.title)),
+        self.typewriter_title = TypewriterText(130, 6, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
         self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
