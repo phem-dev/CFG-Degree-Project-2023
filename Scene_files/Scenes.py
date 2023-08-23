@@ -375,6 +375,8 @@ class SceneMissionAsteroidsInput(Scene):
         result_message, self.attempts = self.asteroid_instance.player_enter_asteroid_distance(asteroid_distances,
                                                                                               player_input,
                                                                                               self.attempts)
+        print(result_message)
+        print(self.attempts)
         self.user_input.text = ""
         # Create a TypewriterText instance with the result and assign it to result_message
         self.result_message = TypewriterText(420, 285, 300, 300, result_message, font=FONT_VSMALL, colour=(0, 0, 0, 0))

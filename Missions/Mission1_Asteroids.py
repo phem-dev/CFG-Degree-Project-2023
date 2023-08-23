@@ -14,7 +14,7 @@ class Challenge:
 
 
 class Asteroids(Challenge):
-    fail_message = "Oh no, Mission Failed!"  # Fail message if player doesn't enter correct answer within 3 attempts
+    #fail_message = "Oh no, Mission Failed!"  # Fail message if player doesn't enter correct answer within 3 attempts
     def success(self):
         """Success message if player correctly inputs asteroid distance
 
@@ -22,6 +22,13 @@ class Asteroids(Challenge):
         """
 
         return "Mission Completed |Congratulations!"
+
+    def fail(self):
+        """Fail message if player uses all attempts
+
+        Returns: String - "Oh no, Mission Failed!" message
+        """
+        return "Oh no, Mission Failed!"
 
     def display_asteroid_data(self, asteroid_output):
         """Outputs asteroid data for the player to round to nearest km and input
@@ -64,11 +71,11 @@ class Asteroids(Challenge):
         Returns: success or failure message
 
         """
-        while attempts > 1:
+        while attempts >= 1:
             if all(x.isnumeric() for x in player_input):  # checking thst input contains only numbers
-                if player_input in asteroid_distances:  # checks player input against available data
+                if int(player_input) in asteroid_distances:  # checks player input against available data
                     success_message = self.success()  # get the success message
-                    return success_message  # display success message
+                    return success_message, attempts  # display success message
                 else:
                     attempts -= 1  # player has used 1 attempt
                     if attempts == 1:  # for grammatical correctness if last attempt
@@ -83,7 +90,7 @@ class Asteroids(Challenge):
                 not_numeric_message = f"Oops, it looks like you entered something that isn't a number! {attempts} attempts remaining..."
                 return not_numeric_message, attempts  # return the not-numeric message to display in the game
 
-        return Asteroids.fail_message, attempts  # return the fail message to display to the player
+        return Asteroids.fail(self), attempts  # return the fail message to display to the player
 
     def get_all_asteroid_data(self):
         """Calls NASA API for 3 asteroids that have missed Earth on the current day. There are always asteroids
@@ -130,13 +137,13 @@ class Asteroids(Challenge):
             asteroid_output.append(f"3rd = {third_asteroid_miss_distance_rounded}km")
             asteroid_distances.append(round(third_asteroid_miss_distance_raw, 0))
         except: return "No more asteroids passed near the Earth today." # in tiny chance that only 2 asteroids are recorded
-        return " ".join(asteroid_output)  # output the asteroid data
+        return " ".join(asteroid_output), asteroid_distances  # output the asteroid data and distances only for comparisons to use in the pygame user_input logic
 
 
-def main():
-    asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object with challenge name
-    return asteroid_challenge.greet(), asteroid_challenge.get_all_asteroid_data()  # return first function - all others are linked
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object with challenge name
+#     return asteroid_challenge.greet(), asteroid_challenge.get_all_asteroid_data()  # return first function - all others are linked
+#
+#
+# if __name__ == "__main__":
+#     main()
