@@ -1,6 +1,5 @@
-import pygame
-from Scene_files.Button_files.draw_rounded_rect import draw_rounded_rect # instead of the pygame.draw.rect, use this custom function for a rounded rectangle in the Button class
-from settings import FONT, SCREEN_HEIGHT, SCREEN_WIDTH, BUTTON_HOVER_PATH, BUTTON_CLICK_PATH, BUTTON_VOLUME
+from Utils.draw_rounded_rect import draw_rounded_rect # instead of the pygame.draw.rect, use this custom function for a rounded rectangle in the Button class
+from settings import *
 
 
 
@@ -29,16 +28,17 @@ class Button:
         action (function): A function to be called when the button is clicked.
     """
 
-    def __init__(self, x, y, colour, hover_colour, text, text_colour, hover_text_colour, action):
-        self.width = FONT.size(text)[0] * 1.2
-        self.height = FONT.size(text)[1] * 1.1
+    def __init__(self, x, y, colour, hover_colour, text, text_colour, hover_text_colour, action, font=FONT):
+        self.font = font
+        self.width = self.font.size(text)[0] * 1.2
+        self.height = self.font.size(text)[1] * 1.1
 
         if x == "center":
             x = (SCREEN_WIDTH // 2) - (self.width // 2)
         elif x == "left":
-            x = SCREEN_WIDTH * 0.1
+            x = SCREEN_WIDTH * 0.06
         elif x == "right":
-            x = (SCREEN_WIDTH * 0.9) - self.width
+            x = (SCREEN_WIDTH * 0.94) - self.width
 
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.colour = colour
@@ -79,7 +79,7 @@ class Button:
             self.hovered = False
 
         draw_rounded_rect(surface, current_colour, self.rect, (self.height * 0.1))  # draw the button rectangle
-        text_surface = FONT.render(self.text, True, current_text_colour)  # render the button ready for adding (blit) to the screen surface, True here has enabled anti-aliasing on the text to make it render nice and smooth on the edges (not as pixely)
+        text_surface = self.font.render(self.text, True, current_text_colour)  # render the button ready for adding (blit) to the screen surface, True here has enabled anti-aliasing on the text to make it render nice and smooth on the edges (not as pixely)
         text_rect = text_surface.get_rect(center=self.rect.center)  # make a rectangle bounding box for the text and match the center to the button rect center
         surface.blit(text_surface, text_rect)  # blit is used to actually add the rendered button surface to the the screen surface at the position defined by text_rect
 

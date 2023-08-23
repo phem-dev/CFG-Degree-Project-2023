@@ -1,6 +1,6 @@
 import pygame
-from settings import SCREEN_WIDTH, IS_MUTED, MUSIC_VOLUME, BUTTON_VOLUME
-from Scene_files.Button_files.Button import Button
+from settings import *
+from Utils.Button import Button
 
 
 

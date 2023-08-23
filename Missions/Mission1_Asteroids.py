@@ -73,6 +73,7 @@ class Asteroids(Challenge):
                     attempts -= 1  # player has used 1 attempt
                     if attempts == 1:  # for grammatical correctness if last attempt
                         incorrect_message = f"Incorrect data - try again. |{attempts} attempt remaining..."
+  
                         return incorrect_message, attempts  # Return the incorrect message to display in the game
                     incorrect_message = f"Incorrect data - try again. |{attempts} attempts remaining..."
                     return incorrect_message, attempts  # Return the incorrect message to display in the game
