@@ -179,6 +179,8 @@ while not done:
             if event.key == pygame.K_SPACE:
                 game.move_space()
             if event.key == pygame.K_ESCAPE:
+                done = True
+            if event.key == pygame.K_RETURN:
                 game.__init__(20, 10)
 
     if event.type == pygame.KEYUP:
@@ -208,14 +210,17 @@ while not done:
 
     font = pygame.font.SysFont('Calibri', 25, True, False)
     font1 = pygame.font.SysFont('Calibri', 65, True, False)
+    font2 = pygame.font.SysFont('Calibri', 45, True, False)
     text = font.render("Score: " + str(game.score), True, black)
     text_game_over = font1.render("Game Over", True, (255, 0, 0))
-    text_esc = font1.render("Press ESC", True, (128, 128, 128, 255))
+    text_esc = font2.render("Press ESC to exit", True, white)
+    text_play_again = font2.render("Press RTN to play again", True, white)
 
     screen.blit(text, [0, 0])
     if game.state == "gameover":
         screen.blit(text_game_over, [230, 200])
-        screen.blit(text_esc, [235, 265])
+        screen.blit(text_esc, [210, 270])
+        screen.blit(text_play_again, [150, 330])
 
     pygame.display.flip()
     clock.tick(fps)
