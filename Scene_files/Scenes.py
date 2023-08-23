@@ -2,6 +2,7 @@ import sys
 import Missions.Mission1_Asteroids
 import Missions.quiz_SQLite.quiz
 import subprocess
+from collections import deque
 
 
 # Superclass and constants
@@ -217,7 +218,7 @@ class SceneStartMenu(Scene):
 
     def update(self):
         # Update the typewriter effect
-            self.typewriter.update()
+        self.typewriter.update()
 
         # Draw the scene's elements on the screen
         # Fill the screen with a white background and draw background image
@@ -707,8 +708,8 @@ class SceneMissionPayload(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Payload Challenge"
-        self.block = "Play the stratobus tetris game!"
-        self.typewriter_title = TypewriterText(130, 6, 550, 500, Challenge.greet(Challenge(self.title)),
+        self.block = "The stored memory is running low help defragment the data storage by using the arrows keys to optimally pack the data packets in!"
+        self.typewriter_title = TypewriterText(130, 30, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
         self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
@@ -732,6 +733,10 @@ class SceneMissionPayload(Scene):
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def run_payload_game(self):
+        script_path = "payload_challenge.py"
+        subprocess.call(["python", script_path])
 
     def handle_event(self, event):
         super().handle_event(event)
@@ -1016,14 +1021,18 @@ class SceneQuiz(Scene):
 class SceneQuizInput(Scene):
     question_number = 0
     user_score = 0
+    quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+    all_questions_and_answers_lists = quizgame_instance.fetch_random_questions(10)
 
     def __init__(self, manager, game_clock):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
         self.quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+
+        self.number_of_questions = 10
         self.user_answer_number = None
-        self.question_and_answers_list = self.quizgame_instance.get_provided_question(SceneQuizInput.question_number)
+        self.all_questions_and_answers_lists = SceneQuizInput.all_questions_and_answers_lists
         self.correct = None
 
         # title
@@ -1038,16 +1047,16 @@ class SceneQuizInput(Scene):
                                                       f"Question {SceneQuizInput.question_number + 1}", font=FONT_SMALL,
                                                       colour=(0, 0, 0, 0))
         # Pull the question (the first returned item from get_provided_question() in Quizgame
-        self.display_text1 = self.question_and_answers_list[0]
-        self.typewriter_display1 = TypewriterText(55, 170, 160, 300, self.display_text1, font=FONT_VSMALL,
+        self.display_question_text = self.all_questions_and_answers_lists[0][1]
+        self.typewriter_display1 = TypewriterText(55, 170, 160, 300, self.display_question_text, font=FONT_VSMALL,
                                                   colour=(0, 0, 0, 0))
 
         # answer buttons
         self.answer_box = pygame.image.load('./Scene_files/Images/trivia_box4_s.png')
-        self.answer1 = self.question_and_answers_list[1][0].strip()
-        self.answer2 = self.question_and_answers_list[1][1].strip()
-        self.answer3 = self.question_and_answers_list[1][2].strip()
-        self.answer4 = self.question_and_answers_list[1][3].strip()
+        self.answer1 = self.all_questions_and_answers_lists[0][2].strip()
+        self.answer2 = self.all_questions_and_answers_lists[0][3].strip()
+        self.answer3 = self.all_questions_and_answers_lists[0][4].strip()
+        self.answer4 = self.all_questions_and_answers_lists[0][5].strip()
         self.answer_button1 = Button(
             "right", (SCREEN_HEIGHT * 0.2), YELLOW, BLUE, self.answer1, BLACK, WHITE,
             lambda: (setattr(self, 'user_answer_number', 1), self.highlight_answer_button1()), FONT_SMALL
@@ -1088,7 +1097,7 @@ class SceneQuizInput(Scene):
 
     def user_submit(self):
         # run the check answer method from the Quiz class
-        result = QuizGame.check_answer(self.quizgame_instance, self.question_and_answers_list, self.user_answer_number)
+        result = self.quizgame_instance.check_answer(self.all_questions_and_answers_lists[0], self.user_answer_number)
         # prepare the result message box
         # check answer returns two values, the message at index [0] and whether it was correct/true at index [1]
         if result[1] is True:
@@ -1099,7 +1108,9 @@ class SceneQuizInput(Scene):
         self.result_message = TypewriterText(420, 370, 250, 200, result[0] + "                          ",
                                              font=FONT_VSMALL, colour=(0, 0, 0, 0))
         SceneQuizInput.question_number += 1
-        print(SceneQuizInput.user_score)
+        deque_all_questions_and_answers_lists = deque(SceneQuizInput.all_questions_and_answers_lists)
+        deque_all_questions_and_answers_lists.popleft()
+        SceneQuizInput.all_questions_and_answers_lists = list(deque_all_questions_and_answers_lists)
 
 
     # code for highlighting the button answer choice when clicked
@@ -1231,7 +1242,7 @@ class SceneQuizLeaderboard(Scene):
                                                     font=FONT_SMALL, colour=(0, 0, 0, 0))
         self.typewriter_input_box = TypewriterText(55, 265, 200, 100, "User input", font=FONT_SMALL,
                                                    colour=(0, 0, 0, 0))
-        self.user_input = TextInput(55, 325, 300, 25)
+        self.user_input = TextInput(55, 325, 200, 25)
         self.click_sound = Button.click_sound
 
         # Display text box elements
@@ -1240,8 +1251,7 @@ class SceneQuizLeaderboard(Scene):
         self.player_input = ""
         self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
         self.typewriter_display_head = TypewriterText(460, 105, 200, 100, "Score", font=FONT_SMALL, colour=(0, 0, 0, 0))
-        self.display_text1 = f"{self.quiz_instance.end_message(self.player_input, SceneQuizInput.user_score)[0]}" \
-                             f"|{self.quiz_instance.end_message(self.player_input, SceneQuizInput.user_score)[1]}"
+        self.display_text1 = ""
         self.typewriter_display1 = TypewriterText(460, 170, 150, 300, self.display_text1, font=FONT_VSMALL,
                                                   colour=(0, 0, 0, 0))
 
@@ -1262,8 +1272,12 @@ class SceneQuizLeaderboard(Scene):
         self.button1 = Button(
             "center", (SCREEN_HEIGHT * 1.1), GREEN, BLUE, "", BLACK, WHITE, None
         )
-        self.submitted = True
         self.quiz_instance.update_leaderboard(self.player_input, SceneQuizInput.user_score)
+        self.display_text1 = f"{self.quiz_instance.end_message(self.player_input, SceneQuizInput.user_score)[0]}" \
+                             f"|{self.quiz_instance.end_message(self.player_input, SceneQuizInput.user_score)[1]}"
+        self.typewriter_display1 = TypewriterText(460, 170, 150, 300, self.display_text1, font=FONT_VSMALL,
+                                                  colour=(0, 0, 0, 0))
+        self.submitted = True
         # close the database that was opened in Quizgame
         self.quiz_instance.close()
 
