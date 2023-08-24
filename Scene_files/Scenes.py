@@ -473,9 +473,81 @@ class SceneMissionAsteroidsInput(Scene):
 
 ########################################################################################################################
 ########################################################################################################################
-# Mission 2: Sentinel
+# Mission 2: Satellite Imaging
 
-class SceneMissionSentinel(Scene):
+class SceneMissionSatellite(Scene):
+    # This class represents the mission scene for the Satellite Challenge
+    def __init__(self, manager, game_clock):
+        # Initialise the Satellite Challenge mission scene.
+        # Call the superclass (Scene)
+        super().__init__()
+    # Store the SceneManager and game clock
+        self.manager = manager
+        self.game_clock = game_clock
+    # Title for the scene
+        self.title = "Satellite Imaging"
+        self.block = "In this challenge, you will use the Stratobus' Satellite links to capture photos of three cities and report certain data back to base."
+    # Create typewriter text for title and mission description
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), justify="center")
+        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
+    # Load and store the mission box image
+        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+
+        # Define buttons for mission operations
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_satellite_play
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
+        )
+
+    def to_scene_mission_satellite_play(self):
+        # Switch to the Satellite Mission Buttons scene
+        self.manager.switch_scene(SceneMissionSatelliteIntro(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        # Handle events for the scene
+        super().handle_event(event)
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    # Update the scene's elements
+    # Update the typewriter's title
+    # Update the typewriter block if typewriter title has completed
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    # Draw the scene's elements on the screen
+    # Fill the screen with a white background and draw background image
+    # Draw typewriter title, typewriter block, buttons, and additional UI elements
+
+    def to_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_satellite.image, BackGround_satellite.rect)
+        screen.blit(self.mission_box_image, (75, 120))
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+        super().draw(screen)
+
+
+########################################################################################################################
+# This class represents the scene where player captures satellite images
+
+class SceneMissionSatelliteIntro(Scene):
     # This class represents the Sentinel Mission scene
     def __init__(self, manager, game_clock):
         # Initialise the Sentinel Mission scene
@@ -484,11 +556,14 @@ class SceneMissionSentinel(Scene):
         # Store the SceneManager and game clock
         self.manager = manager
         self.game_clock = game_clock
+
         # Title for the scene
-        self.title = "Earth Satellite Imaging"
-        self.block = "In this challenge you will take aerial photographs of Earth.  What does your house look like from above? "
+        self.title = "Satellite Imaging Mission"
+        self.satellite_instance = Satellite(self.title)
+        self.block = "The Satellite is primed and ready! Press 'Capture Images' to take some satellite photos."
+
         # Create typewriter text for title and mission description
-        self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)), font = FONT,
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title,
                                                justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
         # Load and store the mission box image
@@ -496,15 +571,16 @@ class SceneMissionSentinel(Scene):
 
         # Adjust these buttons to your needs for the second scene
         # Define buttons for mission options
+
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "ACCEPT", BLACK, WHITE, self.to_scene_mission_sentinel_play
+            "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "CAPTURE IMAGES", BLACK, WHITE, self.to_scene_mission_satellite_answer
         )
         self.button2 = Button(
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
-    def to_scene_mission_sentinel_play(self):
-        self.manager.switch_scene(SceneMissionSentinelPlay(self.manager, self.game_clock))
+    def to_scene_mission_satellite_answer(self):
+        self.manager.switch_scene(SceneMissionSatelliteAnswer(self.manager, self.game_clock))
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
@@ -512,7 +588,6 @@ class SceneMissionSentinel(Scene):
     def handle_event(self, event):
         super().handle_event(event)
         self.button1.handle_event(event)
-        self.button2.handle_event(event)
 
     def update(self):
         # Always update the typewriter title
@@ -525,7 +600,7 @@ class SceneMissionSentinel(Scene):
 
     def draw(self, screen):
         screen.fill([255, 255, 255])
-        screen.blit(BackGround_sentinel.image, BackGround_sentinel.rect)
+        screen.blit(BackGround_satellite.image, BackGround_satellite.rect)
         screen.blit(self.mission_box_image, (75, 120))
         self.typewriter_title.draw(screen)
 
@@ -538,8 +613,9 @@ class SceneMissionSentinel(Scene):
         super().draw(screen)
 
 ########################################################################################################################
-class SceneMissionSentinelPlay(Scene):
-    # This class represents the Sentinel Mission scene
+# New scene where images are displayed and player is asked a question
+class SceneMissionSatelliteAnswer(Scene):
+
     def __init__(self, manager, game_clock):
         # Initialise the Sentinel Mission scene
         # Call the superclass (Scene)
@@ -547,52 +623,122 @@ class SceneMissionSentinelPlay(Scene):
         # Store the SceneManager and game clock
         self.manager = manager
         self.game_clock = game_clock
-        # Title for the scene
-        self.title = "Earth Satellite Imaging Mission"
-        self.block = ""
-        # Create typewriter text for title and mission description
-        self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title,
-                                               justify="center")
-        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
-        # Load and store the mission box image
-        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
 
-        # Adjust these buttons to your needs for the second scene
-        # Define buttons for mission options
+        # Title for the scene
+        self.title = "Satellite Images Received"
+        self.satellite_instance = Satellite(self.title)
+
+        # Initialise buttons for each of the 3 photos, as well as "Menu" button
+        # Based on the value of question_answer above, set the relevant Image button as the correct answer. The other 2
+        # image buttons should be set as incorrect responses. These will vary depending on which question is randomly
+        # chosen by self.satellite_instance.random_question() further down
+        # BACK button should redirect to menu but not working atm
 
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
+            "left", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 1", BLACK, WHITE, self.to_menu # button actions will be determined by which random question is chosen
         )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 2", BLACK, WHITE, self.to_menu # button actions will be determined by which random question is chosen
+        )
+        self.button3 = Button(
+            "right", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 3", BLACK, WHITE, self.to_menu  # button actions will be determined by which random question is chosen
+        )
+        self.button4 = Button(645, 460, ORANGE, BLUE, "BACK", BLACK, WHITE, self.to_menu)
 
+        # Get the three images onscreen above the 3 buttons - may need to resize
+        self.satellite_image1 = pygame.image.load("./Missions/satellite_image1.jpg")
+        self.satellite_image2 = pygame.image.load("./Missions/satellite_image2.jpg")
+        self.satellite_image3 = pygame.image.load("./Missions/satellite_image3.jpg")
+
+        # Resize the images
+        self.satellite_image1 = pygame.transform.scale(self.satellite_image1, (190, 360))
+        self.satellite_image2 = pygame.transform.scale(self.satellite_image2, (190, 360))
+        self.satellite_image3 = pygame.transform.scale(self.satellite_image3, (190, 360))
+
+        # Create typewriter text for screen title, subtitle (top of question box) and question text
+        self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title,
+                                               justify="center")
+
+        self.typewriter_subtitle = TypewriterText(66, 480, 210, 100, "CHOOSE CAREFULLY...", font=FONT_MEDSMALL,
+                                                  colour=(0, 0, 0, 0))
+
+        text_block = self.satellite_instance.random_question()
+        for question_prompt, question_answer in text_block.items():
+            self.typewriter_block = TypewriterText(70, 515, 470, 120, question_prompt,
+                                                   font=FONT_MEDSMALL, colour=(0, 0, 0, 0))
+
+        # Captions for all 3 images telling the player what the city & country are
+        self.typewriter_caption1 = TypewriterText(60, 80, 100, 70, "Reykjavik, Iceland", font=FONT_VSMALL, colour=BLACK)
+        self.typewriter_caption2 = TypewriterText(310, 80, 100, 70, "Lima, Peru", font=FONT_VSMALL, colour=BLACK)
+        self.typewriter_caption3 = TypewriterText(550, 80, 100, 70, "Beijing, China", font=FONT_VSMALL, colour=BLACK)
+
+        # Load and store the mission box image
+        self.mission_box_image = pygame.image.load("./Scene_files/Images/ans_box_1.png")
+        self.mission_box_image = pygame.transform.scale(self.mission_box_image, (600, 130))
+
+        # Create text box shapes for the image captions, adjust sizing
+        self.ans_box_2 = pygame.image.load("./Scene_files/Images/ans_box_2.png")
+        self.ans_box_2 = pygame.transform.scale(self.ans_box_2, (170, 45))
+        self.ans_box_3 = pygame.image.load("./Scene_files/Images/ans_box_3.png")
+        self.ans_box_3 = pygame.transform.scale(self.ans_box_2, (170, 45))
+        self.ans_box_4 = pygame.image.load("./Scene_files/Images/ans_box_4.png")
+        self.ans_box_4 = pygame.transform.scale(self.ans_box_2, (170, 45))
 
     def to_menu(self):
-        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+        self.manager.switch_scene(SceneMissionSatellite(self.manager, self.game_clock))
 
     def handle_event(self, event):
         super().handle_event(event)
         self.button1.handle_event(event)
-
 
     def update(self):
         # Always update the typewriter title
         # Only update the typewriter block if typewriter title has completed
         self.typewriter_title.update()
 
-        # Only update typewriter_block if typewriter title has completed
+        # Sequence for text element updating
         if self.typewriter_title.completed:
+            self.typewriter_subtitle.update()
+        if self.typewriter_subtitle.completed:
             self.typewriter_block.update()
+
+        if self.typewriter_title.completed:
+            self.typewriter_caption1.update()
+        if self.typewriter_caption1.completed:
+            self.typewriter_caption2.update()
+        if self.typewriter_caption2.completed:
+            self.typewriter_caption3.update()
 
     def draw(self, screen):
         screen.fill([255, 255, 255])
-        screen.blit(BackGround_sentinel.image, BackGround_sentinel.rect)
-        screen.blit(self.mission_box_image, (75, 120))
+        screen.blit(BackGround_satellite.image, BackGround_satellite.rect)
+        screen.blit(self.mission_box_image, (30, 450))
+        screen.blit(self.satellite_image1, (50, 75))
+        screen.blit(self.satellite_image2, (300, 75))
+        screen.blit(self.satellite_image3, (540, 75))
+        screen.blit(self.ans_box_2, (50, 75))
+        screen.blit(self.ans_box_3, (300, 75))
+        screen.blit(self.ans_box_4, (540, 75))
+
         self.typewriter_title.draw(screen)
 
-        # Only draw typewriter_block if typewriter_title has completed
+        # Sequence for text element drawing
         if self.typewriter_title.completed:
+            self.typewriter_subtitle.draw(screen)
+        if self.typewriter_subtitle.completed:
             self.typewriter_block.draw(screen)
 
+        if self.typewriter_title.completed:
+            self.typewriter_caption1.draw(screen)
+        if self.typewriter_caption1.completed:
+            self.typewriter_caption2.draw(screen)
+        if self.typewriter_caption2.completed:
+            self.typewriter_caption3.draw(screen)
+
         self.button1.draw(screen)
+        self.button2.draw(screen)
+        self.button3.draw(screen)
+        self.button4.draw(screen)
         super().draw(screen)
 
 ########################################################################################################################
