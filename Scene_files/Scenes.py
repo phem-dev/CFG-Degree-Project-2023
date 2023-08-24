@@ -42,7 +42,7 @@ class SceneStart(Scene):
 
         # Create buttons for the scene - here we define the things to be drawn by the draw method further down
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_mission_menu
+            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_welcome
         )
         self.button2 = Button(
             "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
@@ -52,8 +52,8 @@ class SceneStart(Scene):
                               1000)  # This will trigger a USER EVENT after a set time. (the + 1 is used as ID for that USER EVENT in case there are more)
 
     # Actions as functions to be called on button clicks
-    def to_mission_menu(self):
-        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+    def to_welcome(self):
+        self.manager.switch_scene(WelcomeScene(self.manager, self.game_clock))
 
     def to_controls(self):
         self.manager.switch_scene(SceneControls(self.manager, self.game_clock))
@@ -91,7 +91,60 @@ class SceneStart(Scene):
 
 
 ########################################################################################################################
+# Intro page giving some background info about the game
+class WelcomeScene(Scene):
+    def __init__(self, manager, game_clock):
+        super().__init__()
+        self.manager = manager
+        self.game_clock = game_clock
 
+        # Create a button to move to the Missions scene
+        self.button1 = Button(
+            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_start_menu
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
+        )
+        self.typewriter = TypewriterText(280, 125, 250, 500, "Welcome to the Stratobus Missions!", FONT_MEDIUM, WHITE, justify="center")
+        self.typewriter_block = TypewriterText(250, 190, 320, 500, "Welcome to the Stratobus Missions!,Welcome to the Stratobus Missions!,Welcome to the Stratobus Missions!,Welcome to the Stratobus Missions!", FONT_SMALL, WHITE,
+                                         justify="center")
+
+        # draw text box (asteroids box?), change style for title, write text
+        self.mission_box = pygame.image.load('./Scene_files/Images/mission_box.png')
+        self.mission_box = pygame.transform.scale(self.mission_box, (500, 350))
+
+    def to_start_menu(self):
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def handle_event(self, event):
+        # Handle events specific to the controls menu scene
+        super().handle_event(event)
+        self.button1.handle_event(event)
+        self.button2.handle_event(event)
+
+    def update(self):
+        # Update the scene's elements - if timer has finished, update the typewriter effect
+        self.typewriter.update()
+        self.typewriter_block.update()
+
+    def draw(self, screen):
+        # Draw the scene's elements on the screen
+
+        # Fill the screen with a white background and draw background image
+        # If the timer has finished, draw buttons and typewriter text
+        # Finally, call the base class's draw method for additional UI elements
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_home.image, BackGround_home.rect)
+        screen.blit(self.mission_box, (150, 50))  # position for text box
+        # If timer has finished, draw buttons and typewriter text
+        self.button1.draw(screen)
+        self.button2.draw(screen)
+        self.typewriter.draw(screen)
+        self.typewriter_block.draw(screen)
+
+        super().draw(screen)
+
+########################################################################################################################
 
 class SceneControls(Scene):
     # Initialise the scene for controls menu
