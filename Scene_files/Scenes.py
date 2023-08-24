@@ -1,22 +1,24 @@
-import sys
-import Missions.Mission1_Asteroids
-import Missions.quiz_SQLite.quiz
-import subprocess
-from collections import deque
+import sys # for system exit
+import subprocess # for ISS mission
+import requests # for mars mission - directly coded
+from collections import deque # for quiz question list
+from io import BytesIO # for mars mission - directly coded
 
-
+# configurations
+from settings import *
 # Superclass and constants
 from Scene_files.SceneManager import Scene
-
-from settings import *
-# Mission classes
-from Missions.Mission1_Asteroids import Challenge, Asteroids
-from Missions.quiz_SQLite.quiz import QuizGame
 # functional classes
 from Utils.Typewriter import TypewriterText
 from Utils.Button import Button
 from Utils.TextInput import TextInput
 from Scene_files.background import *
+# Mission classes
+import Missions.Mission1_Asteroids
+import Missions.quiz_SQLite.quiz
+from Missions.Mission1_Asteroids import Challenge, Asteroids
+from Missions.quiz_SQLite.quiz import QuizGame
+
 
 
 ########################################################################################################################
@@ -659,47 +661,203 @@ class SceneMissionMarsPlay(Scene):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
+
+        #title block
         self.title = "Capture Mars Mission"
         self.block = ""
-        self.typewriter_title = TypewriterText(200, 20, 400, 500, self.title,
-                                               justify="center")
-        self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
-        self.mission_box_image = pygame.image.load('./Scene_files/Images/mission_box.png')
+        self.typewriter_title = TypewriterText(200, 20, 400, 500, self.title, justify="center")
 
-        # Adjust these buttons to your needs for the second scene
+        # define which button is clicked
+        self.camera_choice = None
+        self.pygame_image = None  # latest image
+        self.pygame_image2 = None  # previous image
+        self.rover_text = TypewriterText(100, 200, 300, 300, "",justify="center")
+        self.camera_text = TypewriterText(100, 250, 300, 300, "", justify="center")
+        self.no_image_text = TypewriterText(100, 200, 300, 300, "",justify="center")
+        self.loading_text = TypewriterText(200, 350, 300, 300, "LOADING...", justify="center", font=FONT_SMALL)
+        self.button_clicked = False
 
-        self.button1= Button(
+
+
+        # menu button
+        self.button0 = Button(
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
+        # Camera buttons
+        self.button1 = Button(
+            (SCREEN_HEIGHT * 0.05), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Front Hazard Camera", BLACK, WHITE,  lambda: (setattr(self, 'camera_choice',  "1"), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+        )
+        self.button2 = Button(
+            (SCREEN_HEIGHT * 0.7), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Rear Hazard Camera", BLACK, WHITE,lambda: (setattr(self, 'camera_choice', "2"), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+        )
+        self.button3 = Button(
+            "center", (SCREEN_HEIGHT * 0.82), YELLOW, BLUE, "Navigation Camera", BLACK, WHITE, lambda: (setattr(self, 'camera_choice', "3"), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+        )
+
+        # Map the player's choice to each camera:
+        self.camera_mapping = {"1": "FHAZ", "2": "RHAZ", "3": "MAST"}
+
+        # Variables to display full camera name:
+        self.camera_names = {
+            "FHAZ": "Front Hazard Camera",
+            "RHAZ": "Rear Hazard Camera",
+            "MAST": "Navigation Camera"
+        }
+
+        # Function to check if the input is a valid number:
+    def is_valid(self, input_str):
+        try:
+            int(input_str)  # Try to convert the input to an integer
+            return True
+        except ValueError:  # If ValueError occurs, return False
+            return False
+
+    def fetch_previous_images(self, camera, num_images=5):
+        # Fetch previous images from the NASA Mars API:
+        mars_api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
+        rover = "curiosity"
+
+        # Variable created for the Mars API URL based on the chosen camera:
+        mars_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/photos?camera={camera}&api_key={mars_api_key}&sol=1000&page=1&per_page={num_images}"
+
+        # Get response from API:
+        response = requests.get(mars_url)
+
+        # If status code is 200, get image data:
+        if response.status_code == 200:
+            # Parse the response data as JSON:
+            data = response.json()
+            if "photos" in data and data["photos"]:
+                img_urls = [photo["img_src"] for photo in data["photos"]]
+                images_data = []
+
+                for img_url in img_urls:
+                    # fetch image:
+                    image_response = requests.get(img_url)
+                    if image_response.status_code == 200:
+                        image_data = image_response.content
+                        images_data.append(image_data)
+
+                # Return list of image data:
+                return images_data
+
+        return None
+    def fetch_latest_image(self, camera):
+        # Fetch the latest image from the NASA API
+        mars_api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
+        rover = "curiosity"
+        mars_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/latest_photos?camera={camera}&api_key={mars_api_key}"
+        response = requests.get(mars_url)
+
+        # If status code is 200, get LATEST image data:
+        if response.status_code == 200:
+            # Parse the response data as JSON:
+            data = response.json()
+            if "latest_photos" in data and data["latest_photos"]:
+                latest_img_url = data["latest_photos"][0]["img_src"]
+                # Fetch the latest image:
+                image_response = requests.get(latest_img_url)
+                if image_response.status_code == 200:
+                    image_data = image_response.content
+
+                    # Return a dictionary of data:
+                    return {
+                        'data': image_data,
+                        'rover_name': rover.capitalize(),
+                        'camera_choice_name': self.camera_names[self.camera_mapping[camera]]
+                    }
+
+        return None
+
+    def scale_image(self, image):
+        # Scale the image to smaller dimensions:
+        scaled_width = 350
+        scaled_height = 350
+        return pygame.transform.scale(image, (scaled_width, scaled_height))
+
+
+    def run(self):
+        if self.camera_choice:
+            camera = self.camera_mapping[self.camera_choice]
+            latest_image_data = self.fetch_latest_image(camera)
+            if latest_image_data:
+                # Display latest image and camera information:
+                pygame_image = pygame.image.load(BytesIO(latest_image_data['data']))
+
+                # Scale the image to smaller dimensions:
+                self.pygame_image = self.scale_image(pygame_image)
+
+                # Display text info/which camera: ------------------------------------------------------------ ***CHANGE FONT******
+                self.rover_text = TypewriterText(250, 360, 300, 300,
+                                                 f"Photo from Mars Rover {latest_image_data['rover_name']}", FONT_VSMALL)
+                self.camera_text = TypewriterText(250, 380, 300, 300,
+                                                  f"Camera: {latest_image_data['camera_choice_name']}", FONT_VSMALL)
+
+            # Check if no latest image is available
+            else:
+                # Fetch and display photos from the code
+                images_data = self.fetch_previous_images(camera)
+                if images_data:
+                    # Select the first image data from the list
+                    selected_image_data = images_data[0]
+                    pygame_image2 = pygame.image.load(BytesIO(selected_image_data))
+                    self.pygame_image2 = self.scale_image(pygame_image2)
+                    self.rover_text = TypewriterText(250, 360, 300, 300,
+                                                     f"Photo from Mars Rover", FONT_VSMALL)
+                    self.camera_text = TypewriterText(250, 380, 300, 300,
+                                                      f"Camera: {self.camera_names[camera]}", FONT_VSMALL)
+                else:
+                    self.no_image_text = TypewriterText(175, 275, 300, 300, "Sorry. No images available at this time.")
+
+
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def handle_event(self, event):
         super().handle_event(event)
+        self.button0.handle_event(event)
         self.button1.handle_event(event)
+        self.button2.handle_event(event)
+        self.button3.handle_event(event)
 
 
     def update(self):
         # Always update the typewriter title
         self.typewriter_title.update()
+        if self.button_clicked:
+            self.loading_text.update()
+        if self.button_clicked:
+            self.rover_text.update()
+        if self.button_clicked:
+            self.camera_text.update()
+        if self.button_clicked:
+            self.no_image_text.update()
 
-        # Only update typewriter_block if typewriter title has completed
-        if self.typewriter_title.completed:
-            self.typewriter_block.update()
 
     def draw(self, screen):
         screen.fill([255, 255, 255])
         screen.blit(BackGround_mars.image, BackGround_mars.rect)
-        screen.blit(self.mission_box_image, (75, 120))
         self.typewriter_title.draw(screen)
 
-        # Only draw typewriter_block if typewriter title has completed
-        if self.typewriter_title.completed:
-            self.typewriter_block.draw(screen)
+        if self.button_clicked:
+            self.loading_text.draw(screen)
 
+        self.button0.draw(screen)
         self.button1.draw(screen)
+        self.button2.draw(screen)
+        self.button3.draw(screen)
         super().draw(screen)
+
+        if self.pygame_image:
+            screen.blit(self.pygame_image, (225, 75))
+            self.rover_text.draw(screen)
+            self.camera_text.draw(screen)
+        if self.pygame_image2:
+            screen.blit(self.pygame_image2, (225, 75))
+            self.rover_text.draw(screen)
+            self.camera_text.draw(screen)
+
 
 ########################################################################################################################
 #######################################################################################################################
