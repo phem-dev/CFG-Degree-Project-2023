@@ -17,6 +17,7 @@ from Scene_files.background import *
 import Missions.Mission1_Asteroids
 import Missions.quiz_SQLite.quiz
 from Missions.Mission1_Asteroids import Challenge, Asteroids
+from Missions.Mission2_Satellite_Images import Satellite
 from Missions.quiz_SQLite.quiz import QuizGame
 
 
@@ -185,7 +186,7 @@ class SceneStartMenu(Scene):
         self.manager.switch_scene(SceneMissionAsteroids(self.manager, self.game_clock))
 
     def to_scene_mission_sentinel(self):
-        self.manager.switch_scene(SceneMissionSentinel(self.manager, self.game_clock))
+        self.manager.switch_scene(SceneMissionSatellite(self.manager, self.game_clock))
 
     def to_scene_mission_mars(self):
         self.manager.switch_scene(SceneMissionMars(self.manager, self.game_clock))
@@ -404,7 +405,7 @@ class SceneMissionAsteroidsInput(Scene):
         # Switch to the Sentinel Mission scene
 
     def to_scene_mission_sentinel(self):
-        self.manager.switch_scene(SceneMissionSentinel(self.manager, self.game_clock))
+        self.manager.switch_scene(SceneMissionSatellite(self.manager, self.game_clock))
 
         # Handle events for the scene
 

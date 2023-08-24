@@ -9,7 +9,7 @@ class Background(pygame.sprite.Sprite):
 
 BackGround_home = Background('Scene_files/Images/home_bg.png', [0, 0])
 BackGround_asteroid = Background('Scene_files/Images/asteroid_bg.png', [0, 0])
-BackGround_sentinel = Background('Scene_files/Images/sentinel_bg.png', [0, 0])
+BackGround_satellite = Background('Scene_files/Images/sentinel_bg.png', [0, 0])
 BackGround_mars = Background('Scene_files/Images/mars_bg.png', [0, 0])
 BackGround_payload = Background('Scene_files/Images/payload_bg.png', [0, 0])
 BackGround_iss = Background('Scene_files/Images/iss_bg.png',[0, 0])
