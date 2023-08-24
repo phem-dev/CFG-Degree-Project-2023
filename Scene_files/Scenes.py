@@ -589,6 +589,7 @@ class SceneMissionSatelliteIntro(Scene):
     def handle_event(self, event):
         super().handle_event(event)
         self.button1.handle_event(event)
+        self.button2.handle_event(event)
 
     def update(self):
         # Always update the typewriter title
@@ -624,29 +625,19 @@ class SceneMissionSatelliteAnswer(Scene):
         # Store the SceneManager and game clock
         self.manager = manager
         self.game_clock = game_clock
+        self.allow_button_clicks = True
+        self.answered_correctly = False
 
         # Title for the scene
         self.title = "Satellite Images Received"
         self.satellite_instance = Satellite(self.title)
 
-        # Initialise buttons for each of the 3 photos, as well as "Menu" button
         # Based on the value of question_answer above, set the relevant Image button as the correct answer. The other 2
         # image buttons should be set as incorrect responses. These will vary depending on which question is randomly
         # chosen by self.satellite_instance.random_question() further down
         # BACK button should redirect to menu but not working atm
 
-        self.button1 = Button(
-            "left", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 1", BLACK, WHITE, self.to_menu # button actions will be determined by which random question is chosen
-        )
-        self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 2", BLACK, WHITE, self.to_menu # button actions will be determined by which random question is chosen
-        )
-        self.button3 = Button(
-            "right", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 3", BLACK, WHITE, self.to_menu  # button actions will be determined by which random question is chosen
-        )
-        self.button4 = Button(645, 460, ORANGE, BLUE, "BACK", BLACK, WHITE, self.to_menu)
-
-        # Get the three images onscreen above the 3 buttons - may need to resize
+        # Render the three images onscreen above the 3 buttons
         self.satellite_image1 = pygame.image.load("./Missions/satellite_image1.jpg")
         self.satellite_image2 = pygame.image.load("./Missions/satellite_image2.jpg")
         self.satellite_image3 = pygame.image.load("./Missions/satellite_image3.jpg")
@@ -668,6 +659,34 @@ class SceneMissionSatelliteAnswer(Scene):
             self.typewriter_block = TypewriterText(70, 515, 470, 120, question_prompt,
                                                    font=FONT_MEDSMALL, colour=(0, 0, 0, 0))
 
+        # Initialise image option buttons + back button
+        self.button1 = Button(
+            "left", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 1", BLACK, WHITE, self.incorrect_answer
+        )
+        self.button2 = Button(
+            "center", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 2", BLACK, WHITE, self.incorrect_answer
+        )
+        self.button3 = Button(
+            "right", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 3", BLACK, WHITE, self.incorrect_answer
+        )
+        self.button4 = Button(645, 460, ORANGE, BLUE, "BACK", BLACK, WHITE, self.to_menu)
+
+        # Change one of the buttons to correct_answer, depending on the question that was displayed
+        correct_answer = list(text_block.values())[0]
+
+        if correct_answer == 1:
+            self.button1 = Button(
+                "left", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 1", BLACK, WHITE, self.correct_answer
+            )
+        elif correct_answer == 2:
+            self.button2 = Button(
+                "center", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 2", BLACK, WHITE, self.correct_answer
+            )
+        elif correct_answer == 3:
+            self.button3 = Button(
+                "right", (SCREEN_HEIGHT * 0.66), GREEN, BLUE, "IMAGE 3", BLACK, WHITE, self.correct_answer
+            )
+
         # Captions for all 3 images telling the player what the city & country are
         self.typewriter_caption1 = TypewriterText(60, 80, 100, 70, "Reykjavik, Iceland", font=FONT_VSMALL, colour=BLACK)
         self.typewriter_caption2 = TypewriterText(310, 80, 100, 70, "Lima, Peru", font=FONT_VSMALL, colour=BLACK)
@@ -685,12 +704,35 @@ class SceneMissionSatelliteAnswer(Scene):
         self.ans_box_4 = pygame.image.load("./Scene_files/Images/ans_box_4.png")
         self.ans_box_4 = pygame.transform.scale(self.ans_box_2, (170, 45))
 
-    def to_menu(self):
+    def correct_answer(self):  # if answer is correct, display confirmation and block remaining buttons apart from NEXT (button gets updated in handle_event function)
+        self.typewriter_block = TypewriterText(70, 515, 470, 120, "Correct, Mission Completed!", font=FONT_MEDSMALL,
+                                               colour=(0, 0, 0, 0))
+        self.typewriter_block.update()
+        self.allow_button_clicks = False
+        self.answered_correctly = True
+
+    def to_scene_mission_satellite_intro(self):
+        self.manager.switch_scene(SceneMissionSatelliteIntro(self.manager, self.game_clock))
+
+    def incorrect_answer(self):  # if incorrect, block all buttons apart from BACK
+        self.typewriter_block = TypewriterText(70, 515, 470, 120, "Oh no, Mission Failed! You'll have to go back and accept the mission again...", font=FONT_MEDSMALL,
+                                               colour=(0, 0, 0, 0))
+        self.typewriter_block.update()
+        self.allow_button_clicks = False
+
+    def to_menu(self):  # change screen back to Menu
         self.manager.switch_scene(SceneMissionSatellite(self.manager, self.game_clock))
 
+    def to_scene_mission_mars(self):  # if correct answer was chosen, switch to next mission (Mars)
+        self.manager.switch_scene(SceneMissionMars(self.manager, self.game_clock))
+
     def handle_event(self, event):
-        super().handle_event(event)
-        self.button1.handle_event(event)
+        self.button4.handle_event(event)
+        if self.allow_button_clicks:
+            super().handle_event(event)
+            self.button1.handle_event(event)
+            self.button2.handle_event(event)
+            self.button3.handle_event(event)
 
     def update(self):
         # Always update the typewriter title
@@ -709,6 +751,8 @@ class SceneMissionSatelliteAnswer(Scene):
             self.typewriter_caption2.update()
         if self.typewriter_caption2.completed:
             self.typewriter_caption3.update()
+        if self.answered_correctly:
+            self.button4 = Button(645, 460, GREEN, BLUE, "NEXT", BLACK, WHITE, self.to_scene_mission_mars)
 
     def draw(self, screen):
         screen.fill([255, 255, 255])
