@@ -108,7 +108,7 @@ class ISSTracker:
         lon_scale = self.window_size[1] / 360
 
         # Calculate the angle of rotation for the ISS movement around the Earth:
-        angle = pygame.time.get_ticks() / 100000
+        angle = pygame.time.get_ticks() / 9000
 
         # Calculate the radius for the ISS circular movement path:
         radius = min(self.window_size) * 0.2
