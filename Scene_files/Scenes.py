@@ -671,9 +671,9 @@ class SceneMissionMarsPlay(Scene):
         self.camera_choice = None
         self.pygame_image = None  # latest image
         self.pygame_image2 = None  # previous image
-        self.rover_text = TypewriterText(100, 200, 300, 300, "",justify="center")
+        self.rover_text = TypewriterText(100, 200, 300, 300, "", justify="center")
         self.camera_text = TypewriterText(100, 250, 300, 300, "", justify="center")
-        self.no_image_text = TypewriterText(100, 200, 300, 300, "",justify="center")
+        self.no_image_text = TypewriterText(100, 200, 300, 300, "", justify="center")
         self.loading_text = TypewriterText(200, 350, 300, 300, "LOADING...", justify="center", font=FONT_SMALL)
         self.button_clicked = False
 
@@ -685,17 +685,17 @@ class SceneMissionMarsPlay(Scene):
         )
         # Camera buttons
         self.button1 = Button(
-            (SCREEN_HEIGHT * 0.05), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Front Hazard Camera", BLACK, WHITE,  lambda: (setattr(self, 'camera_choice',  "1"), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+            (SCREEN_HEIGHT * 0.05), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Front Hazard Camera", BLACK, WHITE,  lambda: (setattr(self, 'camera_choice',  1), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
         )
         self.button2 = Button(
-            (SCREEN_HEIGHT * 0.7), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Rear Hazard Camera", BLACK, WHITE,lambda: (setattr(self, 'camera_choice', "2"), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+            (SCREEN_HEIGHT * 0.7), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Rear Hazard Camera", BLACK, WHITE,lambda: (setattr(self, 'camera_choice', 2), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
         )
         self.button3 = Button(
-            "center", (SCREEN_HEIGHT * 0.82), YELLOW, BLUE, "Navigation Camera", BLACK, WHITE, lambda: (setattr(self, 'camera_choice', "3"), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+            "center", (SCREEN_HEIGHT * 0.82), YELLOW, BLUE, "Navigation Camera", BLACK, WHITE, lambda: (setattr(self, 'camera_choice', 3), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
         )
 
         # Map the player's choice to each camera:
-        self.camera_mapping = {"1": "FHAZ", "2": "RHAZ", "3": "MAST"}
+        self.camera_mapping = {1: "FHAZ", 2: "RHAZ", 3: "MAST"}
 
         # Variables to display full camera name:
         self.camera_names = {
@@ -764,7 +764,7 @@ class SceneMissionMarsPlay(Scene):
                     return {
                         'data': image_data,
                         'rover_name': rover.capitalize(),
-                        'camera_choice_name': self.camera_names[self.camera_mapping[camera]]
+                        'camera_choice_name': self.camera_names[self.camera_mapping[self.camera_choice]]
                     }
 
         return None
@@ -774,7 +774,6 @@ class SceneMissionMarsPlay(Scene):
         scaled_width = 350
         scaled_height = 350
         return pygame.transform.scale(image, (scaled_width, scaled_height))
-
 
     def run(self):
         if self.camera_choice:
@@ -788,10 +787,10 @@ class SceneMissionMarsPlay(Scene):
                 self.pygame_image = self.scale_image(pygame_image)
 
                 # Display text info/which camera: ------------------------------------------------------------ ***CHANGE FONT******
-                self.rover_text = TypewriterText(250, 360, 300, 300,
-                                                 f"Photo from Mars Rover {latest_image_data['rover_name']}", FONT_VSMALL)
-                self.camera_text = TypewriterText(250, 380, 300, 300,
-                                                  f"Camera: {latest_image_data['camera_choice_name']}", FONT_VSMALL)
+                self.rover_text = TypewriterText(253, 370, 300, 300,
+                                                 f"Photo from Mars Rover {latest_image_data['rover_name']}", FONT_VSMALL, justify="center")
+                self.camera_text = TypewriterText(253, 390, 300, 300,
+                                                  f"Camera: {latest_image_data['camera_choice_name']}", FONT_VSMALL, justify="center")
 
             # Check if no latest image is available
             else:
@@ -802,10 +801,10 @@ class SceneMissionMarsPlay(Scene):
                     selected_image_data = images_data[0]
                     pygame_image2 = pygame.image.load(BytesIO(selected_image_data))
                     self.pygame_image2 = self.scale_image(pygame_image2)
-                    self.rover_text = TypewriterText(250, 360, 300, 300,
-                                                     f"Photo from Mars Rover", FONT_VSMALL)
-                    self.camera_text = TypewriterText(250, 380, 300, 300,
-                                                      f"Camera: {self.camera_names[camera]}", FONT_VSMALL)
+                    self.rover_text = TypewriterText(253, 370, 300, 300,
+                                                     f"Photo from Mars Rover", FONT_VSMALL, justify="center")
+                    self.camera_text = TypewriterText(253, 390, 300, 300,
+                                                      f"Camera: {self.camera_names[camera]}", FONT_VSMALL, justify="center")
                 else:
                     self.no_image_text = TypewriterText(175, 275, 300, 300, "Sorry. No images available at this time.")
 
@@ -850,10 +849,12 @@ class SceneMissionMarsPlay(Scene):
         super().draw(screen)
 
         if self.pygame_image:
+            pygame.draw.rect(screen, [0, 0, 0], (225, 75, 350, 350))
             screen.blit(self.pygame_image, (225, 75))
             self.rover_text.draw(screen)
             self.camera_text.draw(screen)
         if self.pygame_image2:
+            pygame.draw.rect(screen, [0, 0, 0], (225, 75, 350, 350))
             screen.blit(self.pygame_image2, (225, 75))
             self.rover_text.draw(screen)
             self.camera_text.draw(screen)
