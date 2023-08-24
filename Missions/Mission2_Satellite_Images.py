@@ -35,9 +35,7 @@ class Satellite(Challenge):
         to click
         Returns: Confirmation message + move to the next function.
         """
-        ready_message = "The Satellite is primed and ready! Press 'Capture Images' to take photos."  # display this first
-        # pygame button = "Capture Images"
-        # when button clicked -> return capture_confirmation
+        ready_message = "The Satellite is primed and ready! Press 'Capture Images' to take photos."
         capture_confirmation = "Capturing Satellite Images"
         return capture_confirmation, self.download_images()
 
@@ -67,20 +65,6 @@ class Satellite(Challenge):
         question_answer = {question_prompt: correct_answer}
         return question_answer
 
-    def answer(self, correct_ans):
-        """Takes player's answer and determines if correct
-                Args:
-                    correct_ans: correct answer, hardcoded per question
-
-                Returns: success or fail message
-                """
-        player_input = None  # pygame object for button choice OR player input (preferably buttons)
-
-        if player_input == correct_ans:
-            return True
-        else:
-            return False
-
     def success(self):
         correct_response_message = "Correct - Mission Completed!"
         return correct_response_message
@@ -94,17 +78,7 @@ class Satellite(Challenge):
 
 def main():
     satellite_challenge = Satellite("Satellite Imaging")
-    #question, correct_ans = satellite_challenge.random_question()
-    #solution = satellite_challenge.random_question
-    #result = satellite_challenge.answer(correct_ans)
-
-    # if result:
-    #     satellite_challenge.success()
-    # else:
-    #     satellite_challenge.fail()
-
-    return satellite_challenge.greet(), satellite_challenge.random_question()  # random_question removed from flow of
-    # functions & inserted here for unit testing - expected_output and result were throwing different random questions
+    return satellite_challenge.greet(), satellite_challenge.random_question()
 
 
 if __name__ == "__main__":

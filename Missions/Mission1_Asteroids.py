@@ -14,7 +14,6 @@ class Challenge:
 
 
 class Asteroids(Challenge):
-    #fail_message = "Oh no, Mission Failed!"  # Fail message if player doesn't enter correct answer within 3 attempts
     def success(self):
         """Success message if player correctly inputs asteroid distance
 
@@ -52,7 +51,6 @@ class Asteroids(Challenge):
 
         """
         display_message = self.display_asteroid_data(asteroid_output)
-        player_input = ""  # Initialize player input
         return self.asteroid_distance_prompt(), display_message  # display prompt asking player to enter answer, and
         # asteroid data
 
@@ -140,10 +138,10 @@ class Asteroids(Challenge):
         return " ".join(asteroid_output), asteroid_distances  # output the asteroid data and distances only for comparisons to use in the pygame user_input logic
 
 
-# def main():
-#     asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object with challenge name
-#     return asteroid_challenge.greet(), asteroid_challenge.get_all_asteroid_data()  # return first function - all others are linked
-#
-#
-# if __name__ == "__main__":
-#     main()
+def main():
+    asteroid_challenge = Asteroids("Asteroid Proximity Sensor")  # create new class object with challenge name
+    return asteroid_challenge.greet(), asteroid_challenge.get_all_asteroid_data()  # return first function - all others are linked
+
+
+if __name__ == "__main__":
+    main()
