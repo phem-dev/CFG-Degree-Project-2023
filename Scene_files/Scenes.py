@@ -58,7 +58,7 @@ class SceneStart(Scene):
     def to_controls(self):
         self.manager.switch_scene(SceneControls(self.manager, self.game_clock))
 
-    # Here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():" in the main game.py
+    # Here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():" in main.py
     def handle_event(self, event):
         super().handle_event(event)
         # Waiting for the timer USER EVENT to happen
@@ -106,12 +106,14 @@ class WelcomeScene(Scene):
             "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
         )
         self.typewriter = TypewriterText(280, 125, 250, 500, "Welcome to the Stratobus Missions!", FONT_MEDIUM, WHITE, justify="center")
-        self.typewriter_block = TypewriterText(250, 190, 320, 500, "Welcome to the Stratobus Missions!,Welcome to the Stratobus Missions!,Welcome to the Stratobus Missions!,Welcome to the Stratobus Missions!", FONT_SMALL, WHITE,
-                                         justify="center")
+        self.typewriter_block = TypewriterText(250, 190, 320, 500, "Prepare for lift off, captain! You are the pilot of"
+"the Thales Stratobus spacecraft, and must complete all your missions to help collect data from outer space. "
+"Everything you see in this game is real data from outer space and so could change depending on when you play the game."
+"Do you accept your mission?", FONT_VSMALL, WHITE, justify="center")
 
         # draw text box (asteroids box?), change style for title, write text
         self.mission_box = pygame.image.load('./Scene_files/Images/mission_box.png')
-        self.mission_box = pygame.transform.scale(self.mission_box, (500, 350))
+        self.mission_box = pygame.transform.scale(self.mission_box, (515, 380))
 
     def to_start_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
@@ -135,7 +137,7 @@ class WelcomeScene(Scene):
         # Finally, call the base class's draw method for additional UI elements
         screen.fill([255, 255, 255])
         screen.blit(BackGround_home.image, BackGround_home.rect)
-        screen.blit(self.mission_box, (150, 50))  # position for text box
+        screen.blit(self.mission_box, (150, 46))  # position for text box
         # If timer has finished, draw buttons and typewriter text
         self.button1.draw(screen)
         self.button2.draw(screen)
@@ -256,7 +258,7 @@ class SceneStartMenu(Scene):
     def to_scene_quiz(self):
         self.manager.switch_scene(SceneQuiz(self.manager, self.game_clock))
 
-    # here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():" in the main game.py
+    # here we have an event handler, events are fed in using a while loop with "for event in pygame.event.get():" in main.py
 
     # Handle events for the scene
     def handle_event(self, event):
