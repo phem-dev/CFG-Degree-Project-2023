@@ -36,8 +36,8 @@ class ISSTracker:
         self.display_speed = False
 
         # Load ISS and Earth images and set dimensions:
-        self.iss_image = pygame.image.load("iss.png")
-        self.earth_image = pygame.image.load("earth.png")
+        self.iss_image = pygame.image.load("Missions/iss.png")
+        self.earth_image = pygame.image.load("Missions/earth.png")
         self.earth_image_width = 300
         self.earth_image_height = 300
 
