@@ -940,7 +940,7 @@ class SceneMissionMarsPlay(Scene):
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
         self.button02 = Button(
-            (SCREEN_WIDTH * 0.6), (SCREEN_HEIGHT * 0.87), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_payload()
+            (SCREEN_WIDTH * 0.6), (SCREEN_HEIGHT * 0.87), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_payload
         )
         # Camera buttons
         self.button1 = Button(
@@ -1158,6 +1158,9 @@ class SceneMissionPayload(Scene):
 
         # Launch the game in a separate process
         subprocess.Popen([sys.executable,script_path])
+        # make the 1st screen wait a second (for pop-up to load) then go back to menu
+        pygame.time.delay(1000)
+        self.to_menu()
 
     def to_controls(self):
         self.manager.switch_scene(SceneControls(self.manager, self.game_clock))
