@@ -42,7 +42,7 @@ class SceneStart(Scene):
 
         # Create buttons for the scene - here we define the things to be drawn by the draw method further down
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_welcome
+            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "START", BLACK, WHITE, self.to_welcome
         )
         self.button2 = Button(
             "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
@@ -909,9 +909,12 @@ class SceneMissionMarsPlay(Scene):
 
         #title block
         self.title = "Capture Mars Mission"
-        self.block = ""
         self.typewriter_title = TypewriterText(200, 20, 400, 500, self.title, justify="center")
 
+        # command block
+        self.command_block = pygame.image.load('./Scene_files/Images/trivia_box4_s.png')
+        self.command_text = "Check three of the Mars Rover cameras"
+        self.typewriter_command = TypewriterText(100, 20, 300, 500, self.title, justify="center")
         # define which button is clicked
         self.camera_choice = None
         self.pygame_image = None  # latest image
@@ -1086,10 +1089,13 @@ class SceneMissionMarsPlay(Scene):
 
 
     def draw(self, screen):
+
         screen.fill([255, 255, 255])
         screen.blit(BackGround_mars.image, BackGround_mars.rect)
         self.typewriter_title.draw(screen)
-
+        if self.typewriter_title.completed:
+            screen.blit(self.command_block, (SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.2))
+            self.typewriter_command.draw(screen)
         if self.buttons_pressed:
             pygame.draw.rect(screen, [0, 0, 0], (225, 75, 350, 350))
             screen.blit(self.loading_text, (250, 100,))
