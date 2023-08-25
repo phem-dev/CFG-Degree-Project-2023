@@ -90,8 +90,6 @@ Retrieves the current location of the International Space Station.
 
 
 
-
-
 ## Requirements
 
 - Python 3.x
@@ -131,7 +129,8 @@ Before running the game, you need to set up the required environment and depende
 ```json
    pip install googletrans
 ```
-- Install the 'math' module (*Note: The 'math' module is part of Python's standard library and doesn't require installation*):
+- Install the 'math' module (*Note: The 'math' module is part of Python's standard library and doesn't require installation*).
+  
 **5. Run the Game:** Run the game on 'main.py'.
 
 
