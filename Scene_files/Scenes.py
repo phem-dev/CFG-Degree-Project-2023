@@ -918,24 +918,28 @@ class SceneMissionMarsPlay(Scene):
         self.rover_text = TypewriterText(100, 200, 300, 300, "", justify="center")
         self.camera_text = TypewriterText(100, 250, 300, 300, "", justify="center")
         self.no_image_text = TypewriterText(100, 200, 300, 300, "", justify="center")
-        self.loading_text = TypewriterText(200, 350, 300, 300, "LOADING...", justify="center", font=FONT_SMALL)
-        self.button_clicked = False
+        self.loading_text = FONT_MEDSMALL.render("...LOADING...", True, (255, 255, 255))
+        self.buttons_pressed = []
 
 
 
-        # menu button
-        self.button0 = Button(
+
+        # menu and proceed buttons
+        self.button01 = Button(
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
+        )
+        self.button02 = Button(
+            (SCREEN_WIDTH * 0.6), (SCREEN_HEIGHT * 0.87), GREEN, BLUE, "PROCEED", BLACK, WHITE, self.to_scene_payload()
         )
         # Camera buttons
         self.button1 = Button(
-            (SCREEN_HEIGHT * 0.05), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Front Hazard Camera", BLACK, WHITE,  lambda: (setattr(self, 'camera_choice',  1), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+            (SCREEN_WIDTH * 0.05), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Front Hazard Camera", BLACK, WHITE,  lambda: (setattr(self, 'camera_choice',  1), self.run())[1], FONT_SMALL
         )
         self.button2 = Button(
-            (SCREEN_HEIGHT * 0.7), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Rear Hazard Camera", BLACK, WHITE,lambda: (setattr(self, 'camera_choice', 2), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+            (SCREEN_WIDTH * 0.52), (SCREEN_HEIGHT * 0.77), YELLOW, BLUE, "Rear Hazard Camera", BLACK, WHITE,lambda: (setattr(self, 'camera_choice', 2), self.run())[1], FONT_SMALL
         )
         self.button3 = Button(
-            "center", (SCREEN_HEIGHT * 0.82), YELLOW, BLUE, "Navigation Camera", BLACK, WHITE, lambda: (setattr(self, 'camera_choice', 3), setattr(self, 'button_clicked', True), self.run())[1], FONT_SMALL
+            "center", (SCREEN_HEIGHT * 0.82), YELLOW, BLUE, "Navigation Camera", BLACK, WHITE, lambda: (setattr(self, 'camera_choice', 3), self.run())[1], FONT_SMALL
         )
 
         # Map the player's choice to each camera:
@@ -1020,6 +1024,8 @@ class SceneMissionMarsPlay(Scene):
         return pygame.transform.scale(image, (scaled_width, scaled_height))
 
     def run(self):
+        self.buttons_pressed.append(self.camera_choice)
+
         if self.camera_choice:
             camera = self.camera_mapping[self.camera_choice]
             latest_image_data = self.fetch_latest_image(camera)
@@ -1052,14 +1058,16 @@ class SceneMissionMarsPlay(Scene):
                 else:
                     self.no_image_text = TypewriterText(175, 275, 300, 300, "Sorry. No images available at this time.")
 
-
+    def to_scene_payload(self):
+        self.manager.switch_scene(SceneMissionPayload(self.manager, self.game_clock))
 
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def handle_event(self, event):
         super().handle_event(event)
-        self.button0.handle_event(event)
+        self.button01.handle_event(event)
+        self.button02.handle_event(event)
         self.button1.handle_event(event)
         self.button2.handle_event(event)
         self.button3.handle_event(event)
@@ -1068,13 +1076,11 @@ class SceneMissionMarsPlay(Scene):
     def update(self):
         # Always update the typewriter title
         self.typewriter_title.update()
-        if self.button_clicked:
-            self.loading_text.update()
-        if self.button_clicked:
+        if self.buttons_pressed:
             self.rover_text.update()
-        if self.button_clicked:
+        if self.buttons_pressed:
             self.camera_text.update()
-        if self.button_clicked:
+        if self.buttons_pressed:
             self.no_image_text.update()
 
 
@@ -1083,10 +1089,13 @@ class SceneMissionMarsPlay(Scene):
         screen.blit(BackGround_mars.image, BackGround_mars.rect)
         self.typewriter_title.draw(screen)
 
-        if self.button_clicked:
-            self.loading_text.draw(screen)
+        if self.buttons_pressed:
+            pygame.draw.rect(screen, [0, 0, 0], (225, 75, 350, 350))
+            screen.blit(self.loading_text, (250, 100,))
 
-        self.button0.draw(screen)
+        self.button01.draw(screen)
+        if set([1, 2, 3]).issubset(self.buttons_pressed):
+            self.button02.draw(screen)
         self.button1.draw(screen)
         self.button2.draw(screen)
         self.button3.draw(screen)
