@@ -188,7 +188,7 @@ while not done:
             pressing_down = False
 
     screen.fill(white)
-    screen.blit(BackGround_payload.image, BackGround_payload.rect)
+    screen.blit(BackGround_payload_new.image, BackGround_payload_new.rect)
 
     for i in range(game.height):
         for j in range(game.width):
