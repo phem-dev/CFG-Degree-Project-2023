@@ -129,6 +129,14 @@ Before running the game, you need to set up the required environment and depende
 ```json
    pip install googletrans
 ```
+- Install the 'aiohttp' module:
+```json
+   pip install aiohttp
+```
+- Install the 'asyncio' module:
+```json
+   pip install asyncio
+```
 - Install the 'math' module (*Note: The 'math' module is part of Python's standard library and doesn't require installation*).
   
 **5. Run the Game:** Run the game on 'main.py'.
