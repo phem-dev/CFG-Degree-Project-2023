@@ -224,9 +224,9 @@ class SceneStartMenu(Scene):
         self.button5 = Button(
             "center", (SCREEN_HEIGHT * 0.52), GREEN, BLUE, "5: Locate ISS", BLACK, WHITE, self.to_scene_iss
         )
-        # Button for Asteroid Dodge
+        # Button for Asteroid Blast
         self.button6 = Button(
-            "center", (SCREEN_HEIGHT * 0.62), YELLOW, BLUE, "6: Asteroid Dodge", BLACK, WHITE, self.to_scene_dodge
+            "center", (SCREEN_HEIGHT * 0.62), YELLOW, BLUE, "6: Asteroid Blast", BLACK, WHITE, self.to_scene_dodge
         )
         # Button for Quiz
         self.button7 = Button(
