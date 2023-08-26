@@ -16,20 +16,31 @@ import math
 # Import  googletrans module for text translation:
 from googletrans import Translator
 
+# Import Button from utils:
+from Utils.Button import Button
+
+from Scene_files.settings import *
+
 # ISSTracker class:
 class ISSTracker:
     def __init__(self):
         pygame.init()
+
         # Initialize the pygame window
         self.window_size = (800, 600)
         self.screen = pygame.display.set_mode(self.window_size)
         pygame.display.set_caption("ISS Tracker")
+
+        # Load the background image and scale it to the window size
+        self.background_image = pygame.image.load("Scene_files/Images/iss_bg1.png")
+        self.background_image = pygame.transform.scale(self.background_image, self.window_size)
 
         # Set font:
         font_path = 'Scene_files/kenvector_future.ttf'
         self.iss_font = pygame.font.Font(font_path, 25)
         self.iss_font_sml = pygame.font.Font(font_path, 15)
         self.iss_font_smlr = pygame.font.Font(font_path, 12)
+        self.iss_font_smlr2 = pygame.font.Font(font_path, 10)
         self.iss_font_med = pygame.font.Font(font_path, 18)
 
         # Variables for ISS API, geolocation setup and translator:
@@ -55,10 +66,11 @@ class ISSTracker:
 
         # Button positions and dimensions:
         self.speed_button_rect = pygame.Rect(50, 200, 150, 30)
+        #self.speed_button = Button(50, 200, GREEN, BLUE, "View Speed", BLACK, WHITE, self.display_speed) -----------New button??
         self.altitude_button_rect = pygame.Rect(50, 300, 160, 30)
-        self.power_up_button_rect = pygame.Rect(self.window_size[0] - 210, self.window_size[1] - 300, 120, 30)  # Added Power Up button
+        self.power_up_button_rect = pygame.Rect(self.window_size[0] - 210, self.window_size[1] - 300, 120, 30)
         self.power_level_text_rect = pygame.Rect(self.power_up_button_rect.left, self.power_up_button_rect.bottom - 110, 120, 30)
-        self.power_level_rect = pygame.Rect(self.power_up_button_rect.left, self.power_up_button_rect.bottom + 20, 12, 12)  # Move below Power Up button
+        self.power_level_rect = pygame.Rect(self.power_up_button_rect.left, self.power_up_button_rect.bottom + 20, 12, 12)
         self.exit_button_rect = pygame.Rect(350, 550, 65, 30)
 
         # Power level indicator squares:
@@ -116,6 +128,9 @@ class ISSTracker:
 
     # Method to Draw the ISS on the screen:
     def draw_iss(self, lat, lon, country):
+        # Clear the screen with the background image
+        self.screen.blit(self.background_image, (0, 0))
+
         # Calculate scaling factors for latitude and longitude:
         lat_scale = self.window_size[0] / 180
         lon_scale = self.window_size[1] / 360
@@ -128,8 +143,6 @@ class ISSTracker:
         x = int(self.window_size[0] // 2 + radius * math.cos(angle))
         y = int(self.window_size[1] // 2 + radius * math.sin(angle))
 
-        # Clear the screen:
-        self.screen.fill((0, 0, 0))
 
         # Draw scaled Earth image at the centre:
         earth_scaled = pygame.transform.scale(self.earth_image, (self.earth_image_width, self.earth_image_height))
@@ -148,7 +161,7 @@ class ISSTracker:
         # Draw country text:
         font = self.iss_font
         text = font.render(f"Country: {country}", True, (255, 255, 255))
-        self.screen.blit(text, (10, 50))
+        self.screen.blit(text, (10, 35))
 
         # Draw UI buttons and power level:
         self.draw_buttons()
@@ -157,14 +170,16 @@ class ISSTracker:
         # Draw speed and altitude text if selected:
         font = self.iss_font_sml
         if self.display_speed:
-            speed_text = font.render("17,500 mph", True, (255, 255, 255))
+            speed_text = font.render("17,500 mph", True, (0, 0, 0, 255))
             self.screen.blit(speed_text, (self.speed_button_rect.left, self.speed_button_rect.bottom + 10))
         if self.display_altitude:
-            altitude_text = font.render("250 miles above Earth", True, (255, 255, 255))
+            altitude_text = font.render("250 miles", True, (0, 0, 0, 255))
+            altitude_text2 = font.render("above Earth", True, (0, 0, 0, 255))
             self.screen.blit(altitude_text, (self.altitude_button_rect.left, self.altitude_button_rect.bottom + 10))
+            self.screen.blit(altitude_text2, (self.altitude_button_rect.left, self.altitude_button_rect.bottom + 25))
 
         # Draw warning text if the warning timer has elapsed
-        if pygame.time.get_ticks() - self.warning_timer >= 2000:
+        if pygame.time.get_ticks() - self.warning_timer >= 3000:
             font = self.iss_font_med
             warning_text1 = font.render(
                 "Help! The Space Station is losing power!",
@@ -186,33 +201,32 @@ class ISSTracker:
     # Method to draw buttons onto the screen:
     def draw_buttons(self):
         # Draw rectangles for buttons:
-        pygame.draw.rect(self.screen, (30, 167, 225), self.speed_button_rect)
-        pygame.draw.rect(self.screen, (30, 167, 225), self.altitude_button_rect)
+        pygame.draw.rect(self.screen, (255, 204, 0), self.speed_button_rect)
+        pygame.draw.rect(self.screen, (255, 204, 0), self.altitude_button_rect)
         pygame.draw.rect(self.screen, (30, 167, 225), self.exit_button_rect)
-        pygame.draw.rect(self.screen, (30, 167, 225), self.power_up_button_rect)
+        pygame.draw.rect(self.screen, (232, 106, 23), self.power_up_button_rect)
 
         # Set font for button labels:
         font = self.iss_font_sml
 
         # Display button label texts:
-        speed_button_text = font.render("Show Speed", True, (255, 255, 255))
-        altitude_button_text = font.render("Show Altitude", True, (255, 255, 255))
-        exit_button_text = font.render("EXIT", True, (255, 255, 255))
-        power_up_button_text = font.render("Power Up", True, (255, 255, 255))
+        speed_button_text = font.render("Show Speed", True, (0, 0, 0, 255))
+        altitude_button_text = font.render("Show Altitude", True, (0, 0, 0, 255))
+        exit_button_text = font.render("EXIT", True, (0, 0, 0, 255))
+        power_up_button_text = font.render("Power Up", True, (0, 0, 0, 255))
 
         # Display button label texts onto the screen:
         self.screen.blit(speed_button_text, (self.speed_button_rect.left + 10, self.speed_button_rect.top + 5))
         self.screen.blit(altitude_button_text, (self.altitude_button_rect.left + 10, self.altitude_button_rect.top + 5))
         self.screen.blit(exit_button_text, (self.exit_button_rect.left + 10, self.exit_button_rect.top + 5))
-        self.screen.blit(power_up_button_text, (
-        self.power_up_button_rect.left + 10, self.power_up_button_rect.top + 5))
+        self.screen.blit(power_up_button_text, (self.power_up_button_rect.left + 10, self.power_up_button_rect.top + 5))
 
     # Method to draw the power level indicator on the screen:
     def draw_power_level(self):
         font = self.iss_font_smlr
 
         # Display the "Current power level:" text
-        power_level_text = font.render("Current power level:", True, (255, 255, 255))
+        power_level_text = font.render("Current power level:", True, (0, 0, 0, 255))
         self.screen.blit(power_level_text, (self.power_level_text_rect.left, self.power_level_text_rect.top))
 
         # Loop through power level squares and draw them based on the current power level:

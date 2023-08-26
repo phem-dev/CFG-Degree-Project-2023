@@ -1196,7 +1196,7 @@ class SceneMissionISS(Scene):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def to_play_iss(self):
-        script_path = "Missions/iss_new_mission.py"
+        script_path = "Missions/Mission5_ISS.py"
 
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])

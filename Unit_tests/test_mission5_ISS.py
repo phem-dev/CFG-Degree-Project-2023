@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from Missions.Mission5_ISS import ISSTracker
 
+
 class TestISSTracker(unittest.TestCase):
     @patch('requests.get')  # Mock the requests.get function
     def test_get_iss_location(self, mock_requests_get):
@@ -34,6 +35,7 @@ class TestISSTracker(unittest.TestCase):
 
         # Check if the closest country name is as expected
         self.assertEqual(closest_country, 'Translated Country')
+
 
 # Running the unit tests
 if __name__ == '__main__':
