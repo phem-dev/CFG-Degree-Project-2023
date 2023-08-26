@@ -25,7 +25,7 @@ class QuizGame:
 
         return conn, cursor
 
-    def fetch_random_questions(self, num_questions=None):
+    def fetch_random_questions(self, num_questions=10):
         """Fetch a set of random questions from the database."""
         if num_questions is None:
             num_questions = self.num_questions_to_answer
@@ -47,18 +47,18 @@ class QuizGame:
             leaderboard_str += f"{position}. {name}: {score}|"
         return leaderboard_str
 
-    def provide_question(self, question):
-        """Return a question from the list of random questions and its options for the user."""
-        options = question[2:6]
-        question_str = question[1]
-        correct_answer = question[6]
-        # answer_list = "|||" + "||".join([f"{i + 1}. {option}" for i, option in enumerate(options)])
+    # def provide_question(self, question):
+    #     """Return a question from the list of random questions and its options for the user."""
+    #     options = question[2:6]
+    #     question_str = question[1]
+    #     correct_answer = question[6]
+    #     # answer_list = "|||" + "||".join([f"{i + 1}. {option}" for i, option in enumerate(options)])
+    #
+    #     return question_str, options, correct_answer
 
-        return question_str, options, correct_answer
-
-    def get_provided_question(self, question_number):
-        question_data = self.fetch_random_questions()[question_number]
-        return self.provide_question(question_data)
+    # def get_provided_question(self, question_number):
+    #     question_data = self.fetch_random_questions()[question_number]
+    #     return self.provide_question(question_data)
 
 
     # def run(self):
@@ -80,13 +80,14 @@ class QuizGame:
 
     def check_answer(self, question, user_answer):
         """Check the user's answer and return the result."""
-        options = question[1]  # Define options within the method
+        options = question[2:6]  # Define options within the method
 
-        if user_answer == question[2]:
+        if user_answer == question[6]:
             self.result_msg = "Correct!"
+
             self.correct = True
         else:
-            correct_option_index = question[2]-1
+            correct_option_index = question[6] - 1
             self.result_msg = f"Incorrect. |The correct answer was: {options[correct_option_index]}"
             self.correct = False
 
@@ -98,9 +99,8 @@ class QuizGame:
             self.conn.close()
 
     def end_message(self, player_name, score):
-        self.update_leaderboard(player_name, score)
-        self.close()
-        return f"Your final score is: {score}/{self.num_questions_to_answer}", self.display_leaderboard()
+        # self.update_leaderboard(player_name, score)
+        return f"You scored: {score}/{self.num_questions_to_answer}", self.display_leaderboard()
 
 
 

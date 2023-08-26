@@ -1,7 +1,8 @@
 CREATE TABLE leaderboard (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
-    score INT
+    score INT,
+    timestamp_column TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 --select * from leaderboard;
@@ -155,7 +156,7 @@ VALUES (
 INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct_answer)
 VALUES (
     16,
-    'What causes the Moon to sine at night?',
+    'What causes the Moon to shine at night?',
     'Its own light', 'Reflected sunlight', 'Starlight',  'Moonlight',
     2
 );
@@ -180,7 +181,7 @@ INSERT INTO questions (id, Question, choice1, choice2, choice3, choice4, correct
 VALUES (
     19,
     'How do scientists control satellites in space?',
-    'Wifi', 'They take turns living in them', 'They send commands from stations on Earth',  'They use the Moon to help',
+    'Wifi', 'By living on them', 'With Radio signals',  'The Moon does it',
     3
 );
 

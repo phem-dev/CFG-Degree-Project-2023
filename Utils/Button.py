@@ -36,9 +36,9 @@ class Button:
         if x == "center":
             x = (SCREEN_WIDTH // 2) - (self.width // 2)
         elif x == "left":
-            x = SCREEN_WIDTH * 0.1
+            x = SCREEN_WIDTH * 0.06
         elif x == "right":
-            x = (SCREEN_WIDTH * 0.9) - self.width
+            x = (SCREEN_WIDTH * 0.94) - self.width
 
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.colour = colour
