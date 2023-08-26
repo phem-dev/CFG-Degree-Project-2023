@@ -919,7 +919,7 @@ class SceneMissionMarsPlay(Scene):
 
         # command block
         self.command_block = pygame.image.load('./Scene_files/Images/display_ylw.png')
-        self.command_text = "Check three of the Mars Rover cameras."
+        self.command_text = "Choose a camera to take photos on mars."
         self.typewriter_command = TypewriterText(290, 200, 200, 500, self.command_text, colour=(0, 0, 0, 0), font=FONT_SMALL, justify="center")
         # define which button is clicked
         self.camera_choice = None
