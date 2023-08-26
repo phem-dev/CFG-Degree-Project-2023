@@ -25,6 +25,13 @@ class ISSTracker:
         self.screen = pygame.display.set_mode(self.window_size)
         pygame.display.set_caption("ISS Tracker")
 
+        # Set font:
+        font_path = 'Scene_files/kenvector_future.ttf'
+        self.iss_font = pygame.font.Font(font_path, 25)
+        self.iss_font_sml = pygame.font.Font(font_path, 15)
+        self.iss_font_smlr = pygame.font.Font(font_path, 12)
+        self.iss_font_med = pygame.font.Font(font_path, 18)
+
         # Variables for ISS API, geolocation setup and translator:
         self.api_url = "http://api.open-notify.org/iss-now.json"
         self.geolocator = Nominatim(user_agent="iss_tracker")
@@ -134,12 +141,12 @@ class ISSTracker:
         self.screen.blit(self.iss_image, iss_rect)
 
         # Draw title text:
-        title_font = pygame.font.Font(None, 36)
+        title_font = self.iss_font
         title_text = title_font.render("International Space Station Location", True, (255, 255, 255))
         self.screen.blit(title_text, (10, 10))
 
         # Draw country text:
-        font = pygame.font.Font(None, 36)
+        font = self.iss_font
         text = font.render(f"Country: {country}", True, (255, 255, 255))
         self.screen.blit(text, (10, 50))
 
@@ -148,7 +155,7 @@ class ISSTracker:
         self.draw_power_level()
 
         # Draw speed and altitude text if selected:
-        font = pygame.font.Font(None, 24)
+        font = self.iss_font_sml
         if self.display_speed:
             speed_text = font.render("17,500 mph", True, (255, 255, 255))
             self.screen.blit(speed_text, (self.speed_button_rect.left, self.speed_button_rect.bottom + 10))
@@ -158,12 +165,23 @@ class ISSTracker:
 
         # Draw warning text if the warning timer has elapsed
         if pygame.time.get_ticks() - self.warning_timer >= 2000:
-            warning_text = font.render(
-                "Help! The Space Station is losing power!\nClick the power up button to restore power!",
+            font = self.iss_font_med
+            warning_text1 = font.render(
+                "Help! The Space Station is losing power!",
                 True, (255, 0, 0))
-            warning_text_rect = warning_text.get_rect()
-            warning_text_rect.center = (self.window_size[0] // 2, self.window_size[1] // 2 - 180)
-            self.screen.blit(warning_text, warning_text_rect)
+            warning_text2 = font.render(
+                "Click the power up button to restore power!",
+                True, (255, 0, 0))
+
+            # Calculate positions to center text
+            warning_text1_rect = warning_text1.get_rect(
+                center=(self.window_size[0] // 2, 50 + text.get_height() + 20))
+            warning_text2_rect = warning_text2.get_rect(
+                center=(self.window_size[0] // 2, 50 + text.get_height() + 20 + warning_text1.get_height()))
+
+            # Blit each text surface at the adjusted positions
+            self.screen.blit(warning_text1, warning_text1_rect)
+            self.screen.blit(warning_text2, warning_text2_rect)
 
     # Method to draw buttons onto the screen:
     def draw_buttons(self):
@@ -174,7 +192,7 @@ class ISSTracker:
         pygame.draw.rect(self.screen, (30, 167, 225), self.power_up_button_rect)
 
         # Set font for button labels:
-        font = pygame.font.Font(None, 28)
+        font = self.iss_font_sml
 
         # Display button label texts:
         speed_button_text = font.render("Show Speed", True, (255, 255, 255))
@@ -191,7 +209,7 @@ class ISSTracker:
 
     # Method to draw the power level indicator on the screen:
     def draw_power_level(self):
-        font = pygame.font.Font(None, 24)
+        font = self.iss_font_smlr
 
         # Display the "Current power level:" text
         power_level_text = font.render("Current power level:", True, (255, 255, 255))
