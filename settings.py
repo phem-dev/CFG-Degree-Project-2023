@@ -19,6 +19,7 @@ FONT_MEDSMALL = pygame.font.Font(font_path, 18)
 FONT_SMALL = pygame.font.Font(font_path, 20)
 FONT_VSMALL = pygame.font.Font(font_path, 15)
 FONT_TINY = pygame.font.Font(font_path, 13)
+FONT_TEENYTINY = pygame.font.Font(font_path, 7)
 
 
 # Colour (constants are written in all-caps)

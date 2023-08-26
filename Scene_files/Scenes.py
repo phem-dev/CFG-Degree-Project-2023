@@ -1226,14 +1226,17 @@ class SceneMissionISS(Scene):
             "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
         )
 
-    def to_play_iss(self):
-            script_path = "Missions/Mission5_ISS.py"
-
-            # Launch the game in a separate process
-            subprocess.Popen([sys.executable, script_path])
-
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def to_play_iss(self):
+        script_path = "Missions/iss_new_mission.py"
+
+        # Launch the game in a separate process
+        subprocess.Popen([sys.executable, script_path])
+        # make the 1st screen wait a second (for pop-up to load) then go back to menu
+        pygame.time.delay(1000)
+        self.to_menu()
 
     def handle_event(self, event):
         super().handle_event(event)
@@ -1699,7 +1702,7 @@ class SceneQuizLeaderboard(Scene):
             "center", (SCREEN_HEIGHT * 0.75), GREEN, BLUE, "SUBMIT", BLACK, WHITE, self.user_submit
         )
         self.button2 = Button(
-            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "MENU", BLACK, WHITE, self.to_menu
+            "center", (SCREEN_HEIGHT * 0.87), ORANGE, BLUE, "FINISH", BLACK, WHITE, self.to_scene_end
         )
 
     def user_submit(self):
@@ -1718,10 +1721,21 @@ class SceneQuizLeaderboard(Scene):
         # close the database that was opened in Quizgame
         self.quiz_instance.close()
 
+    # save the name of the current player
+    def save_name(self):
+        # Use the 'with' statement to ensure the file is properly closed after it's done
+        with open("Missions/name_cache.txt", 'w') as file:
+            file.write(self.player_input)
+
     # Switch to the Start Menu scene
     def to_menu(self):
-        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+        self.save_name()
         SceneQuizInput.question_number = 0
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+
+    def to_scene_end(self):
+        self.save_name()
+        self.manager.switch_scene(SceneEnd(self.manager, self.game_clock))
 
     # Handle events for the scene
     def handle_event(self, event):
@@ -1773,6 +1787,72 @@ class SceneQuizLeaderboard(Scene):
             self.button2.draw(screen)
         if self.submitted:
             self.typewriter_display1.draw(screen)
+        super().draw(screen)
+
+########################################################################################################################
+########################################################################################################################
+
+# END
+
+
+class SceneEnd(Scene):
+    def __init__(self, manager, game_clock):
+        super().__init__()
+        self.manager = manager
+        self.game_clock = game_clock
+
+        self.typewriter_title = TypewriterText(365, 135, 100, 200, "CONGRATULATIONS",
+                                               font=FONT_TEENYTINY, colour=[0, 0, 0, 0], justify="center")
+
+        self.typewriter_block = TypewriterText(365, 170, 100, 200, f"Well done|{self.get_saved_name()}!|| See you next time.", font=FONT_TEENYTINY, colour=[0, 0, 0, 0],
+                                               justify="center")
+
+
+        # Exit button
+        self.button = Button(
+            (SCREEN_WIDTH * 0.475), (SCREEN_HEIGHT * 0.43), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit, font=FONT_SMALL
+        )
+
+    def get_saved_name(self):
+        def get_content_from_file():
+            try:
+                with open("Missions/name_cache.txt", 'r') as file:
+                    return file.read().strip()
+            except FileNotFoundError:
+                print("Error: The file 'Missions/name_cache.txt' was not found.")
+                return None
+            except IOError:
+                print("Error: There was an issue reading the file 'Missions/name_cache.txt'.")
+                return None
+            except Exception as e:
+                print(f"An unexpected error occurred: {e}")
+                return None
+
+        return get_content_from_file()
+
+    def handle_event(self, event):
+        super().handle_event(event)
+        self.button.handle_event(event)
+
+
+    def update(self):
+        # Always update the typewriter_title
+        self.typewriter_title.update()
+
+        # Only update typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.update()
+
+    def draw(self, screen):
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround_end.image, BackGround_end.rect)
+        self.typewriter_title.draw(screen)
+
+        # Only draw typewriter_block if typewriter_title has completed
+        if self.typewriter_title.completed:
+            self.typewriter_block.draw(screen)
+
+        self.button.draw(screen)
         super().draw(screen)
 
 ########################################################################################################################

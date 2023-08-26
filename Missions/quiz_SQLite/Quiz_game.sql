@@ -1,7 +1,8 @@
 CREATE TABLE leaderboard (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
-    score INT
+    score INT,
+    timestamp_column TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 --select * from leaderboard;
