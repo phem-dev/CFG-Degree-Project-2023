@@ -6,6 +6,7 @@ class TestTetromino(unittest.TestCase):
 
     # Check Tetromino object is initialised with correct class attributes
     def test_tetromino(self):
+
         tetromino = Tetromino(0, 0)
         self.assertEqual(tetromino.x, 0)
         self.assertEqual(tetromino.y, 0)
@@ -16,6 +17,7 @@ class TestTetromino(unittest.TestCase):
 
     # Check display_tetrominoes() returns expected coniguration of a tetromino
     def test_display_tetrominoes(self):
+
         tetromino = Tetromino(0, 0)
         tetromino.type = 0
         tetromino.rotation = 1
@@ -27,6 +29,7 @@ class TestTetromino(unittest.TestCase):
 
     # Check rotate_tetrominoes() returns next rotation
     def test_rotate_tetrominoes(self):
+
         tetromino = Tetromino(0, 0)
         initial_rotation = tetromino.rotation
         tetromino.rotate_tetrominoes()
@@ -38,11 +41,13 @@ class TestGamePlay(unittest.TestCase):
 
     # Set up conditions required for following test cases 
     def setUp(self):
+
         pygame.init()
         self.game = GamePlay(800, 600)
 
     # Check initial state of GamePlay object matches expected values for start of game
     def test_gameplay_start(self):
+
         self.assertEqual(self.game.height, 800)
         self.assertEqual(self.game.width, 600)
         self.assertEqual(self.game.level, 2)
@@ -53,9 +58,37 @@ class TestGamePlay(unittest.TestCase):
 
 
     def test_new_tetrominoes(self):
+
         self.game.new_tetrominoes()
         # Check new tetromino has been created
         self.assertIsNotNone(self.game.tetromino)
+
+    # Test handle_intersections() with no obstacles 
+    def test_handle_intersections_no_intersection(self):
+        
+        tetromino = Tetromino(0, 0)
+        self.game.tetromino = tetromino
+        self.game.field = [[0, 0, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]]
+        intersects = self.game.handle_intersections()
+        self.assertFalse(intersects)
+
+    # Test handle_intersections() with obstacle
+    def test_handle_intersections_block_intersection(self):
+            
+            tetromino = Tetromino(0, 0)
+            self.game.tetromino = tetromino
+            self.game.field = [[0, 0, 0, 0],
+                                [0, 1, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0]]
+            intersects = self.game.handle_intersections()
+            self.assertTrue(intersects)
+
+    
+
 
 
 if __name__ == '__main__':
