@@ -186,7 +186,7 @@ By following these steps, you'll ensure that the required libraries and modules 
 
 ![Capture Mars](https://i.imgur.com/GaXUx6H.png)
 
-![Payload Mission](https://i.imgur.com/uFwZAKe.png)
+![Payload Mission]([https://i.imgur.com/uFwZAKe.png](https://i.imgur.com/lPLlE4I.png)
 
 ![Locate ISS](https://i.imgur.com/F7jkEgZ.png)
 
