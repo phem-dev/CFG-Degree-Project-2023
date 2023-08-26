@@ -75,8 +75,8 @@ class TestGamePlay(unittest.TestCase):
         intersects = self.game.handle_intersections()
         self.assertFalse(intersects)
 
-    # Test handle_intersections() with obstacle
-    def test_handle_intersections_block_intersection(self):
+    # Test handle_intersections() with tetromino
+    def test_handle_intersections_with_intersection(self):
             
             tetromino = Tetromino(0, 0)
             self.game.tetromino = tetromino
@@ -88,7 +88,32 @@ class TestGamePlay(unittest.TestCase):
             self.assertTrue(intersects)
 
     
+    # Test handle_intersections() with multiple tetrominoes
+    def test_handle_intersections_multiple_blocks_intersection(self):
 
+        tetromino = Tetromino(1, 1)
+        self.game.tetromino = tetromino
+        self.game.field = [[0, 0, 0, 0],
+                            [0, 1, 1, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]]
+        intersects = self.game.handle_intersections()
+        self.assertTrue(intersects)
+
+
+    
+    # test halt_tetromino
+
+    # test delete_line
+
+
+
+    # test move_space
+
+
+    # test move_down
+
+    # test move_to_side
 
 
 if __name__ == '__main__':
