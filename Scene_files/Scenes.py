@@ -101,7 +101,7 @@ class WelcomeScene(Scene):
 
         # Create a button to move to the Missions scene
         self.button1 = Button(
-            "center", (SCREEN_HEIGHT * 0.72), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_start_menu
+            "center", (SCREEN_HEIGHT * 0.74), GREEN, BLUE, "PLAY", BLACK, WHITE, self.to_start_menu
         )
         self.button2 = Button(
             "center", (SCREEN_HEIGHT * 0.84), ORANGE, BLUE, "EXIT", BLACK, WHITE, sys.exit
