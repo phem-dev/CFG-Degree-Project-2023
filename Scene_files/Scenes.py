@@ -109,7 +109,7 @@ class WelcomeScene(Scene):
         self.typewriter = TypewriterText(280, 125, 250, 500, "Welcome to the Stratobus Missions!", FONT_MEDIUM, WHITE, justify="center")
         self.typewriter_block = TypewriterText(250, 190, 320, 500, "Prepare for lift off, captain! You are the pilot of"
 "the Thales Stratobus spacecraft, and must complete all your missions to help collect data from outer space. "
-"Everything you see in this game is real data from outer space and so could change depending on when you play the game."
+"Everything you see in this game is real data from outer space and can change depending on when you play the game."
 "Do you accept your mission?", FONT_VSMALL, WHITE, justify="center")
 
         # draw text box (asteroids box?), change style for title, write text
@@ -1138,7 +1138,7 @@ class SceneMissionPayload(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Payload Challenge"
-        self.block = "The stored memory is running low help defragment the data storage by using the arrows keys to optimally pack the data packets in!"
+        self.block = "The stored memory is running low! Help defragment the data storage by using the arrow keys to optimally pack the data packets in!"
         self.typewriter_title = TypewriterText(130, 6, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
