@@ -1,5 +1,5 @@
 import pygame
-from settings import FONT_SMALL, BUTTON_CLICK_PATH
+from Scene_files.settings import FONT_SMALL
 
 
 class TextInput:

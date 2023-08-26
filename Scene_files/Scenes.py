@@ -1,13 +1,12 @@
 import sys # for system exit
 import subprocess # for ISS mission
-import requests # for mars mission - directly coded
 from collections import deque # for quiz question list
 from io import BytesIO # for mars mission - directly coded
 import aiohttp # for mars mission async programming- directly coded
 import asyncio # for mars mission async programming- directly coded
 
 # configurations
-from settings import *
+from Scene_files.settings import *
 # Superclass and constants
 from Scene_files.SceneManager import Scene
 # functional classes
@@ -1749,7 +1748,7 @@ class SceneQuizLeaderboard(Scene):
             if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                 self.save_name()
                 self.click_sound.play()
-                self.user_submit()
+                self.to_scene_end()
 
     def update(self):
         # Always update the typewriter_title

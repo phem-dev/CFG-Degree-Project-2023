@@ -1,5 +1,5 @@
 from Utils.draw_rounded_rect import draw_rounded_rect # instead of the pygame.draw.rect, use this custom function for a rounded rectangle in the Button class
-from settings import *
+from Scene_files.settings import *
 
 
 
