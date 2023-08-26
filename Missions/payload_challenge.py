@@ -2,7 +2,7 @@ import pygame
 import random
 from Scene_files.background import *
 
-# Define colours for blocks
+# Define colours for tetrominoes
 colours = [
     (104, 187, 66),
     (232, 106, 23),
@@ -12,18 +12,18 @@ colours = [
     (21, 193, 231)
 ]
 
-class Block: 
+class Tetromino: 
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        # Randomly pick type and colour for each block
-        self.type = random.randint(0, len(self.blocks) - 1)
+        # Randomly pick type and colour for each tetromino
+        self.type = random.randint(0, len(self.tetrominoes) - 1)
         self.colour = random.randint(1, len(colours) - 1)
         self.rotation = 0
 
-    # Maps out positions in a 4 x 4 matrix for each solid block. Inner list contains rotations
-    blocks = [
+    # Maps out positions in a 4 x 4 matrix for each solid tetromino. Inner list contains rotations
+    tetrominoes = [
         [[1, 5, 9, 13], [4, 5, 6, 7]],
         [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
         [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],  
@@ -32,11 +32,11 @@ class Block:
     ]
 
     # Rotate figures and get current rotation
-    def display_blocks(self):
-        return self.blocks[self.type][self.rotation]
+    def display_tetrominoes(self):
+        return self.tetrominoes[self.type][self.rotation]
     
-    def rotate_blocks(self):
-        self.rotation = (self.rotation + 1) % len(self.blocks[self.type])
+    def rotate_tetrominoes(self):
+        self.rotation = (self.rotation + 1) % len(self.tetrominoes[self.type])
 
 
 class GamePlay:
@@ -49,12 +49,12 @@ class GamePlay:
         self.score = 0
         # Are we playing the game?
         self.state = "start"
-        # Contains 0 where field is empty, colours where there are blocks
+        # Contains 0 where field is empty, colours where there are tetrominoes
         self.field = []
         self.x = 300
         self.y = 60
         self.zoom = 20
-        self.block = None
+        self.tetromino = None
 
         for _ in range(height):
             new_line = []
@@ -62,30 +62,30 @@ class GamePlay:
                 new_line.append(0)
             self.field.append(new_line)
 
-    # Create new block at co-ords of 3, 0
-    def new_blocks(self):
-        self.block = Block(3, 0)
+    # Create new tetromino at co-ords of 3, 0
+    def new_tetrominoes(self):
+        self.tetromino = Tetromino(3, 0)
 
-    # Handle intersections of blocks
+    # Handle intersections of tetrominoes
     def handle_intersections(self):
         intersects = False
         for i in range(4):
             for j in range(4):
-                # Check if each block is within bounds of game
-                if i * 4 + j in self.block.display_blocks():
-                    # Check if block is touching another. If 0, safe to move. 
-                    if i + self.block.y > self.height - 1 or j + self.block.x > self.width - 1 or j + self.block.x < 0 or self.field[i + self.block.y][j + self.block.x] > 0:
+                # Check if each tetromino is within bounds of game
+                if i * 4 + j in self.tetromino.display_tetrominoes():
+                    # Check if tetromino is touching another. If 0, safe to move. 
+                    if i + self.tetromino.y > self.height - 1 or j + self.tetromino.x > self.width - 1 or j + self.tetromino.x < 0 or self.field[i + self.tetromino.y][j + self.tetromino.x] > 0:
                         intersects = True
         return intersects
     
-    # Pause block in the field. If there is a complete horizontal line, create a new figure. If not, game over :(
-    def halt_block(self):
+    # Pause tetromino in the field. If there is a complete horizontal line, create a new figure. If not, game over :(
+    def halt_tetromino(self):
         for i in range(4):
             for j in range(4):
-                if i * 4 + j in self.block.display_blocks():
-                    self.field[i + self.block.y][j + self.block.x] = self.block.colour
+                if i * 4 + j in self.tetromino.display_tetrominoes():
+                    self.field[i + self.tetromino.y][j + self.tetromino.x] = self.tetromino.colour
         self.delete_line()
-        self.new_blocks()
+        self.new_tetrominoes()
         if self.handle_intersections():
             game.state = "gameover"
 
@@ -105,30 +105,30 @@ class GamePlay:
             
         self.score += lines ** 2
     
-    # Move blocks - define last position, change co-ords and check handle_intersections(). If True, return to previous state. 
+    # Move tetrominoes - define last position, change co-ords and check handle_intersections(). If True, return to previous state. 
     def move_space(self):
         while not self.handle_intersections():
-            self.block.y += 1
-        self.block.y -= 1
-        self.halt_block()
+            self.tetromino.y += 1
+        self.tetromino.y -= 1
+        self.halt_tetromino()
 
     def move_down(self):
-        self.block.y += 1
+        self.tetromino.y += 1
         if self.handle_intersections():
-            self.block.y -= 1
-            self.halt_block()
+            self.tetromino.y -= 1
+            self.halt_tetromino()
 
     def move_to_side(self, dx):
-        old_x = self.block.x
-        self.block.x += dx
+        old_x = self.tetromino.x
+        self.tetromino.x += dx
         if self.handle_intersections():
-            self.block.x = old_x 
+            self.tetromino.x = old_x 
     
-    def rotate_blocks(self):
-        previous_rotation = self.block.rotation
-        self.block.rotate_blocks()
+    def rotate_tetrominoes(self):
+        previous_rotation = self.tetromino.rotation
+        self.tetromino.rotate_tetrominoes()
         if self.handle_intersections():
-            self.block.rotation = previous_rotation
+            self.tetromino.rotation = previous_rotation
 
 # Initialise game
 pygame.init()
@@ -154,8 +154,8 @@ counter = 0
 pressing_down = False
 
 while not done:
-    if game.block is None:
-        game.new_blocks()
+    if game.tetromino is None:
+        game.new_tetrominoes()
     counter += 1
     if counter > 100000:
         counter = 0
@@ -169,7 +169,7 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                game.rotate_blocks()
+                game.rotate_tetrominoes()
             if event.key == pygame.K_DOWN:
                 pressing_down = True
             if event.key == pygame.K_LEFT:
@@ -197,14 +197,14 @@ while not done:
                 pygame.draw.rect(screen, colours[game.field[i][j]],
                                  [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 2])
 
-    if game.block is not None:
+    if game.tetromino is not None:
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in game.block.display_blocks():
-                    pygame.draw.rect(screen, colours[game.block.colour],
-                                     [game.x + game.zoom * (j + game.block.x) + 1,
-                                      game.y + game.zoom * (i + game.block.y) + 1,
+                if p in game.tetromino.display_tetrominoes():
+                    pygame.draw.rect(screen, colours[game.tetromino.colour],
+                                     [game.x + game.zoom * (j + game.tetromino.x) + 1,
+                                      game.y + game.zoom * (i + game.tetromino.y) + 1,
                                       game.zoom - 2, game.zoom - 2])
 
 
