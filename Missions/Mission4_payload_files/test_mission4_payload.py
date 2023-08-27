@@ -1,7 +1,8 @@
 import unittest
+import pygame
 from Missions.Mission4_payload_files.mission4_payload import Tetromino, GamePlay, colours
 
-class TestTetromino(unittest.TestCase):ß
+class TestTetromino(unittest.TestCase):
 
     # Check Tetromino object is initialised with correct class attributes
     def test_tetromino(self):
@@ -96,7 +97,7 @@ class TestGamePlay(unittest.TestCase):
                             [0, 1, 1, 0],
                             [0, 0, 0, 0],
                             [0, 0, 0, 0]]
-        intersects = self.game.håandle_intersections()
+        intersects = self.game.handle_intersections()
         self.assertTrue(intersects)
 
 
