@@ -3,11 +3,13 @@ import os
 
 # Get the directory where the current settings.py script resides
 root_dir = (os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
 # now anything pointing to a directory is redefined by applying the hosts absolute path
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location

@@ -1,6 +1,6 @@
-from Utils.draw_rounded_rect import draw_rounded_rect # instead of the pygame.draw.rect, use this custom function for a rounded rectangle in the Button class
+from Utils.draw_rounded_rect import \
+    draw_rounded_rect  # instead of the pygame.draw.rect, use this custom function for a rounded rectangle in the Button class
 from Scene_files.settings import *
-
 
 
 # If we want to standardise the button sizes
@@ -52,7 +52,8 @@ class Button:
         self.click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
         self.click_sound.set_volume(Button.button_volume)
         self.hovered = False
-        Button.active_buttons.append(self) #  keep a list of all active buttons so the mute/unmute can apply to them even though they have already been rendered
+        Button.active_buttons.append(
+            self)  # keep a list of all active buttons so the mute/unmute can apply to them even though they have already been rendered
 
     def set_volume(self, volume):
         self.hover_sound.set_volume(volume)
@@ -79,9 +80,12 @@ class Button:
             self.hovered = False
 
         draw_rounded_rect(surface, current_colour, self.rect, (self.height * 0.1))  # draw the button rectangle
-        text_surface = self.font.render(self.text, True, current_text_colour)  # render the button ready for adding (blit) to the screen surface, True here has enabled anti-aliasing on the text to make it render nice and smooth on the edges (not as pixely)
-        text_rect = text_surface.get_rect(center=self.rect.center)  # make a rectangle bounding box for the text and match the center to the button rect center
-        surface.blit(text_surface, text_rect)  # blit is used to actually add the rendered button surface to the the screen surface at the position defined by text_rect
+        text_surface = self.font.render(self.text, True,
+                                        current_text_colour)  # render the button ready for adding (blit) to the screen surface, True here has enabled antialiasing on the text to make it render nice and smooth on the edges (not as pixely)
+        text_rect = text_surface.get_rect(
+            center=self.rect.center)  # make a rectangle bounding box for the text and match the center to the button rect center
+        surface.blit(text_surface,
+                     text_rect)  # blit is used to actually add the rendered button surface to the screen surface at the position defined by text_rect
 
     def handle_event(self, event):
         """
