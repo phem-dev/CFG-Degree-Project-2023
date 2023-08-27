@@ -15,9 +15,13 @@ colours = [
 class Tetromino: 
 
     def __init__(self, x, y):
+        """
+            Initialise Tetromino class. 
+
+            Randomly pick attributes for each tetromino.
+        """
         self.x = x
         self.y = y
-        # Randomly pick type and colour for each tetromino
         self.type = random.randint(0, len(self.tetrominoes) - 1)
         self.colour = random.randint(1, len(colours) - 1)
         self.rotation = 0
@@ -31,18 +35,29 @@ class Tetromino:
         [[1, 2, 5, 6]],
     ]
 
-    # Rotate figures and get current rotation
+
     def display_tetrominoes(self):
+        """
+            Display and return current rotation of tetromino
+        """
         return self.tetrominoes[self.type][self.rotation]
     
     def rotate_tetrominoes(self):
+        """
+            Rotate tetromino
+        """
         self.rotation = (self.rotation + 1) % len(self.tetrominoes[self.type])
 
 
 class GamePlay:
 
-    # Create a field of the size width x height
     def __init__(self, height, width):
+        """
+            Initialise GamePlay class with and set attributes. 
+
+            Draw a game field of height * width with no tetrominoes in the field and 
+            game state set to "start". 
+        """
         self.height = height
         self.width = width
         self.level = 2
@@ -62,18 +77,29 @@ class GamePlay:
                 new_line.append(0)
             self.field.append(new_line)
 
-    # Create new tetromino at co-ords of 3, 0
+
     def new_tetrominoes(self):
+        """
+            Create new tetrominoes at co-ords of 3, 0.
+        """
         self.tetromino = Tetromino(3, 0)
 
-    # Handle intersections of tetrominoes
+
     def handle_intersections(self):
+        """
+            Handle intersections of tetrominoes. 
+
+            Check the current position of the tetromino and whether it has any collisions
+            with the game boundaries or other tetrominoes. 
+
+            If there is a collision, set intersects to True. Else, intersects = False. 
+        """
         intersects = False
         for i in range(4):
             for j in range(4):
                 # Check if each tetromino is within bounds of game
                 if i * 4 + j in self.tetromino.display_tetrominoes():
-                    # Check if tetromino is touching another. If 0, safe to move. 
+                    # Check if tetromino intersects with another. If 0, safe to move. 
                     if i + self.tetromino.y > self.height - 1 or j + self.tetromino.x > self.width - 1 or j + self.tetromino.x < 0 or self.field[i + self.tetromino.y][j + self.tetromino.x] > 0:
                         intersects = True
         return intersects
