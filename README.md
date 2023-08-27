@@ -266,6 +266,5 @@ Contributions to the Stratobus Mission game are always welcome! If you find any 
 
 ## License
 
-This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
-======= 
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License. 
 
