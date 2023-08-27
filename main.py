@@ -1,8 +1,8 @@
 import pygame
 from pygame import mixer
 import sys  # needed so the system can exit the window when the 'x' is pressed
-from Scene_files.SceneManager import SceneManager
-from Scene_files.Scenes import SceneStart
+from Scene_files.scene_manager import SceneManager
+from Scene_files.scenes import SceneStart
 from Scene_files.settings import SCREEN_HEIGHT, SCREEN_WIDTH, MUSIC_PATH, MUSIC_VOLUME
 
 
@@ -25,7 +25,7 @@ clock = pygame.time.Clock()  # make a clock object, so we can use its method 'cl
 ########################################################################################################################
 
 
-def main():
+def run():
     scene_manager = SceneManager()  # object instantiation for the SceneManager
     scene_manager.switch_scene(SceneStart(scene_manager, clock))  # start scene 1
 
@@ -52,4 +52,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    run()

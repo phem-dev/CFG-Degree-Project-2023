@@ -1,11 +1,14 @@
 import pygame
-
+import os
 
 # Fonts
 pygame.font.init()
 
-# Font settings
-font_path = 'Scene_files/kenvector_future.ttf'
+# Get the directory where the current settings.py script resides
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# now anything pointing to a directory is redefined by applying the hosts absolute path
+
+font_path = os.path.join(current_dir, "kenvector_future.ttf")
 
 FONT = pygame.font.Font(font_path, 35)
 FONT_TITLE = pygame.font.Font(font_path, 80)
@@ -37,10 +40,10 @@ SCREEN_HEIGHT = 600
 
 # Audio
 MUSIC_VOLUME = 0.3
-MUSIC_PATH = "Scene_files/Audio/CFG Track 2.wav"
+MUSIC_PATH = os.path.join(current_dir, "Audio\CFG Track 2.wav")
 BUTTON_VOLUME = 0.4
-BUTTON_HOVER_PATH = "Scene_files/Audio/Button hover 1.wav"
-BUTTON_CLICK_PATH = "Scene_files/Audio/Button click 1.wav"
+BUTTON_HOVER_PATH = os.path.join(current_dir, "Audio\Button hover 1.wav")
+BUTTON_CLICK_PATH = os.path.join(current_dir, "Audio\Button click 1.wav")
 MUTED_VOLUME = 0
 IS_MUTED = False
 
