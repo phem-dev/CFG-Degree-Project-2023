@@ -18,7 +18,7 @@ from Scene_files.background import *
 import Missions.Mission1_asteroid_files.mission1_asteroids
 import Missions.Mission7_quiz_files.mission7_quiz
 from Missions.Mission1_asteroid_files.mission1_asteroids import Challenge, Asteroids
-from Missions.Mission2_Satellite_Images import Satellite
+from Missions.Mission2_satellite_files.mission2_satellite import Satellite
 from Missions.Mission7_quiz_files.mission7_quiz import QuizGame
 
 
@@ -660,9 +660,9 @@ class SceneMissionSatelliteAnswer(Scene):
         # BACK button should redirect to menu but not working atm
 
         # Render the three images onscreen above the 3 buttons
-        self.satellite_image1 = pygame.image.load("./Missions/satellite_image1.jpg")
-        self.satellite_image2 = pygame.image.load("./Missions/satellite_image2.jpg")
-        self.satellite_image3 = pygame.image.load("./Missions/satellite_image3.jpg")
+        self.satellite_image1 = pygame.image.load("Missions/Mission2_satellite_files/satellite_images/satellite_image1.jpg")
+        self.satellite_image2 = pygame.image.load("Missions/Mission2_satellite_files/satellite_images/satellite_image2.jpg")
+        self.satellite_image3 = pygame.image.load("Missions/Mission2_satellite_files/satellite_images/satellite_image3.jpg")
 
         # Resize the images
         self.satellite_image1 = pygame.transform.scale(self.satellite_image1, (190, 360))
