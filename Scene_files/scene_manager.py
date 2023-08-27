@@ -60,16 +60,16 @@ class Scene:
         self.unmute_image = pygame.image.load(os.path.join(root_dir, 'Images/speaker_30px.png'))
         # Define the mute/unmute button's rect (assuming top-right corner and 50x50 size for now)
         self.mute_button_rect = pygame.Rect(SCREEN_WIDTH - 40, 10, 30, 30)
-        self.IS_MUTED = False
+        self.IS_MUTED = None
 
     def toggle_mute(self):
         """
         Toggles the mute state of the music and buttons in the scene.
         Mutes or unmutes based on the current global `IS_MUTED` variable.
         """
-        global MUSIC_VOLUME, BUTTON_VOLUME
-        if not self.IS_MUTED:
-            self.IS_MUTED = True
+        global MUSIC_VOLUME, IS_MUTED, BUTTON_VOLUME
+        if not IS_MUTED:
+            IS_MUTED = True
             # Here, you should also update the volume in actual pygame mixer
             pygame.mixer.music.set_volume(0)
             # mute all buttons
@@ -78,12 +78,13 @@ class Scene:
                 button.set_volume(0)
 
         else:
-            self.IS_MUTED = False
+            IS_MUTED = False
             pygame.mixer.music.set_volume(MUSIC_VOLUME)
             # unmute all buttons
             Button.button_volume = BUTTON_VOLUME
             for button in Button.active_buttons:
                 button.set_volume(BUTTON_VOLUME)
+        self.IS_MUTED = IS_MUTED
 
     def handle_event(self, event):
         """
@@ -114,7 +115,7 @@ class Scene:
             The surface onto which the mute/unmute button should be drawn.
         """
         # Depending on the state, draw either the mute or unmute button
-        if self.IS_MUTED:
+        if IS_MUTED:
             screen.blit(self.mute_image, self.mute_button_rect.topleft)
         else:
             screen.blit(self.unmute_image, self.mute_button_rect.topleft)
