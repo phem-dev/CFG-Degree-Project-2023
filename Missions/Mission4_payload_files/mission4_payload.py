@@ -104,8 +104,15 @@ class GamePlay:
                         intersects = True
         return intersects
     
-    # Pause tetromino in the field. If there is a complete horizontal line, create a new figure. If not, game over :(
+
     def halt_tetromino(self):
+        """
+            Pause tetromino in the field. 
+            
+            If there is a complete horizontal line, delete the line and create a new tetromino. 
+            
+            If handle_intersections() is True, set game.state to "gameover".
+        """
         for i in range(4):
             for j in range(4):
                 if i * 4 + j in self.tetromino.display_tetrominoes():
@@ -117,18 +124,32 @@ class GamePlay:
 
     # Check if there is a complete horizontal line
     def delete_line(self):
+        """
+            Check if there is a complete horizontal line in the game field. 
+
+            If zeros == 0, the row is filled with non-zero values, indicating a complete line. 
+
+            If there is a complete line, delete the line and increase the score by 1 for each line deleted.
+
+        """
+
+        # Create a count for number of lines deleted
         lines = 0 
+        # Iterate over rows in the game field
         for i in range(1, self.height):
             zeros = 0
+            # Iterate over columns within each row
             for j in range(self.width):
                 if self.field[i][j] == 0:
                     zeros += 1
+            # Handle line deletion
             if zeros == 0:
                 lines += 1
                 for k in range(i, 0, -1):
                     for j in range(self.width):
                         self.field[k][j] = self.field[k - 1][j]
-            
+
+        # Square score - clearing multiple lines at once scores the player more points     
         self.score += lines ** 2
     
     # Move tetrominoes - define last position, change co-ords and check handle_intersections(). If True, return to previous state. 
