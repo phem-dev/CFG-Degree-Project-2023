@@ -137,6 +137,10 @@ Before running the game, you need to set up the required environment and depende
 ```json
    pip install asyncio
 ```
+- Install the 'requirements.txt' module:
+```json
+   pip install -r requirements.txt
+```
 - Install the 'math' module (*Note: The 'math' module is part of Python's standard library and doesn't require installation*).
   
 **5. Run the Game:** Run the game on 'main.py'.
