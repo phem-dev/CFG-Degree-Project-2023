@@ -117,7 +117,7 @@ Before running the game, you need to set up the required environment and depende
 
 **3. Clone the Repository:** Clone or download this repository to your local machine using your preferred method. You can use the following command if you have Git installed:
 
-git clone https://github.com/your-username/repository-name.git
+git clone https://github.com/CFGSoftware2-23/Group-6-Thales-Gals.git
 
 **4. Install Required Modules:**
 
@@ -127,57 +127,23 @@ _**To install all required modules in one go run:**_
    pip install -r requirements.txt
 ```
 
-_**Alternatively, you can install each module separately:**_
+_This will install the following modules:_
 
-- Install the 'datetime' module:
+- datetime
 
-```json
-   pip install datetime
-```
+- requests
 
-- Install the 'requests' module:
+- geopy
 
-```json
-   pip install requests
-```
+- googletrans
 
-- Install the 'geopy' module:
+- aiohttp
 
-```json
-   pip install geopy
-```
+- asyncio
 
-- Install the 'googletrans' module:
+- aiohttp
 
-```json
-   pip install googletrans
-```
-
-- Install the 'aiohttp' module:
-
-```json
-   pip install aiohttp
-```
-
-- Install the 'asyncio' module:
-
-```json
-   pip install asyncio
-```
-
-- Install the 'aiohttp' module:
-
-```json
-   pip install aiohttp
-```
-
-- Install the 'asyncio' module:
-
-```json
-   pip install asyncio
-```
-
-- Install the 'math' module (_Note: The 'math' module is part of Python's standard library and doesn't require installation_).
+- 'math' and 'random' (_Note: The 'math' and 'random' modules are part of Python's standard library and don't require installation_).
 
 **5. Run the Game:** Run the game on 'main.py'.
 
