@@ -101,20 +101,5 @@ class TestGamePlay(unittest.TestCase):
         self.assertTrue(intersects)
 
 
-    
-    # test halt_tetromino
-
-    # test delete_line
-
-
-
-    # test move_space
-
-
-    # test move_down
-
-    # test move_to_side
-
-
 if __name__ == '__main__':
     unittest.main()
