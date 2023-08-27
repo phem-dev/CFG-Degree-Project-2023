@@ -1,44 +1,120 @@
 import unittest
-from Missions.Mission4_payload_files.mission4_payload import Block, GamePlay, colours
+import pygame
+from Missions.Mission4_payload_files.mission4_payload import Tetromino, GamePlay, colours
 
-class TestBlock(unittest.TestCase):
+class TestTetromino(unittest.TestCase):
 
-    def setUp(self):
-        self.block = Block(3, 0)
+    # Check Tetromino object is initialised with correct class attributes
+    def test_tetromino(self):
 
-    def test_initialization(self):
-        self.assertEqual(self.block.x, 3)
-        self.assertEqual(self.block.y, 0)
-        self.assertTrue(self.block.type in range(len(self.block.blocks)))
-        self.assertTrue(self.block.colour in range(1, len(colours)))
+        tetromino = Tetromino(0, 0)
+        self.assertEqual(tetromino.x, 0)
+        self.assertEqual(tetromino.y, 0)
+        self.assertIn(tetromino.type, range(len(Tetromino.tetrominoes)))
+        self.assertIn(tetromino.colour, range(1, len(colours)))
+        self.assertEqual(tetromino.rotation, 0)
 
-    def test_display_blocks(self):
-        self.assertTrue(isinstance(self.block.display_blocks(), list))
 
-    def test_rotate_blocks(self):
-        prev_rotation = self.block.rotation
-        self.block.rotate_blocks()
-        self.assertEqual(self.block.rotation, (prev_rotation + 1) % len(self.block.blocks[self.block.type]))
+    # Check display_tetrominoes() returns expected coniguration of a tetromino
+    def test_display_tetrominoes(self):
+
+        tetromino = Tetromino(0, 0)
+        tetromino.type = 0
+        tetromino.rotation = 1
+        configuration = tetromino.tetrominoes[tetromino.type][tetromino.rotation]
+        # Return current configuration of tetromino 
+        result = tetromino.display_tetrominoes()
+        self.assertEqual(result, configuration)
+
+
+    # Check rotate_tetrominoes() returns next rotation
+    def test_rotate_tetrominoes(self):
+
+        tetromino = Tetromino(0, 0)
+        initial_rotation = tetromino.rotation
+        tetromino.rotate_tetrominoes()
+        # Compare current rotation with expected
+        self.assertEqual(tetromino.rotation, (initial_rotation + 1) % len(tetromino.tetrominoes[tetromino.type]))
+
 
 class TestGamePlay(unittest.TestCase):
 
+    # Set up conditions required for following test cases 
     def setUp(self):
-        self.gameplay = GamePlay(20, 10)
 
-    def test_initialization(self):
-        self.assertEqual(self.gameplay.height, 20)
-        self.assertEqual(self.gameplay.width, 10)
-        self.assertEqual(len(self.gameplay.field), 20)
-        for line in self.gameplay.field:
-            self.assertEqual(len(line), 10)
+        pygame.init()
+        self.game = GamePlay(800, 600)
 
-    def test_new_blocks(self):
-        self.gameplay.new_blocks()
-        self.assertIsNotNone(self.gameplay.block)
-        self.assertEqual(self.gameplay.block.x, 3)
-        self.assertEqual(self.gameplay.block.y, 0)
+    # Check initial state of GamePlay object matches expected values for start of game
+    def test_gameplay_start(self):
 
-    # You can add more methods to test specific functionalities of your game.
+        self.assertEqual(self.game.height, 800)
+        self.assertEqual(self.game.width, 600)
+        self.assertEqual(self.game.level, 2)
+        self.assertEqual(self.game.score, 0)
+        self.assertEqual(self.game.state, "start")
+        self.assertIsNotNone(self.game.field)
+        self.assertIsNone(self.game.tetromino)
+
+
+    def test_new_tetrominoes(self):
+
+        self.game.new_tetrominoes()
+        # Check new tetromino has been created
+        self.assertIsNotNone(self.game.tetromino)
+
+    # Test handle_intersections() with no obstacles 
+    def test_handle_intersections_no_intersection(self):
+        
+        tetromino = Tetromino(0, 0)
+        self.game.tetromino = tetromino
+        self.game.field = [[0, 0, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]]
+        intersects = self.game.handle_intersections()
+        self.assertFalse(intersects)
+
+    # Test handle_intersections() with tetromino
+    def test_handle_intersections_with_intersection(self):
+            
+            tetromino = Tetromino(0, 0)
+            self.game.tetromino = tetromino
+            self.game.field = [[0, 0, 0, 0],
+                                [0, 1, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0]]
+            intersects = self.game.handle_intersections()
+            self.assertTrue(intersects)
+
+    
+    # Test handle_intersections() with multiple tetrominoes
+    def test_handle_intersections_multiple_blocks_intersection(self):
+
+        tetromino = Tetromino(1, 1)
+        self.game.tetromino = tetromino
+        self.game.field = [[0, 0, 0, 0],
+                            [0, 1, 1, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]]
+        intersects = self.game.handle_intersections()
+        self.assertTrue(intersects)
+
+
+    
+    # test halt_tetromino
+
+    # test delete_line
+
+
+
+    # test move_space
+
+
+    # test move_down
+
+    # test move_to_side
+
 
 if __name__ == '__main__':
     unittest.main()

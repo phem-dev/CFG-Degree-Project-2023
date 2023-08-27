@@ -15,9 +15,13 @@ colours = [
 class Tetromino: 
 
     def __init__(self, x, y):
+        """
+            Initialise Tetromino class. 
+
+            Randomly pick attributes for each tetromino.
+        """
         self.x = x
         self.y = y
-        # Randomly pick type and colour for each tetromino
         self.type = random.randint(0, len(self.tetrominoes) - 1)
         self.colour = random.randint(1, len(colours) - 1)
         self.rotation = 0
@@ -31,18 +35,29 @@ class Tetromino:
         [[1, 2, 5, 6]],
     ]
 
-    # Rotate figures and get current rotation
+
     def display_tetrominoes(self):
+        """
+            Display and return current rotation of tetromino
+        """
         return self.tetrominoes[self.type][self.rotation]
     
     def rotate_tetrominoes(self):
+        """
+            Rotate tetromino
+        """
         self.rotation = (self.rotation + 1) % len(self.tetrominoes[self.type])
 
 
 class GamePlay:
 
-    # Create a field of the size width x height
     def __init__(self, height, width):
+        """
+            Initialise GamePlay class with and set attributes. 
+
+            Draw a game field of height * width with no tetrominoes in the field and 
+            game state set to "start". 
+        """
         self.height = height
         self.width = width
         self.level = 2
@@ -62,24 +77,42 @@ class GamePlay:
                 new_line.append(0)
             self.field.append(new_line)
 
-    # Create new tetromino at co-ords of 3, 0
+
     def new_tetrominoes(self):
+        """
+            Create new tetrominoes at co-ords of 3, 0.
+        """
         self.tetromino = Tetromino(3, 0)
 
-    # Handle intersections of tetrominoes
+
     def handle_intersections(self):
+        """
+            Handle intersections of tetrominoes. 
+
+            Check the current position of the tetromino and whether it has any collisions
+            with the game boundaries or other tetrominoes. 
+
+            If there is a collision, set intersects to True. Else, intersects = False. 
+        """
         intersects = False
         for i in range(4):
             for j in range(4):
                 # Check if each tetromino is within bounds of game
                 if i * 4 + j in self.tetromino.display_tetrominoes():
-                    # Check if tetromino is touching another. If 0, safe to move. 
+                    # Check if tetromino intersects with another. If 0, safe to move. 
                     if i + self.tetromino.y > self.height - 1 or j + self.tetromino.x > self.width - 1 or j + self.tetromino.x < 0 or self.field[i + self.tetromino.y][j + self.tetromino.x] > 0:
                         intersects = True
         return intersects
     
-    # Pause tetromino in the field. If there is a complete horizontal line, create a new figure. If not, game over :(
+
     def halt_tetromino(self):
+        """
+            Pause tetromino in the field. 
+            
+            If there is a complete horizontal line, delete the line and create a new tetromino. 
+            
+            If handle_intersections() is True, set game.state to "gameover".
+        """
         for i in range(4):
             for j in range(4):
                 if i * 4 + j in self.tetromino.display_tetrominoes():
@@ -91,40 +124,88 @@ class GamePlay:
 
     # Check if there is a complete horizontal line
     def delete_line(self):
+        """
+            Check if there is a complete horizontal line in the game field. 
+
+            If zeros == 0, the row is filled with non-zero values, indicating a complete line. 
+
+            If there is a complete line, delete the line and increase the score by 1 for each line deleted.
+
+        """
+
+        # Create a count for number of lines deleted
         lines = 0 
+        # Iterate over rows in the game field
         for i in range(1, self.height):
             zeros = 0
+            # Iterate over columns within each row
             for j in range(self.width):
                 if self.field[i][j] == 0:
                     zeros += 1
+            # Handle line deletion
             if zeros == 0:
                 lines += 1
                 for k in range(i, 0, -1):
                     for j in range(self.width):
                         self.field[k][j] = self.field[k - 1][j]
-            
+
+        # Square score - clearing multiple lines at once scores the player more points     
         self.score += lines ** 2
     
     # Move tetrominoes - define last position, change co-ords and check handle_intersections(). If True, return to previous state. 
     def move_space(self):
+        """
+            Move tetromino down the field until it encounters an intersection: 
+
+                While handle_intersections() is false: Increment verticle position of current tetromino by 1 to move the the tetromino down the game board. 
+
+                Once tetromino encounters an intersection, decrement vertical position by 1 to reach last valid position. 
+
+                Call halt_tetromino method. 
+        """
         while not self.handle_intersections():
             self.tetromino.y += 1
         self.tetromino.y -= 1
         self.halt_tetromino()
 
     def move_down(self):
+        """
+            Move tetromino down one row. 
+
+            If handle_intersections() == True
+                Move tetromino to last valid position
+                Call halt_tetromino() method 
+        """
         self.tetromino.y += 1
         if self.handle_intersections():
             self.tetromino.y -= 1
             self.halt_tetromino()
 
     def move_to_side(self, dx):
+        """
+            Args: dx = horizontal distance tetromino should move
+            +ve = move right
+            -ve = move left 
+
+            Store current horizontal position of tetromino 
+            (in case it needs to be moved back). 
+            Update horizontal position of tetromino depending on value of dx. 
+            Check for intersections. If handle_intersections() == True, 
+            move tetromino back to old position. 
+
+        """
         old_x = self.tetromino.x
         self.tetromino.x += dx
         if self.handle_intersections():
             self.tetromino.x = old_x 
     
     def rotate_tetrominoes(self):
+        """
+            Try to rotate tetromino. 
+
+            If rotation results in handle_intersections() == True, 
+            return tetromino to previous_rotation. 
+        """
         previous_rotation = self.tetromino.rotation
         self.tetromino.rotate_tetrominoes()
         if self.handle_intersections():
@@ -138,11 +219,11 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 grey = (128, 128, 128)
 
-
+# Set size of board
 size = (800, 600)
 screen = pygame.display.set_mode(size)
 
-pygame.display.set_caption("Stratobus Payload Challenge")
+# pygame.display.set_caption("Stratobus Payload Challenge")
 
 # Loop until the user clicks the close button.
 done = False
@@ -153,17 +234,21 @@ counter = 0
 
 pressing_down = False
 
+# While player has not decided to exit the game: 
 while not done:
+    # If there is no active tetromino, create a new one 
     if game.tetromino is None:
         game.new_tetrominoes()
     counter += 1
     if counter > 100000:
         counter = 0
 
+    # Conditions that result in a tetromino moving down the board
     if counter % (fps // game.level // 2) == 0 or pressing_down:
         if game.state == "start":
             game.move_down()
 
+    # Event handling for key strokes 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -197,6 +282,14 @@ while not done:
                 pygame.draw.rect(screen, colours[game.field[i][j]],
                                  [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 2])
 
+
+    """
+        Iterate through 4 * 4 grid.
+        Check if each cell is part of an active tetromino. 
+        If it is, draw a tetromino. 
+        Repeat for all cells in the shape of the tetromino type, 
+        taking into account current position and rotation. 
+    """
     if game.tetromino is not None:
         for i in range(4):
             for j in range(4):
