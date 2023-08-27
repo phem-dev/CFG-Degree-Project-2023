@@ -1315,6 +1315,7 @@ class SceneMissionBlast(Scene):
         script_path = "Missions/Mission6_blast_files/mission6_blast.py"
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def to_menu(self):
         # Switch to the Start Menu scene
