@@ -21,17 +21,24 @@ from Utils.button import Button
 
 from Scene_files.settings import *
 
+# Import pygame mixer module:
+import pygame.mixer
 
 # Get the root directory by going up a few times (nested)
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # now anything pointing to a directory is redefined by applying the hosts absolute path
 
-
-
 # ISSTracker class:
 class ISSTracker:
+    """ A class for tracking the International Space Station (ISS) using Pygame.
+    """
     def __init__(self):
+        """
+        Initialize the ISS tracker.
+        """
         pygame.init()
+
+        pygame.mixer.init()  # Initialize the pygame mixer
 
         # Initialize the pygame window
         self.window_size = (800, 600)
@@ -49,6 +56,64 @@ class ISSTracker:
         self.iss_font_smlr = pygame.font.Font(font_path, 12)
         self.iss_font_smlr2 = pygame.font.Font(font_path, 10)
         self.iss_font_med = pygame.font.Font(font_path, 18)
+
+        # Define font colors for normal and hover states:
+        self.font_colors = {
+            "normal": (0, 0, 0),  # Black color for normal state
+            "hover": (255, 255, 255)  # White color for hover state
+        }
+
+        # Load sound effect for button click:
+        self.button_click_sound = pygame.mixer.Sound("Scene_files/Audio/Button click 1.wav")
+        self.button_hover_sound = pygame.mixer.Sound("Scene_files/Audio/Button hover 1.wav")
+
+        # Load button images:
+        speed_button_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/button.png"))
+        altitude_button_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/button.png"))
+        exit_button_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/menu_btn.png"))
+        power_up_button_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/p_up.png"))
+
+        # Load Hover button images:
+        speed_button_hover_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/button_hvr.png"))
+        altitude_button_hover_img = pygame.image.load(
+            os.path.join(root_dir, "Missions/Mission5_ISS_files/button_hvr.png"))
+        exit_button_hover_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/menu_hvr.png"))
+        power_up_button_hover_img = pygame.image.load(
+            os.path.join(root_dir, "Missions/Mission5_ISS_files/p_up_hvr.png"))
+
+        # Dictionary to store button images:
+        self.button_images = {
+            "speed": {
+                "normal": speed_button_img,
+                "hover": speed_button_hover_img
+            },
+            "altitude": {
+                "normal": altitude_button_img,
+                "hover": altitude_button_hover_img
+            },
+            "exit": {
+                "normal": exit_button_img,
+                "hover": exit_button_hover_img
+            },
+            "power_up": {
+                "normal": power_up_button_img,
+                "hover": power_up_button_hover_img
+            }
+        }
+
+        # Preload hover button images:
+        self.button_images["speed"]["hover"] = pygame.image.load(
+            os.path.join(root_dir, "Missions/Mission5_ISS_files/button_hvr.png")
+        )
+        self.button_images["altitude"]["hover"] = pygame.image.load(
+            os.path.join(root_dir, "Missions/Mission5_ISS_files/button_hvr.png")
+        )
+        self.button_images["exit"]["hover"] = pygame.image.load(
+            os.path.join(root_dir, "Missions/Mission5_ISS_files/menu_hvr.png")
+        )
+        self.button_images["power_up"]["hover"] = pygame.image.load(
+            os.path.join(root_dir, "Missions/Mission5_ISS_files/p_up_hvr.png")
+        )
 
         # Variables for ISS API, geolocation setup and translator:
         self.api_url = "http://api.open-notify.org/iss-now.json"
@@ -73,7 +138,6 @@ class ISSTracker:
 
         # Button positions and dimensions:
         self.speed_button_rect = pygame.Rect(50, 200, 150, 30)
-        #self.speed_button = Button(50, 200, GREEN, BLUE, "View Speed", BLACK, WHITE, self.display_speed) -----------New button??
         self.altitude_button_rect = pygame.Rect(50, 300, 160, 30)
         self.power_up_button_rect = pygame.Rect(self.window_size[0] - 210, self.window_size[1] - 300, 120, 30)
         self.power_level_text_rect = pygame.Rect(self.power_up_button_rect.left, self.power_up_button_rect.bottom - 110, 120, 30)
@@ -89,14 +153,34 @@ class ISSTracker:
         self.power_level = 0  # Store the current power level
         self.full_power_reached = False  # Flag to track if full power is reached
 
+        # Mission complete:
+        self.mission_complete_font = pygame.font.Font(font_path, 30)  # Define font for mission complete text
+        self.mission_complete_text = None  # To store the mission complete text surface
+
     # Method to get the current ISS location:
     def get_iss_location(self):
+        """
+        Retrieve the current latitude and longitude of the ISS.
+
+        Returns:
+            Tuple: A tuple containing the latitude and longitude of the ISS.
+        """
         response = requests.get(self.api_url)
         data = response.json()
         return float(data["iss_position"]["latitude"]), float(data["iss_position"]["longitude"])
 
     # Method to get the closest country to a given latitude and longitude:
     def get_closest_country(self, lat, lon):
+        """
+        Get the name of the closest country to a given latitude and longitude.
+
+        Args:
+            lat (float): Latitude.
+            lon (float): Longitude.
+
+        Returns:
+            str: The name of the closest country.
+        """
         closest_distance = float('inf')
         closest_country = ". . . loading"
 
@@ -126,15 +210,34 @@ class ISSTracker:
 
     # Translate text to English using Google Translate:
     def translate_to_english(self, text):
+        """
+        Translate text to English using Google Translate.
+
+            Args:
+                text (str): Text to be translated.
+
+            Returns:
+                str: Translated text in English.
+        """
         try:
             translation = self.translator.translate(text, src='auto', dest='en')
-            return translation.text
-        except Exception as e:
-            print(f"Translation error: {e}")
+            if translation:
+                return translation.text
+            else:
+                return text
+        except AttributeError:
             return text
 
     # Method to Draw the ISS on the screen:
     def draw_iss(self, lat, lon, country):
+        """
+        Draw the ISS on the screen.
+
+         Args:
+            lat (float): Latitude of the ISS.
+            lon (float): Longitude of the ISS.
+            country (str): Name of the country closest to the ISS.
+        """
         # Clear the screen with the background image
         self.screen.blit(self.background_image, (0, 0))
 
@@ -149,7 +252,6 @@ class ISSTracker:
         radius = min(self.window_size) * 0.2
         x = int(self.window_size[0] // 2 + radius * math.cos(angle))
         y = int(self.window_size[1] // 2 + radius * math.sin(angle))
-
 
         # Draw scaled Earth image at the centre:
         earth_scaled = pygame.transform.scale(self.earth_image, (self.earth_image_width, self.earth_image_height))
@@ -205,31 +307,121 @@ class ISSTracker:
             self.screen.blit(warning_text1, warning_text1_rect)
             self.screen.blit(warning_text2, warning_text2_rect)
 
+            # Draw "Mission Complete" text if power level is 10:
+            if self.power_level >= 10:
+                mission_complete_text = self.mission_complete_font.render("Mission Complete!", True, (255, 0, 0))
+                mission_complete_rect = mission_complete_text.get_rect(
+                    center=(self.window_size[0] // 2, self.exit_button_rect.top - 50)
+                )
+                self.mission_complete_text = mission_complete_text  # Store the text surface
+                self.screen.blit(mission_complete_text, mission_complete_rect)
+
     # Method to draw buttons onto the screen:
     def draw_buttons(self):
-        # Draw rectangles for buttons:
-        pygame.draw.rect(self.screen, (255, 204, 0), self.speed_button_rect)
-        pygame.draw.rect(self.screen, (255, 204, 0), self.altitude_button_rect)
-        pygame.draw.rect(self.screen, (30, 167, 225), self.exit_button_rect)
-        pygame.draw.rect(self.screen, (232, 106, 23), self.power_up_button_rect)
+        """
+        Draw buttons on the screen and handle button interactions.
+        """
+        # Declare running as a global variable:
+        global running
+
+        # Check if mouse hovers over buttons and is clicked:
+        mouse_pos = pygame.mouse.get_pos()  # Get mouse position
+        mouse_clicked = pygame.mouse.get_pressed()[0]  # Check left mouse button state
+
+        # Speed Button
+        if self.speed_button_rect.collidepoint(mouse_pos):
+            if mouse_clicked:
+                self.display_speed = not self.display_speed
+                self.display_altitude = False
+                self.button_click_sound.play()
+            self.screen.blit(self.button_images["speed"]["hover"], self.speed_button_rect)
+        else:
+            self.screen.blit(self.button_images["speed"]["normal"], self.speed_button_rect)
+
+        # Altitude Button
+        if self.altitude_button_rect.collidepoint(mouse_pos):
+            if mouse_clicked:
+                self.display_altitude = not self.display_altitude
+                self.display_speed = False
+                self.button_click_sound.play()
+            self.screen.blit(self.button_images["altitude"]["hover"], self.altitude_button_rect)
+        else:
+            self.screen.blit(self.button_images["altitude"]["normal"], self.altitude_button_rect)
+
+        # Exit Button
+        if self.exit_button_rect.collidepoint(mouse_pos):
+            if mouse_clicked:
+                running = False  # Exit the game
+                self.button_click_sound.play()
+            self.screen.blit(self.button_images["exit"]["hover"], self.exit_button_rect)
+        else:
+            self.screen.blit(self.button_images["exit"]["normal"], self.exit_button_rect)
+
+        # Power Up Button
+        if self.power_up_button_rect.collidepoint(mouse_pos):
+            if mouse_clicked:
+                self.power_up_action()
+                self.button_click_sound.play()
+            self.screen.blit(self.button_images["power_up"]["hover"], self.power_up_button_rect)
+        else:
+            self.screen.blit(self.button_images["power_up"]["normal"], self.power_up_button_rect)
 
         # Set font for button labels:
         font = self.iss_font_sml
 
-        # Display button label texts:
-        speed_button_text = font.render("Show Speed", True, (0, 0, 0, 255))
-        altitude_button_text = font.render("Show Altitude", True, (0, 0, 0, 255))
-        exit_button_text = font.render("EXIT", True, (0, 0, 0, 255))
-        power_up_button_text = font.render("Power Up", True, (0, 0, 0, 255))
+        # Get mouse position for hover detection:
+        mouse_pos = pygame.mouse.get_pos()
+
+        # Display button label texts and adjust font color for hover state:
+        speed_button_text = font.render("Show Speed", True,self.font_colors["hover"] if self.speed_button_rect.collidepoint(mouse_pos) else self.font_colors["normal"])
+        altitude_button_text = font.render("Show Altitude", True, self.font_colors["hover"] if self.altitude_button_rect.collidepoint(mouse_pos) else self.font_colors["normal"])
+        exit_button_text = font.render("MENU", True, self.font_colors["hover"] if self.exit_button_rect.collidepoint(mouse_pos) else self.font_colors["normal"])
+        power_up_button_text = font.render("Power Up", True, self.font_colors["hover"] if self.power_up_button_rect.collidepoint(mouse_pos) else self.font_colors["normal"])
 
         # Display button label texts onto the screen:
         self.screen.blit(speed_button_text, (self.speed_button_rect.left + 10, self.speed_button_rect.top + 5))
         self.screen.blit(altitude_button_text, (self.altitude_button_rect.left + 10, self.altitude_button_rect.top + 5))
-        self.screen.blit(exit_button_text, (self.exit_button_rect.left + 10, self.exit_button_rect.top + 5))
+        self.screen.blit(exit_button_text, (self.exit_button_rect.left + 20, self.exit_button_rect.top + 5))
         self.screen.blit(power_up_button_text, (self.power_up_button_rect.left + 10, self.power_up_button_rect.top + 5))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            # Check if mouse button is clicked:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if self.speed_button_rect.collidepoint(event.pos):
+                        self.display_speed = not self.display_speed
+                        self.display_altitude = False
+                        self.button_click_sound.play()
+                    elif self.altitude_button_rect.collidepoint(event.pos):
+                        self.display_altitude = not self.display_altitude
+                        self.display_speed = False
+                        self.button_click_sound.play()
+                    elif self.power_up_button_rect.collidepoint(event.pos):
+                        self.power_up_action()
+                        self.button_click_sound.play()
+                    elif self.exit_button_rect.collidepoint(event.pos):
+                        running = False  # Exit the game
+                        self.button_click_sound.play()
+
+            # Check if mouse hovers over buttons:
+            elif event.type == pygame.MOUSEMOTION:
+                if self.speed_button_rect.collidepoint(event.pos):
+                    self.button_hover_sound.play()
+                elif self.altitude_button_rect.collidepoint(event.pos):
+                    self.button_hover_sound.play()
+                elif self.power_up_button_rect.collidepoint(event.pos):
+                    self.button_hover_sound.play()
+                elif self.exit_button_rect.collidepoint(event.pos):
+                    self.button_hover_sound.play()
 
     # Method to draw the power level indicator on the screen:
     def draw_power_level(self):
+        """
+        Draw the power level indicator on the screen.
+        """
         font = self.iss_font_smlr
 
         # Display the "Current power level:" text
@@ -247,15 +439,22 @@ class ISSTracker:
         # Display "Full Power Reached!" text if the power level is >= 10:
         if self.power_level >= 10:
             full_power_text = font.render("Full Power Reached!", True, (255, 0, 0))
-            self.screen.blit(full_power_text, (self.power_level_text_rect.left, self.power_level_text_rect.bottom + 20))
+            self.screen.blit(full_power_text, (self.power_level_text_rect.left, self.power_level_text_rect.bottom + 25))
 
     # Method to increase the power level if < 10:
     def power_up_action(self):
+        """
+        Increase the power level by one if it's less than 10.
+        """
         if self.power_level < 10:
             self.power_level += 1
 
     # Method to start the main program loop and handle events:
     def run(self):
+        """
+        Start the main program loop and handle events.
+        """
+        global running  # Declare running as a global variable
         running = True
         while running:
             for event in pygame.event.get():
