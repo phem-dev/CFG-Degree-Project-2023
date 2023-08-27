@@ -96,6 +96,7 @@ Retrieves the current location of the International Space Station.
 
 ## Requirements
 
+- Pycharm IDE
 - Python 3.x
 - Pygame library
 
@@ -107,9 +108,11 @@ To play the Stratobus Mission game, follow the installation instructions in the 
 
 Before running the game, you need to set up the required environment and dependencies. Follow these steps to ensure everything is properly installed:
 
-**1. Python Version:** Make sure you have Python 3.x installed on your system. You can download the latest version of Python from the official Python website.
+**1. Pycharm:** Make sure you have downloaded the Pycharm IDE from: https://www.jetbrains.com/pycharm/download/?section=windows
 
-**2. Install Pygame:** The game relies on the Pygame library. To install it, open your terminal and run the following command:
+**2. Python Version:** Make sure you have Python 3.x installed on your system. You can download the latest version of Python from the official Python website.
+
+**3. Install Pygame:** The game relies on the Pygame library. To install it, open your terminal and run the following command:
 
 ```json
    pip install pygame
