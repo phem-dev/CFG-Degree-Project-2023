@@ -1682,7 +1682,7 @@ class SceneQuizLeaderboard(Scene):
     # save the name of the current player
     def save_name(self):
         # Use the 'with' statement to ensure the file is properly closed after it's done
-        with open("Missions/name_cache.txt", 'w') as file:
+        with open("Missions/Mission7_quiz_files/name_cache.txt", 'w') as file:
             file.write(self.player_input)
 
     # Switch to the Start Menu scene
