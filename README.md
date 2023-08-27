@@ -50,7 +50,7 @@ Image Sources:
 
 Font Sources:
 
-- [TypewriterText](http://www.kenney.nl)
+- [kenvector_future.ttf](http://www.kenney.nl)
 
 ## API Reference
 
@@ -121,7 +121,7 @@ git clone https://github.com/CFGSoftware2-23/Group-6-Thales-Gals.git
 
 **4. Install Required Modules:**
 
-_**To install all required modules in one go run:**_
+_**To install all required modules run:**_
 
 ```json
    pip install -r requirements.txt
