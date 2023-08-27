@@ -1,7 +1,12 @@
+import os
 import pygame
 import random
 import math
 from pygame import mixer
+
+# Get the root directory by going up a few times (nested)
+root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# now anything pointing to a directory is redefined by applying the hosts absolute path
 
 # initialize pygame
 pygame.init()
@@ -12,11 +17,11 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 # title and icon
 pygame.display.set_caption("Asteroid Blast")
-icon = pygame.image.load("Missions/asteroid_blast_files/asteroid.png")
+icon = pygame.image.load(os.path.join(root_dir, "Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/asteroid.png"))
 pygame.display.set_icon(icon)
 
 # ship
-ship_img = pygame.image.load("Missions/asteroid_blast_files/zeppelin.png")
+ship_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/zeppelin.png"))
 ship_img = pygame.transform.rotate(ship_img, 270)
 ship_width = 64
 shipx = screen_width // 2 - ship_width // 2
@@ -24,7 +29,7 @@ shipy = 480
 shipx_change = 0
 
 # asteroid
-asteroid_img = pygame.image.load("Missions/asteroid_blast_files/asteroid1.png")
+asteroid_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/asteroid1.png"))
 # create empty lists to add the different asteroid variables to
 asteroid_images = []
 asteroidx = []
@@ -43,7 +48,7 @@ for i in range(num_asteroids):
     asteroidy_change.append(speed)  # Set the speed for each asteroid
 
 # bullet
-bullet_img = pygame.image.load("Missions/asteroid_blast_files/bullet.png")
+bullet_img = pygame.image.load(os.path.join(root_dir, "Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/bullet.png"))
 bulletx = 0
 bullety = 480
 bulletx_change = 0
@@ -124,7 +129,7 @@ class Background(pygame.sprite.Sprite):
 
 
 # create instance of background
-BackGround = Background('Missions/asteroid_blast_files/asteroid_bg.png', [0, 0])
+BackGround = Background(os.path.join(root_dir, 'Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/asteroid_bg.png'), [0, 0])
 
 # game loop
 running = True
@@ -156,7 +161,7 @@ while running:
             #     if space bar is pressed fire bullet and make bullet sound
             if event.key == pygame.K_SPACE:
                 if bullet_state == "ready":
-                    bullet_sound = mixer.Sound('Missions/asteroid_blast_files/laser.wav')
+                    bullet_sound = mixer.Sound(os.path.join(root_dir, 'Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/laser.wav'))
                     bullet_sound.play()
                     bulletx = shipx
                     fire_bullet(bulletx, bullety)  # draw bullet at start position
@@ -189,7 +194,7 @@ while running:
         collison = is_collision(bulletx, bullety)
         # if there is a collision make an explosion sound, reset the bullet position and state, increase score by 1, reset asterpod position at top of screen
         if collison:
-            explosion_sound = mixer.Sound('Missions/asteroid_blast_files/explosion.wav')
+            explosion_sound = mixer.Sound(os.path.join(root_dir, 'Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/explosion.wav'))
             explosion_sound.play()
             bullety = 480
             bullet_state = "ready"
@@ -202,7 +207,7 @@ while running:
     game_over = is_game_over(shipx, shipy)
     # If game over: play explosion sound, display game over text, show final score in centre of screen, update display, wait 3 seconds before exiting
     if game_over:
-        explosion_sound = mixer.Sound('Missions/asteroid_blast_files/explosion.wav')
+        explosion_sound = mixer.Sound(os.path.join(root_dir, 'Missions/Mission6_blast_files/Mission6_asteroid_blast_assets/explosion.wav'))
         explosion_sound.play()
         game_over_text()
         show_score(350, 320)

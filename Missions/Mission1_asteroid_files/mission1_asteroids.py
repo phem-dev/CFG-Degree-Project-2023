@@ -1,5 +1,5 @@
 import requests
-from Missions.Mission_config import today_date_string, short_url
+from Missions.Mission1_asteroid_files.Mission_config import today_date_string, short_url
 
 class Challenge:
     def __init__(self, challenge_name):

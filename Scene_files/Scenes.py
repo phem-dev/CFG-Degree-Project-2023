@@ -1312,7 +1312,7 @@ class SceneMissionBlast(Scene):
         )
 
     def to_play_asteroid_blast(self):
-        script_path = "Missions/Mission6_Asteroid_Blast.py"
+        script_path = "Missions/Mission6_blast_files/mission6_blast.py"
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])
 
