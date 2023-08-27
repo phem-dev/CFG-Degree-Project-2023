@@ -1,8 +1,14 @@
 import unittest
+import os
 from unittest.mock import patch, MagicMock
 from Missions.Mission5_ISS_files.mission5_ISS import ISSTracker
 from Scene_files.settings import *
 
+# Get the root directory:
+root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Set the working directory:
+os.chdir(root_dir)
 
 class TestISSTracker(unittest.TestCase):
     @patch('requests.get')  # Mock the requests.get function

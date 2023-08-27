@@ -24,9 +24,8 @@ from Scene_files.settings import *
 # Import pygame mixer module:
 import pygame.mixer
 
-# Get the root directory by going up a few times (nested)
+# Get the root directory:
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# now anything pointing to a directory is redefined by applying the hosts absolute path
 
 # ISSTracker class:
 class ISSTracker:
