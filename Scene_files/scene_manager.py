@@ -1,7 +1,11 @@
 from Scene_files.settings import *
 from Utils.button import Button
 
+# Get the root directory by going up a few times (nested)
+root_dir = os.path.dirname(os.path.abspath(__file__))
 
+
+# now anything pointing to a directory is redefined by applying the hosts absolute path
 
 class SceneManager:
     """
@@ -52,12 +56,13 @@ class Scene:
         The rectangle representing the mute/unmute button's position and size on the screen.
         """
         # Load the mute and unmute images
-        self.mute_image = pygame.image.load('Scene_files/Images/speaker_mute_30px.png')
-        self.unmute_image = pygame.image.load('Scene_files/Images/speaker_30px.png')
+        self.mute_image = pygame.image.load(os.path.join(root_dir, 'Images/speaker_mute_30px.png'))
+        self.unmute_image = pygame.image.load(os.path.join(root_dir, 'Images/speaker_30px.png'))
         # Define the mute/unmute button's rect (assuming top-right corner and 50x50 size for now)
         self.mute_button_rect = pygame.Rect(SCREEN_WIDTH - 40, 10, 30, 30)
 
-    def toggle_mute(self):
+    @staticmethod
+    def toggle_mute():
         """
         Toggles the mute state of the music and buttons in the scene.
         Mutes or unmutes based on the current global `IS_MUTED` variable.
@@ -72,7 +77,6 @@ class Scene:
             for button in Button.active_buttons:
                 button.set_volume(0)
 
-
         else:
             IS_MUTED = False
             pygame.mixer.music.set_volume(MUSIC_VOLUME)
@@ -80,8 +84,6 @@ class Scene:
             Button.button_volume = BUTTON_VOLUME
             for button in Button.active_buttons:
                 button.set_volume(BUTTON_VOLUME)
-
-
 
     def handle_event(self, event):
         """
@@ -116,5 +118,3 @@ class Scene:
             screen.blit(self.mute_image, self.mute_button_rect.topleft)
         else:
             screen.blit(self.unmute_image, self.mute_button_rect.topleft)
-
-

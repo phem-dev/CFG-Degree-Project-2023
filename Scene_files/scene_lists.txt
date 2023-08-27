@@ -2,43 +2,44 @@
 # START AND CONTROLS ###################################################################################################
 ########################################################################################################################
 SceneStart
-    The title screen with start button, rules button and exit button
+    The title screen with start button and exit button
 
     Function to direct here:
         self.back_to_scene_start
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids
-        self.button2 -> self.to_controls
-        self.button3 -> sys.exit
+        self.button1 "START" -> self.to_welcome
+        self.button2 "EXIT" -> sys.exit
 
 
  ########################################################################################################################
-SceneControls
-    The rules and controls screen
+WelcomeScene
+    The intro screen with play button and exit button
 
     Function to direct here:
-        self.to_controls
+        self.to_welcome
 
     Buttons on here:
-        self.button1 -> self.back_to_scene_start
-        self.button2 -> sys.exit
+        self.button1 "PLAY" -> self.to_start_menu
+        self.button2 "EXIT" -> sys.exit
 
 
-########################################################################################################################
+ ########################################################################################################################
 SceneStartMenu
-    A menu screen of all 4 mission buttons and the exit
+    A navigation menu screen of all 7 mission buttons and the exit
 
     Function to direct here:
         self.to_mission_menu
 
     Buttons on here:
-        self.button1 -> to_scene_mission_asteroids
-        self.button2 ->to_scene_mission_sentinel
-        self.button3 ->to_scene_mission_mars
-        self.button4 ->self.to_scene_payload
-        self.button5 ->self.to_scene_dodge
-        self.button6 -> sys.exit
+        self.button1 "1: Asteroid Challenge" -> to_scene_mission_asteroids
+        self.button2 "2: Satellite Images" -> to_scene_mission_sentinel
+        self.button3 "3: Capture Mars" -> to_scene_mission_mars
+        self.button4 "4: Payload Mission" -> self.to_scene_payload
+        self.button5 "5: Locate ISS" -> self.to_scene_iss
+        self.button6 "6: Asteroid Blast" -> self.to_scene_dodge
+        self.button7 "7: Quiz"-> self.to_scene_quiz
+        self.button8 "EXIT" -> sys.exit
 
 ########################################################################################################################
 # MISSIONS #############################################################################################################
@@ -50,31 +51,55 @@ SceneMissionAsteroids
         self.to_scene_mission_asteroids
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids_input
-        self.button2 -> self.to_menu
+        self.button1 "ACCEPT" -> self.to_scene_mission_asteroids_input
+        self.button2 "MENU" -> self.to_menu
 
 ########################################################################################################################
 SceneMissionAsteroidsInput
-    The asteroid mission user input page with...
+    The asteroid mission user input page
 
     Function to direct here:
-        self.to_scene_mission_asteroids
+        self.to_scene_mission_asteroids_input
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids_input
-        self.button2 -> self.to_menu
+        self.button1 "SUBMIT" -> self.user_submit
+        self.button2 "MENU" -> self.to_menu
 
 ########################################################################################################################
 #########################################################################################################################
-SceneMissionSentinel
+SceneMissionSatellite
     The Sentinel mission intro page with title, description, accept button and menu button
 
     Function to direct here:
         to_scene_mission_sentinel
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids_input
-        self.button2 -> self.to_menu
+        self.button1 "ACCEPT" -> self.to_scene_mission_asteroids_input
+        self.button2 "MENU" -> self.to_menu
+
+ ########################################################################################################################
+ SceneMissionSatelliteIntro
+    The Sentinel mission user intro page with instructions
+
+    Function to direct here:
+        self.to_scene_mission_asteroids_input
+
+    Buttons on here:
+        self.button1 "CAPTURE IMAGES" -> self.to_scene_mission_satellite_answer
+        self.button2 "MENU" -> self.to_menu
+
+########################################################################################################################
+SceneMissionSatelliteAnswer
+    The Sentinel mission user input page
+
+    Function to direct here:
+        self.to_scene_mission_satellite_answer
+
+    Buttons on here have if logic so two possible functions
+        self.button1 "IMAGE 1" -> self.incorrect_answer / self.correct_answer
+        self.button2 "IMAGE 2" -> self.incorrect_answer / self.correct_answer
+        self.button3 "IMAGE 3" -> self.incorrect_answer / self.correct_answer
+        self.button4 "BACK" -> self.to_menu
 
 ########################################################################################################################
 #########################################################################################################################
@@ -85,8 +110,22 @@ SceneMissionMars
         to_scene_mission_mars
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids_input
-        self.button2 -> sys.exit
+        self.button1 "ACCEPT" -> self.to_scene_mission_mars_play
+        self.button2 "MENU" -> self.to_menu]
+
+########################################################################################################################
+SceneMissionMarsPlay
+    The Mars Rover mission intro page with title,  description, accept button and menu button
+
+    Function to direct here:
+        self.to_scene_mission_mars_play
+
+    Buttons on here:
+        self.button01 "MENU" -> self.to_menu
+        self.button02 "PROCEED" -> self.to_scene_payload
+        self.button1 "Front Hazard Camera" -> lambda: (setattr(self, 'camera_choice', 1), self.run())[1]
+        self.button2 "Rear Hazard Camera" -> lambda: (setattr(self, 'camera_choice', 2), self.run())[1]
+        self.button "Navigation Camera" -> lambda: (setattr(self, 'camera_choice', 3), self.run())[1]
 
 ########################################################################################################################
 #########################################################################################################################
@@ -97,28 +136,94 @@ SceneMissionPayload
         self.to_scene_payload
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids_input
-        self.button2 -> self.to_menu
+        self.button1 "ACCEPT" -> self.to_play_payload_challenge
+        self.button2 "MENU" -> self.to_menu
 
 ########################################################################################################################
 #########################################################################################################################
-SceneMissionDodge
+SceneMissionISS
+    The ISS mission
+
+    Function to direct here:
+        self.to_scene_iss
+
+    Buttons on here:
+        self.button1 "ACCEPT" -> self.to_play_iss
+        self.button2 "MENU" -> self.to_menu
+
+#########################################################################################################################
+SceneMissionISSPlay
     The asteroid dodge mission intro page with title, description, accept button and menu button
+
+    Function to direct here:
+        self.to_scene_iss
+
+    Buttons on here:
+         self.button1 "MENU" -> self.to_menu
+
+########################################################################################################################
+SceneMissionBlast
+    The asteroid dodge mission
 
     Function to direct here:
         self.to_scene_dodge
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroid_dodge_game
-        self.button2 -> self.to_menu
+        self.button1 "ACCEPT" -> self.to_play_asteroid_blast
+        self.button2 "MENU" -> self.to_menu
 
-########################################################################################################################
-SceneMissionDodgeGame
+#########################################################################################################################
+#########################################################################################################################
+SSceneQuiz
     The asteroid dodge mission intro page with title, description, accept button and menu button
 
     Function to direct here:
-        self.to_scene_mission_asteroid_dodge_game
+        self.to_scene_quiz
 
     Buttons on here:
-        self.button1 -> self.to_scene_mission_asteroids_input
-        self.button2 -> self.to_menu
+        self.button1 "ACCEPT" -> self.to_scene_mission_quiz_input
+        self.button2 "MENU" -> self.to_menu
+
+#########################################################################################################################
+SceneQuizInput
+    The multiple choice quiz
+
+    Function to direct here:
+        self.to_scene_quiz
+
+    Buttons on here:
+        self.answer_button1 self.answer1 -> lambda: (setattr(self, 'user_answer_number', 1), self.highlight_answer_button4())
+        self.answer_button2 self.answer1 -> lambda: (setattr(self, 'user_answer_number', 2), self.highlight_answer_button4())
+        self.answer_button3 self.answer1 -> lambda: (setattr(self, 'user_answer_number', 3), self.highlight_answer_button4())
+        self.answer_button4 self.answer1 -> lambda: (setattr(self, 'user_answer_number', 4), self.highlight_answer_button4())
+
+        self.button1 "SUBMIT" -> self.user_submit
+        self.button2 "MENU" -> self.to_menu
+
+        self.button_next "NEXT QUESTION" ->  lambda: (setattr(self, 'correct', None), self.to_scene_quiz_input())[1]
+        self.button_next "SEE MY RESULTS" ->  lambda: (setattr(self, 'correct', None), self.to_scene_quiz_leaderboard())[1]
+
+#########################################################################################################################
+SceneQuizLeaderboard
+    The scene for submitting a name for the leaderboard
+
+    Function to direct here:
+        self.user_submit
+
+    Buttons on here:
+        self.button1 "SUBMIT" -> self.user_submit
+        self.button2 "FINISH" -> self.to_scene_end
+
+#########################################################################################################################
+#########################################################################################################################
+SceneQuizLeaderboard
+    The scene for submitting a name for the leaderboard
+
+    Function to direct here:
+        self.user_submit
+
+    Buttons on here:
+        self.button "EXIT" -> sys.exit
+
+#########################################################################################################################
+#########################################################################################################################

@@ -22,6 +22,11 @@ from Missions.Mission2_satellite_files.mission2_satellite import Satellite
 from Missions.Mission7_quiz_files.mission7_quiz import QuizGame
 
 
+# Get the directory where the current settings.py script resides
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# now anything pointing to a directory is redefined by applying the hosts absolute path
+
+
 ########################################################################################################################
 # START AND CONTROLS ###################################################################################################
 ########################################################################################################################
@@ -374,7 +379,8 @@ class SceneMissionAsteroidsInput(Scene):
         self.user_input = TextInput(420, 255, 300, 25)
         self.result_message = None
         self.attempts = 3
-        self.click_sound = Button.click_sound
+        self.click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
+        self.click_sound.set_volume()
 
         # Adjust these buttons to your needs for the second scene
         self.button1 = Button(
@@ -1367,7 +1373,7 @@ class SceneQuiz(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Quiz"
-        quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
+        quizgame_instance = QuizGame(os.path.join(root_dir, "Missions/Mission7_quiz_files/my.db"), os.path.join(root_dir, "Missions/Mission7_quiz_files/mission7_quiz.sql"))
         self.block = f"In this challenge you will need to answer {quizgame_instance.num_questions_to_answer} multiple-choice space questions from the database of trivia!|| Enter your name at the end to join the leaderboard."
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
@@ -1422,14 +1428,14 @@ class SceneQuiz(Scene):
 class SceneQuizInput(Scene):
     question_number = 0
     user_score = 0
-    quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
+    quizgame_instance = QuizGame(os.path.join(root_dir, "Missions/Mission7_quiz_files/my.db"), os.path.join(root_dir, "Missions/Mission7_quiz_files/mission7_quiz.sql"))
     all_questions_and_answers_lists = quizgame_instance.fetch_random_questions(10)
 
     def __init__(self, manager, game_clock):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
-        self.quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
+        self.quizgame_instance = QuizGame(os.path.join(root_dir, "Missions/Mission7_quiz_files/my.db"), os.path.join(root_dir, "Missions/Mission7_quiz_files/mission7_quiz.sql"))
 
         self.number_of_questions = 10
         self.user_answer_number = None
@@ -1442,7 +1448,7 @@ class SceneQuizInput(Scene):
 
         # display text box for question
         # define the box image
-        self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
+        self.display_bl_image = pygame.image.load(os.path.join(root_dir, 'Scene_files/Images/display_bl.png'))
         # define a header saying the question number
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100,
                                                       f"Question {SceneQuizInput.question_number + 1}", font=FONT_SMALL,
@@ -1453,7 +1459,7 @@ class SceneQuizInput(Scene):
                                                   colour=(0, 0, 0, 0))
 
         # answer buttons
-        self.answer_box = pygame.image.load('./Scene_files/Images/trivia_box4_s.png')
+        self.answer_box = pygame.image.load(os.path.join(root_dir, 'Scene_files/Images/trivia_box4_s.png'))
         self.answer1 = self.all_questions_and_answers_lists[0][2].strip()
         self.answer2 = self.all_questions_and_answers_lists[0][3].strip()
         self.answer3 = self.all_questions_and_answers_lists[0][4].strip()
@@ -1485,8 +1491,8 @@ class SceneQuizInput(Scene):
 
         # result message and boxes, next question and end buttons
         self.result_message = None
-        self.display_box_image_green = pygame.image.load('./Scene_files/Images/ans_box_2.png')
-        self.display_box_image_orange = pygame.image.load('./Scene_files/Images/ans_box_3.png')
+        self.display_box_image_green = pygame.image.load(os.path.join(root_dir, 'Scene_files/Images/ans_box_2.png'))
+        self.display_box_image_orange = pygame.image.load(os.path.join(root_dir, 'Scene_files/Images/ans_box_3.png'))
         self.button_next = Button(
             "center", (SCREEN_HEIGHT * 0.75), ORANGE, BLUE, "NEXT QUESTION", BLACK, WHITE,
             lambda: (setattr(self, 'correct', None), self.to_scene_quiz_input())[1]
@@ -1633,23 +1639,24 @@ class SceneQuizLeaderboard(Scene):
         self.title = "Quiz Results"
         # Create typewriter text for the title
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
-        self.quiz_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
+        self.quiz_instance = QuizGame(os.path.join(root_dir, "Missions/Mission7_quiz_files/my.db"), os.path.join(root_dir, "Missions/Mission7_quiz_files/mission7_quiz.sql"))
 
         # Input box elements
-        self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
-        self.trivia_box2_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
+        self.trivia_box1_image = pygame.image.load(os.path.join(root_dir, 'Scene_files/Images/trivia_box1.png'))
+        self.trivia_box2_image = pygame.image.load(os.path.join(root_dir, 'Scene_files/Images/trivia_box1.png'))
         self.typewriter_input_head = TypewriterText(70, 125, 150, 100, "Input your name to enter the leaderboard",
                                                     font=FONT_SMALL, colour=(0, 0, 0, 0))
         self.typewriter_input_box = TypewriterText(55, 265, 200, 100, "User input", font=FONT_SMALL,
                                                    colour=(0, 0, 0, 0))
         self.user_input = TextInput(55, 325, 200, 25)
-        self.click_sound = Button.click_sound
+        self.click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
+        self.click_sound.set_volume(Button.button_volume)
 
         # Display text box elements
         # A boolean that will conditionally allow the leaderboard to appear once self.user_input is submitted
         self.submitted = False
         self.player_input = ""
-        self.display_bl_image = pygame.image.load('./Scene_files/Images/display_bl.png')
+        self.display_bl_image = pygame.image.load(os.path.join(root_dir, 'Scene_files/Images/display_bl.png'))
         self.typewriter_display_head = TypewriterText(460, 105, 200, 100, "Score", font=FONT_SMALL, colour=(0, 0, 0, 0))
         self.display_text1 = ""
         self.typewriter_display1 = TypewriterText(460, 170, 150, 300, self.display_text1, font=FONT_VSMALL,
@@ -1682,7 +1689,7 @@ class SceneQuizLeaderboard(Scene):
     # save the name of the current player
     def save_name(self):
         # Use the 'with' statement to ensure the file is properly closed after it's done
-        with open("Missions/Mission7_quiz_files/name_cache.txt", 'w') as file:
+        with open(os.path.join(root_dir, "Missions/Mission7_quiz_files/name_cache.txt"), 'w') as file:
             file.write(self.player_input)
 
     # Switch to the Start Menu scene
@@ -1777,13 +1784,13 @@ class SceneEnd(Scene):
     def get_saved_name():
         def get_content_from_file():
             try:
-                with open("Missions/name_cache.txt", 'r') as file:
+                with open(os.path.join(root_dir, "Missions/Mission7_quiz_files/name_cache.txt"), 'r') as file:
                     return file.read().strip()
             except FileNotFoundError:
-                print("Error: The file 'Missions/name_cache.txt' was not found.")
+                print("Error: The file 'name_cache.txt' was not found.")
                 return None
             except IOError:
-                print("Error: There was an issue reading the file 'Missions/name_cache.txt'.")
+                print("Error: There was an issue reading the file 'name_cache.txt'.")
                 return None
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")
