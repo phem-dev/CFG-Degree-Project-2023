@@ -1124,7 +1124,7 @@ class SceneMissionPayload(Scene):
         )
 
     def to_play_payload_challenge(self):
-        script_path = "Missions/payload_challenge.py"
+        script_path = "Missions/Mission4_payload_files/mission4_payload.py"
 
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])
@@ -1136,7 +1136,7 @@ class SceneMissionPayload(Scene):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def run_payload_game(self):
-        script_path = "payload_challenge.py"
+        script_path = "mission4_payload.py"
         subprocess.call(["python", script_path])
 
     def handle_event(self, event):
