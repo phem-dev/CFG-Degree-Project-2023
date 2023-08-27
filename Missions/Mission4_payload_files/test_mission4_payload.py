@@ -14,8 +14,7 @@ class TestTetromino(unittest.TestCase):
         self.assertIn(tetromino.colour, range(1, len(colours)))
         self.assertEqual(tetromino.rotation, 0)
 
-
-    # Check display_tetrominoes() returns expected coniguration of a tetromino
+    # Check display_tetrominoes() returns expected configuration of a tetromino
     def test_display_tetrominoes(self):
 
         tetromino = Tetromino(0, 0)
@@ -26,7 +25,6 @@ class TestTetromino(unittest.TestCase):
         result = tetromino.display_tetrominoes()
         self.assertEqual(result, configuration)
 
-
     # Check rotate_tetrominoes() returns next rotation
     def test_rotate_tetrominoes(self):
 
@@ -35,7 +33,6 @@ class TestTetromino(unittest.TestCase):
         tetromino.rotate_tetrominoes()
         # Compare current rotation with expected
         self.assertEqual(tetromino.rotation, (initial_rotation + 1) % len(tetromino.tetrominoes[tetromino.type]))
-
 
 class TestGamePlay(unittest.TestCase):
 
@@ -55,7 +52,6 @@ class TestGamePlay(unittest.TestCase):
         self.assertEqual(self.game.state, "start")
         self.assertIsNotNone(self.game.field)
         self.assertIsNone(self.game.tetromino)
-
 
     def test_new_tetrominoes(self):
 
@@ -78,16 +74,15 @@ class TestGamePlay(unittest.TestCase):
     # Test handle_intersections() with tetromino
     def test_handle_intersections_with_intersection(self):
             
-            tetromino = Tetromino(0, 0)
-            self.game.tetromino = tetromino
-            self.game.field = [[0, 0, 0, 0],
+        tetromino = Tetromino(0, 0)
+        self.game.tetromino = tetromino
+        self.game.field = [[0, 0, 0, 0],
                                 [0, 1, 0, 0],
                                 [0, 0, 0, 0],
                                 [0, 0, 0, 0]]
-            intersects = self.game.handle_intersections()
-            self.assertTrue(intersects)
+        intersects = self.game.handle_intersections()
+        self.assertTrue(intersects)
 
-    
     # Test handle_intersections() with multiple tetrominoes
     def test_handle_intersections_multiple_blocks_intersection(self):
 
