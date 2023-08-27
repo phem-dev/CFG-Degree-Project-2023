@@ -1,9 +1,9 @@
 import sys  # for system exit
 import subprocess  # for ISS mission
 from collections import deque  # for quiz question list
-from io import BytesIO  # for mars mission - directly coded
-import aiohttp  # for mars mission async programming- directly coded
-import asyncio  # for mars mission async programming- directly coded
+from io import BytesIO  # for Mars mission - directly coded
+import aiohttp  # for Mars mission async programming- directly coded
+import asyncio  # for Mars mission async programming- directly coded
 
 # configurations
 from Scene_files.settings import *
@@ -933,14 +933,16 @@ class SceneMissionMarsPlay(Scene):
 
         # Function to check if the input is a valid number:
 
-    def is_valid(self, input_str):
+    @staticmethod
+    def is_valid(input_str):
         try:
             int(input_str)  # Try to convert the input to an integer
             return True
         except ValueError:  # If ValueError occurs, return False
             return False
 
-    async def fetch_previous_images(self, camera, num_images=5):
+    @staticmethod
+    async def fetch_previous_images(camera, num_images=5):
         mars_api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
         rover = "curiosity"
         mars_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/photos?camera={camera}&api_key={mars_api_key}&sol=1000&page=1&per_page={num_images}"
@@ -981,7 +983,8 @@ class SceneMissionMarsPlay(Scene):
                                 }
         return None
 
-    def scale_image(self, image):
+    @staticmethod
+    def scale_image(image):
         # Scale the image to smaller dimensions:
         scaled_width = 350
         scaled_height = 350
@@ -1080,7 +1083,7 @@ class SceneMissionMarsPlay(Scene):
 
         self.button01.draw(screen)
         # check if numbers (for the buttons) 1, 2 and 3 have been added to the buttons pressed list yet then draw proceed if so
-        if set([1, 2, 3]).issubset(self.buttons_pressed):
+        if {1, 2, 3}.issubset(self.buttons_pressed):
             self.button02.draw(screen)
         self.button1.draw(screen)
         self.button2.draw(screen)
@@ -1135,10 +1138,6 @@ class SceneMissionPayload(Scene):
     def to_menu(self):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
-    def run_payload_game(self):
-        script_path = "mission4_payload.py"
-        subprocess.call(["python", script_path])
-
     def handle_event(self, event):
         super().handle_event(event)
         self.button1.handle_event(event)
@@ -1177,7 +1176,7 @@ class SceneMissionISS(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Locate ISS"
-        self.block = "Where above Earth is the ISS?"
+        self.block = "Find out where above Earth is the ISS and help restore its power"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
@@ -1315,7 +1314,8 @@ class SceneMissionBlast(Scene):
         script_path = "Missions/Mission6_blast_files/mission6_blast.py"
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])
-        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
+        pygame.time.delay(1000)
+        self.to_menu()
 
     def to_menu(self):
         # Switch to the Start Menu scene
@@ -1773,7 +1773,8 @@ class SceneEnd(Scene):
             font=FONT_SMALL
         )
 
-    def get_saved_name(self):
+    @staticmethod
+    def get_saved_name():
         def get_content_from_file():
             try:
                 with open("Missions/name_cache.txt", 'r') as file:

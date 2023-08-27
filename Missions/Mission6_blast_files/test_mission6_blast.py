@@ -3,7 +3,7 @@
 
 import unittest
 from unittest.mock import Mock, patch, MagicMock
-from Missions.Mission6_blast_ import *
+from Missions.Mission6_blast_files.mission6_blast import *
 from Scene_files.background import *
 
 
