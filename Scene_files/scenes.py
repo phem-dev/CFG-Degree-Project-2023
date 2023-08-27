@@ -1712,9 +1712,7 @@ class SceneQuizLeaderboard(Scene):
         self.user_input.handle_event(event)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                self.save_name()
-                self.click_sound.play()
-                self.to_scene_end()
+                pass  # ignore submits via keyboard
 
     def update(self):
         # Always update the typewriter_title
