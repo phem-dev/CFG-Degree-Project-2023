@@ -17,9 +17,16 @@ import math
 from googletrans import Translator
 
 # Import Button from utils:
-from Utils.Button import Button
+from Utils.button import Button
 
 from Scene_files.settings import *
+
+
+# Get the root directory by going up a few times (nested)
+root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# now anything pointing to a directory is redefined by applying the hosts absolute path
+
+
 
 # ISSTracker class:
 class ISSTracker:
@@ -32,11 +39,11 @@ class ISSTracker:
         pygame.display.set_caption("ISS Tracker")
 
         # Load the background image and scale it to the window size
-        self.background_image = pygame.image.load("Scene_files/Images/iss_bg1.png")
+        self.background_image = pygame.image.load(os.path.join(root_dir, "Scene_files/Images/iss_bg1.png"))
         self.background_image = pygame.transform.scale(self.background_image, self.window_size)
 
         # Set font:
-        font_path = 'Scene_files/kenvector_future.ttf'
+        font_path = os.path.join(root_dir, "Scene_files/kenvector_future.ttf")
         self.iss_font = pygame.font.Font(font_path, 25)
         self.iss_font_sml = pygame.font.Font(font_path, 15)
         self.iss_font_smlr = pygame.font.Font(font_path, 12)
@@ -54,8 +61,8 @@ class ISSTracker:
         self.display_speed = False
 
         # Load ISS and Earth images and set dimensions:
-        self.iss_image = pygame.image.load("Missions/iss.png")
-        self.earth_image = pygame.image.load("Missions/earth.png")
+        self.iss_image = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/iss.png"))
+        self.earth_image = pygame.image.load(os.path.join(root_dir, "Missions/Mission5_ISS_files/earth.png"))
         self.earth_image_width = 300
         self.earth_image_height = 300
 

@@ -8,18 +8,18 @@ import asyncio  # for mars mission async programming- directly coded
 # configurations
 from Scene_files.settings import *
 # Superclass and constants
-from Scene_files.SceneManager import Scene
+from Scene_files.scene_manager import Scene
 # functional classes
-from Utils.Typewriter import TypewriterText
-from Utils.Button import Button
-from Utils.TextInput import TextInput
+from Utils.typewriter import TypewriterText
+from Utils.button import Button
+from Utils.text_input import TextInput
 from Scene_files.background import *
 # Mission classes
-import Missions.Mission1_Asteroids
-import Missions.quiz_SQLite.quiz
-from Missions.Mission1_Asteroids import Challenge, Asteroids
-from Missions.Mission2_Satellite_Images import Satellite
-from Missions.quiz_SQLite.quiz import QuizGame
+import Missions.Mission1_asteroid_files.mission1_asteroids
+import Missions.Mission7_quiz_files.mission7_quiz
+from Missions.Mission1_asteroid_files.mission1_asteroids import Challenge, Asteroids
+from Missions.Mission2_satellite_files.mission2_satellite import Satellite
+from Missions.Mission7_quiz_files.mission7_quiz import QuizGame
 
 
 ########################################################################################################################
@@ -361,7 +361,7 @@ class SceneMissionAsteroidsInput(Scene):
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL,
                                                       colour=(0, 0, 0, 0))
         self.display_text1 = f"{self.asteroid_instance.asteroid_distance_prompt()}"
-        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), self.asteroid_instance.get_all_asteroid_data(), Missions.Mission1_Asteroids.today_date_string)[0]}"
+        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), self.asteroid_instance.get_all_asteroid_data(), Missions.Mission1_asteroid_files.mission1_asteroids.today_date_string)[0]}"
         self.typewriter_display1 = TypewriterText(55, 170, 150, 300, self.display_text1, font=FONT_VSMALL,
                                                   colour=(0, 0, 0, 0))
         self.typewriter_display2 = TypewriterText(55, 320, 150, 300, self.display_text2, font=FONT_SMALL,
@@ -392,7 +392,7 @@ class SceneMissionAsteroidsInput(Scene):
 
         asteroid_data = self.asteroid_instance.get_all_asteroid_data()
         asteroid_distances = \
-            self.asteroid_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_Asteroids.today_date_string)[1]
+            self.asteroid_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_asteroid_files.mission1_asteroids.today_date_string)[1]
 
         # Call the player_enter_asteroid_distance function
         result_message, self.attempts = self.asteroid_instance.player_enter_asteroid_distance(asteroid_distances,
@@ -660,9 +660,9 @@ class SceneMissionSatelliteAnswer(Scene):
         # BACK button should redirect to menu but not working atm
 
         # Render the three images onscreen above the 3 buttons
-        self.satellite_image1 = pygame.image.load("./Missions/satellite_image1.jpg")
-        self.satellite_image2 = pygame.image.load("./Missions/satellite_image2.jpg")
-        self.satellite_image3 = pygame.image.load("./Missions/satellite_image3.jpg")
+        self.satellite_image1 = pygame.image.load("Missions/Mission2_satellite_files/satellite_images/satellite_image1.jpg")
+        self.satellite_image2 = pygame.image.load("Missions/Mission2_satellite_files/satellite_images/satellite_image2.jpg")
+        self.satellite_image3 = pygame.image.load("Missions/Mission2_satellite_files/satellite_images/satellite_image3.jpg")
 
         # Resize the images
         self.satellite_image1 = pygame.transform.scale(self.satellite_image1, (190, 360))
@@ -739,7 +739,7 @@ class SceneMissionSatelliteAnswer(Scene):
 
     def incorrect_answer(self):  # if incorrect, block all buttons apart from BACK
         self.typewriter_block = TypewriterText(70, 515, 470, 120,
-                                               "Oh no, Mission Failed! You'll have to go back and accept the mission again...",
+                                               Asteroids.fail(),
                                                font=FONT_MEDSMALL,
                                                colour=(0, 0, 0, 0))
         self.typewriter_block.update()
@@ -1124,7 +1124,7 @@ class SceneMissionPayload(Scene):
         )
 
     def to_play_payload_challenge(self):
-        script_path = "Missions/payload_challenge.py"
+        script_path = "Missions/Mission4_payload_files/mission4_payload.py"
 
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])
@@ -1136,7 +1136,7 @@ class SceneMissionPayload(Scene):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def run_payload_game(self):
-        script_path = "payload_challenge.py"
+        script_path = "mission4_payload.py"
         subprocess.call(["python", script_path])
 
     def handle_event(self, event):
@@ -1196,7 +1196,7 @@ class SceneMissionISS(Scene):
         self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def to_play_iss(self):
-        script_path = "Missions/Mission5_ISS.py"
+        script_path = "Missions/Mission5_ISS_files/mission5_ISS.py"
 
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])
@@ -1312,9 +1312,10 @@ class SceneMissionBlast(Scene):
         )
 
     def to_play_asteroid_blast(self):
-        script_path = "Missions/Mission6_Asteroid_Blast.py"
+        script_path = "Missions/Mission6_blast_files/mission6_blast.py"
         # Launch the game in a separate process
         subprocess.Popen([sys.executable, script_path])
+        self.manager.switch_scene(SceneStartMenu(self.manager, self.game_clock))
 
     def to_menu(self):
         # Switch to the Start Menu scene
@@ -1366,7 +1367,7 @@ class SceneQuiz(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Quiz"
-        quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+        quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
         self.block = f"In this challenge you will need to answer {quizgame_instance.num_questions_to_answer} multiple-choice space questions from the database of trivia!|| Enter your name at the end to join the leaderboard."
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
@@ -1421,14 +1422,14 @@ class SceneQuiz(Scene):
 class SceneQuizInput(Scene):
     question_number = 0
     user_score = 0
-    quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+    quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
     all_questions_and_answers_lists = quizgame_instance.fetch_random_questions(10)
 
     def __init__(self, manager, game_clock):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
-        self.quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+        self.quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
 
         self.number_of_questions = 10
         self.user_answer_number = None
@@ -1632,7 +1633,7 @@ class SceneQuizLeaderboard(Scene):
         self.title = "Quiz Results"
         # Create typewriter text for the title
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
-        self.quiz_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+        self.quiz_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
 
         # Input box elements
         self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')
@@ -1681,7 +1682,7 @@ class SceneQuizLeaderboard(Scene):
     # save the name of the current player
     def save_name(self):
         # Use the 'with' statement to ensure the file is properly closed after it's done
-        with open("Missions/name_cache.txt", 'w') as file:
+        with open("Missions/Mission7_quiz_files/name_cache.txt", 'w') as file:
             file.write(self.player_input)
 
     # Switch to the Start Menu scene

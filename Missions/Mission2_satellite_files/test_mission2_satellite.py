@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from Missions.Mission2_Satellite_Images import Satellite
+from Missions.Mission2_satellite_files.mission2_satellite import Satellite
 
 
 class TestAsteroidsChallenge(unittest.TestCase):

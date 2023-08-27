@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import Mock, patch, MagicMock
-from Missions.Mission3_Mars import MarsRoverViewer
+from Missions.Mission3_mars_files.mission3_mars import MarsRoverViewer
 
 class TestMarsRoverViewer(unittest.TestCase):
 
     # Using patch to mock the pygame and requests modules for testing
-    @patch('Missions.Mission3_Mars.pygame')
-    @patch('Missions.Mission3_Mars.requests')
+    @patch('Missions.Mission3_mars_files.mission3_mars.pygame')
+    @patch('Missions.Mission3_mars_files.mission3_mars.requests')
     def setUp(self, mock_requests, mock_pygame):
         # Creating a mock screen using MagicMock to simulate Pygame screen
         self.mock_screen = MagicMock()
@@ -23,7 +23,7 @@ class TestMarsRoverViewer(unittest.TestCase):
         self.assertFalse(self.viewer.is_valid("abc"))
 
     # Testing successful fetch of previous images from NASA API
-    @patch('Missions.Mission3_Mars.requests.get')
+    @patch('Missions.Mission3_mars_files.mission3_mars.requests.get')
     def test_fetch_previous_images_success(self, mock_get):
         # Creating a mock response with image data
         mock_response = Mock()
@@ -41,7 +41,7 @@ class TestMarsRoverViewer(unittest.TestCase):
         self.assertEqual(len(images_data), 2)
 
     # Testing failure to fetch previous images from NASA API
-    @patch('Missions.Mission3_Mars.requests.get')
+    @patch('Missions.Mission3_mars_files.mission3_mars.requests.get')
     def test_fetch_previous_images_failure(self, mock_get):
         # Creating a mock response with status code 404
         mock_response = Mock()

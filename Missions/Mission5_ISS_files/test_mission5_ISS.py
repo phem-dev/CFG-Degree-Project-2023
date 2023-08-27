@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from Missions.Mission5_ISS import ISSTracker
+from Missions.Mission5_ISS_files.mission5_ISS import ISSTracker
+from Scene_files.settings import *
 
 
 class TestISSTracker(unittest.TestCase):

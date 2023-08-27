@@ -1,11 +1,10 @@
 import unittest
-from unittest.mock import Mock, patch, MagicMock
-import Missions.Mission6_Asteroid_Blast as mission6
-from Missions.asteroid_blast_files import *
+from unittest.mock import Mock, patch
+import Missions.Mission6_blast_files.mission6_blast as mission6
 
 
 class TestAsteroidBlast(unittest.TestCase):
-    # @patch('Missions.asteroid_blast_files')
+    # @patch('Missions.Mission6_asteroid_blast_assets')
     # @patch('Missions.Mission6_Asteroid_Blast.pygame')
     @patch('pygame.font.Font.render')
     @patch('pygame.Surface.blit')
@@ -61,7 +60,7 @@ class TestAsteroidBlast(unittest.TestCase):
     #     self.mock_screen = MagicMock()
     #     mock_pygame.display.set_mode.return_value = self.mock_screen
     #     # initializing class object to test
-    #     self.BackGround = Background('Missions/asteroid_blast_files/asteroid_bg.png', [0,0])
+    #     self.BackGround = Background('Missions/Mission6_asteroid_blast_assets/asteroid_bg.png', [0,0])
 
 
 
