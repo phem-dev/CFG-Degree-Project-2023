@@ -74,7 +74,7 @@ def display_leaderboard():
 
 def main():
     global mydb, cursor
-    mydb, cursor = create_connection('../Missions/quiz_SQLite/my.db', r"C:\Users\kirst\PycharmProjects\pythonProject3\quiz-multichoice_SQLite\Quiz_game.sql")
+    mydb, cursor = create_connection('../Missions/Mission7_quiz_files/my.db', r"C:\Users\kirst\PycharmProjects\pythonProject3\quiz-multichoice_SQLite\Quiz_game.sql")
 
     if not mydb or not cursor:
         print("Failed to connect to database.")

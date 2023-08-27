@@ -25,7 +25,7 @@ clock = pygame.time.Clock()  # make a clock object, so we can use its method 'cl
 ########################################################################################################################
 
 
-def main():
+def run():
     scene_manager = SceneManager()  # object instantiation for the SceneManager
     scene_manager.switch_scene(SceneStart(scene_manager, clock))  # start scene 1
 
@@ -52,4 +52,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    run()

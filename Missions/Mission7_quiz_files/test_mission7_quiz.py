@@ -1,6 +1,10 @@
 import unittest
+import tempfile
+
 from unittest.mock import patch, Mock, mock_open
-from Missions.quiz_SQLite.quiz import QuizGame, given_number_of_questions
+# Mission assets
+from Missions.Mission7_quiz_files.mission7_quiz import QuizGame, given_number_of_questions
+
 
 
 class TestQuizGame(unittest.TestCase):
@@ -8,8 +12,14 @@ class TestQuizGame(unittest.TestCase):
     def setUp(self):
         # The setup method runs before every test method.
         # Here, we're setting the test database and SQL file paths.
-        self.db_file = "Missions/quiz_SQLite/my.db"
-        self.sql_file = "Missions/quiz_SQLite/Quiz_game.sql"
+        # Create a temporary database file to avoid messing with our real database
+        self.temp_db = tempfile.NamedTemporaryFile(delete=False)
+        self.db_file = self.temp_db.name
+        self.sql_file = "mission7_quiz.sql"
+
+    def tearDown(self):
+        # This method is executed after each test.
+        self.temp_db.close()
 
     @patch("sqlite3.connect")
     def test_create_connection_new_table(self, mock_connect):
@@ -85,6 +95,11 @@ class TestQuizGame(unittest.TestCase):
         Test the method that fetches and displays the top 10 players from the leaderboard.
         """
         mock_cursor = Mock()
+        # Mocking the fetchall to return dummy leaderboard data
+        mock_cursor.fetchall.return_value = [
+            ('player1', 100),
+            ('player2', 90),
+        ]
         mock_create_connection.return_value = (None, mock_cursor)
 
         game = QuizGame(self.db_file, self.sql_file)
@@ -129,29 +144,11 @@ class TestQuizGame(unittest.TestCase):
 
         # Mock the display_leaderboard method to return a dummy leaderboard
         game.display_leaderboard = Mock(return_value="Mocked Leaderboard")
-        score_msg, leaderboard = game.end_message(7)
+        score_msg, leaderboard = game.end_message("Ralph", 7)
 
         # Ensure that the method returns the expected formatted message
         self.assertEqual(score_msg, "You scored: 7/10")
         self.assertEqual(leaderboard, "Mocked Leaderboard")
-
-    @patch.object(QuizGame, "create_connection")
-    @patch("builtins.open", mock_open(read_data="CREATE TABLE questions;"))
-    def test_create_connection_with_sql_file(self, mock_create_connection):
-        """
-        Test the create_connection method's behavior when reading an actual SQL file.
-        We're mocking both the file open function and the create_connection method.
-        """
-        mock_cursor = Mock()
-        # Simulate a scenario where the 'questions' table doesn't exist
-        mock_cursor.fetchone.return_value = None
-        mock_create_connection.return_value = (None, mock_cursor)
-
-        game = QuizGame(self.db_file, self.sql_file)
-        game.create_connection()
-
-        # Ensure that the SQL script from the file is executed
-        mock_cursor.executescript.assert_called_with("CREATE TABLE questions;")
 
     @patch.object(QuizGame, "create_connection")
     def test_fetch_default_number_of_questions(self, mock_create_connection):

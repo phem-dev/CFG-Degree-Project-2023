@@ -16,10 +16,10 @@ from Utils.TextInput import TextInput
 from Scene_files.background import *
 # Mission classes
 import Missions.Mission1_Asteroids
-import Missions.quiz_SQLite.quiz
+import Missions.Mission7_quiz_files.mission7_quiz
 from Missions.Mission1_Asteroids import Challenge, Asteroids
 from Missions.Mission2_Satellite_Images import Satellite
-from Missions.quiz_SQLite.quiz import QuizGame
+from Missions.Mission7_quiz_files.mission7_quiz import QuizGame
 
 
 ########################################################################################################################
@@ -1366,7 +1366,7 @@ class SceneQuiz(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Quiz"
-        quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+        quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
         self.block = f"In this challenge you will need to answer {quizgame_instance.num_questions_to_answer} multiple-choice space questions from the database of trivia!|| Enter your name at the end to join the leaderboard."
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
@@ -1421,14 +1421,14 @@ class SceneQuiz(Scene):
 class SceneQuizInput(Scene):
     question_number = 0
     user_score = 0
-    quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+    quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
     all_questions_and_answers_lists = quizgame_instance.fetch_random_questions(10)
 
     def __init__(self, manager, game_clock):
         super().__init__()
         self.manager = manager
         self.game_clock = game_clock
-        self.quizgame_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+        self.quizgame_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
 
         self.number_of_questions = 10
         self.user_answer_number = None
@@ -1632,7 +1632,7 @@ class SceneQuizLeaderboard(Scene):
         self.title = "Quiz Results"
         # Create typewriter text for the title
         self.typewriter_title = TypewriterText(130, 20, 550, 500, self.title, justify="center")
-        self.quiz_instance = QuizGame("Missions/quiz_SQLite/my.db", "Missions/quiz_SQLite/Quiz_game.sql")
+        self.quiz_instance = QuizGame("Missions/Mission7_quiz_files/my.db", "Missions/Mission7_quiz_files/mission7_quiz.sql")
 
         # Input box elements
         self.trivia_box1_image = pygame.image.load('./Scene_files/Images/trivia_box1.png')

@@ -96,11 +96,14 @@ class QuizGame:
         if self.conn:
             self.conn.close()
 
-    def end_message(self, score):
+    def end_message(self, player_name, score):
         """
         Display the end message with the player's score and the leaderboard.
 
         :param score: The score of the player.
         :return: A tuple containing the player's score message and the leaderboard.
-        """
+
+        Args:
+            player_name: this is not used here but given as an argument in the integration
+         """
         return f"You scored: {score}/{self.num_questions_to_answer}", self.display_leaderboard()
