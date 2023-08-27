@@ -154,24 +154,58 @@ class GamePlay:
     
     # Move tetrominoes - define last position, change co-ords and check handle_intersections(). If True, return to previous state. 
     def move_space(self):
+        """
+            Move tetromino down the field until it encounters an intersection: 
+
+                While handle_intersections() is false: Increment verticle position of current tetromino by 1 to move the the tetromino down the game board. 
+
+                Once tetromino encounters an intersection, decrement vertical position by 1 to reach last valid position. 
+
+                Call halt_tetromino method. 
+        """
         while not self.handle_intersections():
             self.tetromino.y += 1
         self.tetromino.y -= 1
         self.halt_tetromino()
 
     def move_down(self):
+        """
+            Move tetromino down one row. 
+
+            If handle_intersections() == True
+                Move tetromino to last valid position
+                Call halt_tetromino() method 
+        """
         self.tetromino.y += 1
         if self.handle_intersections():
             self.tetromino.y -= 1
             self.halt_tetromino()
 
     def move_to_side(self, dx):
+        """
+            Args: dx = horizontal distance tetromino should move
+            +ve = move right
+            -ve = move left 
+
+            Store current horizontal position of tetromino 
+            (in case it needs to be moved back). 
+            Update horizontal position of tetromino depending on value of dx. 
+            Check for intersections. If handle_intersections() == True, 
+            move tetromino back to old position. 
+
+        """
         old_x = self.tetromino.x
         self.tetromino.x += dx
         if self.handle_intersections():
             self.tetromino.x = old_x 
     
     def rotate_tetrominoes(self):
+        """
+            Try to rotate tetromino. 
+
+            If rotation results in handle_intersections() == True, 
+            return tetromino to previous_rotation. 
+        """
         previous_rotation = self.tetromino.rotation
         self.tetromino.rotate_tetrominoes()
         if self.handle_intersections():
