@@ -8,11 +8,11 @@ import asyncio  # for mars mission async programming- directly coded
 # configurations
 from Scene_files.settings import *
 # Superclass and constants
-from Scene_files.SceneManager import Scene
+from Scene_files.scene_manager import Scene
 # functional classes
-from Utils.Typewriter import TypewriterText
-from Utils.Button import Button
-from Utils.TextInput import TextInput
+from Utils.typewriter import TypewriterText
+from Utils.button import Button
+from Utils.text_input import TextInput
 from Scene_files.background import *
 # Mission classes
 import Missions.Mission1_asteroid_files.mission1_asteroids

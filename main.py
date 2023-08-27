@@ -1,8 +1,8 @@
 import pygame
 from pygame import mixer
 import sys  # needed so the system can exit the window when the 'x' is pressed
-from Scene_files.SceneManager import SceneManager
-from Scene_files.Scenes import SceneStart
+from Scene_files.scene_manager import SceneManager
+from Scene_files.scenes import SceneStart
 from Scene_files.settings import SCREEN_HEIGHT, SCREEN_WIDTH, MUSIC_PATH, MUSIC_VOLUME
 
 

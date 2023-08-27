@@ -17,7 +17,7 @@ import math
 from googletrans import Translator
 
 # Import Button from utils:
-from Utils.Button import Button
+from Utils.button import Button
 
 from Scene_files.settings import *
 
