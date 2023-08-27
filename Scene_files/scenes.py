@@ -1182,7 +1182,7 @@ class SceneMissionISS(Scene):
         self.manager = manager
         self.game_clock = game_clock
         self.title = "Locate the ISS"
-        self.block = "Can you find out where the ISS is and help restore its power!"
+        self.block = "In this challenge can you find out where the ISS is and help restore its power?"
         self.typewriter_title = TypewriterText(130, 20, 550, 500, Challenge.greet(Challenge(self.title)),
                                                justify="center")
         self.typewriter_block = TypewriterText(150, 200, 430, 200, self.block, font=FONT_SMALL)
