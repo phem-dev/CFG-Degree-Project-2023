@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from Missions.Mission1_Asteroids import Asteroids
+from Missions.Mission1_asteroid_files.mission1_asteroids import Asteroids
 
 
 class TestAsteroidsChallenge(unittest.TestCase):
@@ -42,7 +42,7 @@ class TestAsteroidsChallenge(unittest.TestCase):
         asteroid_distances = ["100", "200", "300"]
         expected_output = "Oh no, Mission Failed!"
         result = self.asteroid_challenge.player_enter_asteroid_distance(asteroid_distances, player_input, attempts = 3)
-        self.assertEqual(expected_output, self.asteroid_challenge.fail_message)
+        self.assertEqual(expected_output, self.asteroid_challenge.fail())
 
     def test_get_3_asteroid_data(self):
         data = {

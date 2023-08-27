@@ -22,14 +22,16 @@ class Asteroids(Challenge):
 
         return "Mission Completed |Congratulations!"
 
-    def fail(self):
+    @staticmethod
+    def fail():
         """Fail message if player uses all attempts
 
         Returns: String - "Oh no, Mission Failed!" message
         """
         return "Oh no, Mission Failed!"
 
-    def display_asteroid_data(self, asteroid_output):
+    @staticmethod
+    def display_asteroid_data(asteroid_output):
         """Outputs asteroid data for the player to round to nearest km and input
 
         Args:
@@ -70,7 +72,7 @@ class Asteroids(Challenge):
 
         """
         while attempts > 1:
-            if all(x.isnumeric() for x in player_input):  # checking thst input contains only numbers
+            if all(x.isnumeric() for x in player_input) and player_input != "":  # checking thst input contains only numbers
                 if int(player_input) in asteroid_distances:  # checks player input against available data
                     success_message = self.success()  # get the success message
                     return success_message, attempts  # display success message
@@ -91,7 +93,7 @@ class Asteroids(Challenge):
                 not_numeric_message = f"Oops, it looks like you entered something that isn't a number! {attempts} attempts remaining..."
                 return not_numeric_message, attempts  # Return the incorrect message to display in the game
 
-        return Asteroids.fail(self), attempts  # return the fail message to display to the player
+        return Asteroids.fail(), attempts  # return the fail message to display to the player
 
     def get_all_asteroid_data(self):
         """Calls NASA API for 3 asteroids that have missed Earth on the current day. There are always asteroids

@@ -15,9 +15,9 @@ from Utils.Button import Button
 from Utils.TextInput import TextInput
 from Scene_files.background import *
 # Mission classes
-import Missions.Mission1_Asteroids
+import Missions.Mission1_asteroid_files.mission1_asteroids
 import Missions.Mission7_quiz_files.mission7_quiz
-from Missions.Mission1_Asteroids import Challenge, Asteroids
+from Missions.Mission1_asteroid_files.mission1_asteroids import Challenge, Asteroids
 from Missions.Mission2_Satellite_Images import Satellite
 from Missions.Mission7_quiz_files.mission7_quiz import QuizGame
 
@@ -361,7 +361,7 @@ class SceneMissionAsteroidsInput(Scene):
         self.typewriter_display_head = TypewriterText(55, 105, 200, 100, "Data Received", font=FONT_SMALL,
                                                       colour=(0, 0, 0, 0))
         self.display_text1 = f"{self.asteroid_instance.asteroid_distance_prompt()}"
-        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), self.asteroid_instance.get_all_asteroid_data(), Missions.Mission1_Asteroids.today_date_string)[0]}"
+        self.display_text2 = f"{Asteroids.get_3_asteroid_data(Asteroids(self.title), self.asteroid_instance.get_all_asteroid_data(), Missions.Mission1_asteroid_files.mission1_asteroids.today_date_string)[0]}"
         self.typewriter_display1 = TypewriterText(55, 170, 150, 300, self.display_text1, font=FONT_VSMALL,
                                                   colour=(0, 0, 0, 0))
         self.typewriter_display2 = TypewriterText(55, 320, 150, 300, self.display_text2, font=FONT_SMALL,
@@ -392,7 +392,7 @@ class SceneMissionAsteroidsInput(Scene):
 
         asteroid_data = self.asteroid_instance.get_all_asteroid_data()
         asteroid_distances = \
-            self.asteroid_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_Asteroids.today_date_string)[1]
+            self.asteroid_instance.get_3_asteroid_data(asteroid_data, Missions.Mission1_asteroid_files.mission1_asteroids.today_date_string)[1]
 
         # Call the player_enter_asteroid_distance function
         result_message, self.attempts = self.asteroid_instance.player_enter_asteroid_distance(asteroid_distances,
@@ -739,7 +739,7 @@ class SceneMissionSatelliteAnswer(Scene):
 
     def incorrect_answer(self):  # if incorrect, block all buttons apart from BACK
         self.typewriter_block = TypewriterText(70, 515, 470, 120,
-                                               "Oh no, Mission Failed! You'll have to go back and accept the mission again...",
+                                               Asteroids.fail(),
                                                font=FONT_MEDSMALL,
                                                colour=(0, 0, 0, 0))
         self.typewriter_block.update()
