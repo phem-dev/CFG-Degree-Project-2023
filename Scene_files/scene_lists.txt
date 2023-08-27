@@ -216,11 +216,11 @@ SceneQuizLeaderboard
 
 #########################################################################################################################
 #########################################################################################################################
-SceneQuizLeaderboard
-    The scene for submitting a name for the leaderboard
+SceneEnd
+    The exit scene of the game featuring Ralph the cat
 
     Function to direct here:
-        self.user_submit
+        self.to_scene_end
 
     Buttons on here:
         self.button "EXIT" -> sys.exit
