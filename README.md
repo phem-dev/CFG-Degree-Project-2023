@@ -112,11 +112,6 @@ Before running the game, you need to set up the required environment and depende
 
 **2. Python Version:** Make sure you have Python 3.x installed on your system. You can download the latest version of Python from the official Python website.
 
-**3. Install Pygame:** The game relies on the Pygame library. To install it, open your terminal and run the following command:
-
-```json
-   pip install pygame
-```
 
 **3. Clone the Repository:** Clone or download this repository to your local machine using your preferred method. You can use the following command if you have Git installed:
 
