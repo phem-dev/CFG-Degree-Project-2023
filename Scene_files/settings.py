@@ -45,7 +45,7 @@ BUTTON_VOLUME = 0.4
 BUTTON_HOVER_PATH = os.path.join(current_dir, "Audio\Button hover 1.wav")
 BUTTON_CLICK_PATH = os.path.join(current_dir, "Audio\Button click 1.wav")
 MUTED_VOLUME = 0
-IS_MUTED = False
+
 
 
 

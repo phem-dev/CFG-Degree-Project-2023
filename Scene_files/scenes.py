@@ -380,7 +380,7 @@ class SceneMissionAsteroidsInput(Scene):
         self.result_message = None
         self.attempts = 3
         self.click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
-        self.click_sound.set_volume()
+        self.click_sound.set_volume(Button.button_volume)
 
         # Adjust these buttons to your needs for the second scene
         self.button1 = Button(
@@ -443,7 +443,9 @@ class SceneMissionAsteroidsInput(Scene):
         self.user_input.handle_event(event)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                self.click_sound.play()
+                if not self.IS_MUTED:
+                    self.click_sound.play()
+
                 self.user_submit()
 
         # Update the scene's elements
@@ -1649,8 +1651,6 @@ class SceneQuizLeaderboard(Scene):
         self.typewriter_input_box = TypewriterText(55, 265, 200, 100, "User input", font=FONT_SMALL,
                                                    colour=(0, 0, 0, 0))
         self.user_input = TextInput(55, 325, 200, 25)
-        self.click_sound = pygame.mixer.Sound(BUTTON_CLICK_PATH)
-        self.click_sound.set_volume(Button.button_volume)
 
         # Display text box elements
         # A boolean that will conditionally allow the leaderboard to appear once self.user_input is submitted
