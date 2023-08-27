@@ -1,5 +1,5 @@
 import pygame
-from settings import FONT
+from Scene_files.settings import FONT
 
 class TypewriterText:
     """

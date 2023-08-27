@@ -1,9 +1,9 @@
 import pygame
 from pygame import mixer
 import sys  # needed so the system can exit the window when the 'x' is pressed
-from Scene_files.SceneManager import SceneManager, Scene
+from Scene_files.SceneManager import SceneManager
 from Scene_files.Scenes import SceneStart
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH, MUSIC_PATH, MUSIC_VOLUME
+from Scene_files.settings import SCREEN_HEIGHT, SCREEN_WIDTH, MUSIC_PATH, MUSIC_VOLUME
 
 
 ########################################################################################################################
@@ -16,6 +16,8 @@ mixer.init()
 # Create screen and clock, clock will be needed to help make animations and waits https://www.pygame.org/docs/ref/time.html
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # set the screen size
 # screen = screen.convert_alpha()  # Convert the screen to support transparency on pixels
+icon = pygame.image.load('Scene_files/Images/stratobus_ship.png')
+pygame.display.set_icon(icon)
 pygame.display.set_caption('Stratobus Mission')  # set the window title
 clock = pygame.time.Clock()  # make a clock object, so we can use its method 'clock.tick(30) later, this will slow the frame rate (or refresh rate) to 30 frames per second during while loops instead of doing the while loop nearly instantaneously
 

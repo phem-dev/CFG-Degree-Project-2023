@@ -9,7 +9,11 @@ from io import BytesIO
 
 class MarsRoverViewer:
     def __init__(self):
-        # Initialize Pygame:
+        """
+               Initialize the MarsRoverViewer class.
+
+               Initializes the Pygame module and sets up the display screen. Also, initializes camera mappings and names.
+               """
         pygame.init()
 
         # Set up the display:
@@ -29,6 +33,15 @@ class MarsRoverViewer:
 
     # Function to check if the input is a valid number:
     def is_valid(self, input_str):
+        """
+                Check if a given input string can be converted to an integer.
+
+                Args:
+                    input_str (str): Input string to be checked.
+
+                Returns:
+                    bool: True if the input can be converted to an integer, False otherwise.
+                """
         try:
             int(input_str)  # Try to convert the input to an integer
             return True
@@ -36,6 +49,16 @@ class MarsRoverViewer:
             return False
 
     def fetch_previous_images(self, camera, num_images=5):
+        """
+                Fetch a specified number of previous images from the NASA Mars API.
+
+                Args:
+                    camera (str): Camera type to fetch images from.
+                    num_images (int): Number of images to fetch (default is 5).
+
+                Returns:
+                    list: List of image data for fetched images, or None if no images are fetched.
+                """
         # Fetch previous images from the NASA Mars API:
         mars_api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
         rover = "curiosity"
@@ -67,6 +90,15 @@ class MarsRoverViewer:
         return None
 
     def fetch_latest_image(self, camera):
+        """
+                Fetch the latest image from the NASA API for a specified camera.
+
+                Args:
+                    camera (str): Camera type to fetch the latest image from.
+
+                Returns:
+                    dict: Dictionary containing the latest image data, rover name, and camera choice name, or None if no image is fetched.
+                """
         # Fetch the latest image from the NASA API
         mars_api_key = "nFd7Ku7gaRTV7eeYliSeSsYFVOP4oN7U6J80KbFP"
         rover = "curiosity"
@@ -94,6 +126,11 @@ class MarsRoverViewer:
         return None
 
     def run(self):
+        """
+               Run the Mars Rover Viewer application.
+
+               Manages the user interaction, image fetching, and display using Pygame.
+               """
         running = True
         while running:
             # Variable to get user input choice:
@@ -121,9 +158,9 @@ class MarsRoverViewer:
 
                         # Display the image on the Pygame screen:
                         self.screen.fill((0, 0, 0)) # Clear screen
-                        self.screen.blit(pygame_image, (100, 75))   # Display at the top-left corner ----------- *****REPOSITION ONTOP OF BG*****
+                        self.screen.blit(pygame_image, (100, 75))
 
-                        # Display text info/which camera: ------------------------------------------------------------ ***CHANGE FONT******
+                        # Display text info/which camera:
                         font = pygame.font.Font(None, 24)
                         rover_text = font.render(f"Photo from Mars Rover {latest_image_data['rover_name']}", True,
                                                  (255, 255, 255))
@@ -153,10 +190,10 @@ class MarsRoverViewer:
                             scaled_width = 250
                             scaled_height = 250
                             pygame_image = pygame.transform.scale(pygame_image, (scaled_width, scaled_height))
-                            self.screen.fill((0, 0, 0)) # CLear screen
-                            self.screen.blit(pygame_image, (100, 75)) # Display at the top-left corner  ----------- *****REPOSITION ONTOP OF BG*****
+                            self.screen.fill((0, 0, 0))     # CLear screen
+                            self.screen.blit(pygame_image, (100, 75))
 
-                            # Display text info/which camera: -------------------------------------------------------- ***CHANGE FONT******
+                            # Display text info/which camera:
                             font = pygame.font.Font(None, 24)
                             rover_text = font.render(f"Photo from Mars Rover", True, (255, 255, 255))
                             camera_text = font.render(f"Camera: {self.camera_names[camera]}", True, (255, 255, 255))

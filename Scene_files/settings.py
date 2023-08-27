@@ -5,11 +5,6 @@ import pygame
 pygame.font.init()
 
 # Font settings
-
-# NEW FONT PATH????**************************************************
-# font path = 'Scene_files/spaceranger.ttf'
-
-# Delete below font path ******************************************
 font_path = 'Scene_files/kenvector_future.ttf'
 
 FONT = pygame.font.Font(font_path, 35)

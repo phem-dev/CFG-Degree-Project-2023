@@ -1,5 +1,4 @@
-import pygame
-from settings import *
+from Scene_files.settings import *
 from Utils.Button import Button
 
 
