@@ -219,11 +219,11 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 grey = (128, 128, 128)
 
-
+# Set size of board
 size = (800, 600)
 screen = pygame.display.set_mode(size)
 
-pygame.display.set_caption("Stratobus Payload Challenge")
+# pygame.display.set_caption("Stratobus Payload Challenge")
 
 # Loop until the user clicks the close button.
 done = False
@@ -234,17 +234,21 @@ counter = 0
 
 pressing_down = False
 
+# While player has not decided to exit the game: 
 while not done:
+    # If there is no active tetromino, create a new one 
     if game.tetromino is None:
         game.new_tetrominoes()
     counter += 1
     if counter > 100000:
         counter = 0
 
+    # Conditions that result in a tetromino moving down the board
     if counter % (fps // game.level // 2) == 0 or pressing_down:
         if game.state == "start":
             game.move_down()
 
+    # Event handling for key strokes 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -278,6 +282,14 @@ while not done:
                 pygame.draw.rect(screen, colours[game.field[i][j]],
                                  [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 2])
 
+
+    """
+        Iterate through 4 * 4 grid.
+        Check if each cell is part of an active tetromino. 
+        If it is, draw a tetromino. 
+        Repeat for all cells in the shape of the tetromino type, 
+        taking into account current position and rotation. 
+    """
     if game.tetromino is not None:
         for i in range(4):
             for j in range(4):
