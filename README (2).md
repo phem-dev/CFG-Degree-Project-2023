@@ -3,7 +3,6 @@
 
 Stratobus Mission is a space-themed game created using the Pygame library. The game challenges players to navigate through various scenes and complete missions. This README provides an overview of the game structure, its features, and how to run it.
 
-
 ## Table of Contents
 
 - Description
